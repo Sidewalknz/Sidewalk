@@ -328,13 +328,63 @@ export default function Home() {
     title.textContent = "Sidewalk";
     title.classList.add(styles.centerText, styles.rgbGlitch);
 
+    const tagline = document.createElement("h3");
+    tagline.textContent = "Web and Brand Developers";
+    tagline.classList.add(styles.tagline, styles.rgbGlitchSoft);
+
     const subtitle = document.createElement("h2");
     subtitle.textContent = "Coming Soon";
     subtitle.classList.add(styles.subText, styles.rgbGlitchSoft);
 
+    // Email line
+    const email = document.createElement("p");
+    email.classList.add(styles.emailText, styles.rgbGlitchSoft);
+    email.appendChild(document.createTextNode("For enquiries: "));
+
+    const emailLink = document.createElement("a");
+    emailLink.href = "mailto:admin@sidewalks.co.nz";
+    emailLink.textContent = "admin@sidewalks.co.nz";
+    emailLink.classList.add(styles.emailLink);
+    emailLink.title = "Click to email (also copies address)";
+    emailLink.setAttribute("aria-label", "Email admin at sidewalks dot co dot nz");
+
+    // Copy-to-clipboard toast
+    const toast = document.createElement("span");
+    toast.classList.add(styles.copyToast);
+    toast.setAttribute("role", "status");
+    toast.setAttribute("aria-live", "polite");
+    toast.textContent = "Copied!";
+
+    email.appendChild(emailLink);
+    email.appendChild(toast);
+
+    // Copy logic (keeps mailto behavior)
+    const copyAddress = async () => {
+      try {
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText("admin@sidewalks.co.nz");
+          toast.classList.add(styles.show);
+          setTimeout(() => toast.classList.remove(styles.show), 1400);
+        }
+      } catch {
+        // ignore copy failures silently
+      }
+    };
+
+    const onClick = () => copyAddress();
+    const onKeyDown = (e) => {
+      if (e.key === "Enter" || e.key === " ") copyAddress();
+    };
+
+    emailLink.addEventListener("click", onClick);
+    emailLink.addEventListener("keydown", onKeyDown);
+
     textWrapper.appendChild(title);
+    textWrapper.appendChild(tagline);
     textWrapper.appendChild(subtitle);
+    textWrapper.appendChild(email);
     screenRef.current.appendChild(textWrapper);
+
     screen.add("vignette");
     screen.add("scanlines");
     screen.add("vcr", { opacity: 0.6, miny: 220, miny2: 220, num: 28, fps: 24, blur: 1.6 });
@@ -342,6 +392,9 @@ export default function Home() {
     screen.add("snow", { opacity: 0.15 });
 
     return () => {
+      emailLink.removeEventListener("click", onClick);
+      emailLink.removeEventListener("keydown", onKeyDown);
+
       screen.remove("snow");
       screen.remove("vcr");
       screen.remove("scanlines");
