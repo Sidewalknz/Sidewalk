@@ -118,22 +118,6 @@
   animation: rgbShiftSoft 2.2s steps(12) infinite, flicker 4s linear infinite;
 }
 
-@keyframes rgbShift {
-  0%, 8%, 100% { transform: translateX(0); }
-  9%           { transform: translateX(1px); }
-  10%          { transform: translateX(-1px); }
-  30%          { transform: translateX(0.8px); }
-  31%          { transform: translateX(-0.8px); }
-  70%          { transform: translateX(0.6px); }
-  71%          { transform: translateX(-0.6px); }
-}
-@keyframes rgbShiftSoft {
-  0%, 100% { transform: translateX(0); }
-  20%      { transform: translateX(0.6px); }
-  21%      { transform: translateX(-0.6px); }
-  60%      { transform: translateX(0.4px); }
-  61%      { transform: translateX(-0.4px); }
-}
 @keyframes flicker {
   0%, 100% { opacity: 1; }
   2%       { opacity: 0.85; }
