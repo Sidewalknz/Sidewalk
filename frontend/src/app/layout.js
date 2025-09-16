@@ -1,13 +1,15 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Montserrat, Freehand, Gloria_Hallelujah, Bree_Serif} from "next/font/google";
 import "./globals.css";
+import Navbar from "../components/Navbar";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const freehand = Bree_Serif({
+  weight: "400",
+  variable: "--font-freehand",
   subsets: ["latin"],
 });
 
@@ -19,8 +21,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {children}
+      <body className={`${montserrat.variable} ${freehand.variable}`}>
+        <Navbar />
+        <main>{children}</main>
       </body>
     </html>
   );

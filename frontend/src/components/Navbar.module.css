@@ -1,0 +1,207 @@
+/* --- Container --- */
+.header {
+  position: fixed;
+  top: 16px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  z-index: 1200;
+
+  /* Allow clicks to pass through the header chrome by default */
+  pointer-events: none;
+}
+
+.nav {
+  pointer-events: auto; /* re-enable for the bar itself */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  width: min(1100px, calc(100% - 2rem));
+  padding: 1rem 1rem;
+  border-radius: 12px;
+  background: #202e37;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+  backdrop-filter: saturate(180%) blur(10px);
+  font-family: var(--font-montserrat), sans-serif;
+}
+
+/* --- Logo --- */
+.logo { display: flex; align-items: center; cursor: pointer; }
+.logo a { display: flex; align-items: center; line-height: 0; }
+.logoImg { height: 40px; width: auto; display: block; object-fit: contain; }
+
+/* --- Desktop nav links --- */
+.navLinks {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-montserrat), sans-serif;
+}
+
+.navLinks li { display: flex; align-items: center; }
+
+.navLinks li a {
+  text-decoration: none;
+  color: #fff7ed;
+  transition: color 0.2s ease-in-out;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.navLinks li a:hover { color: #0070f3; }
+
+.contactBtn {
+  background: #de442a;
+  color: #fff !important;
+  padding: 0.5rem 1rem; /* slightly larger for touch */
+  border-radius: 8px;
+  font-weight: 600;
+  display: inline-block;
+  transition: transform 0.25s ease, background 0.25s ease;
+}
+.contactBtn:hover {
+  background: #c53c25;
+  color: #fff;
+  transform: scale(1.06) rotate(-1.5deg);
+}
+
+/* --- Burger button (hidden on desktop) --- */
+.burger {
+  display: none;
+  position: relative;
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 10px;
+  background: #263642;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: transform 0.2s ease;
+}
+.burger:active { transform: scale(0.96); }
+.burgerBar {
+  position: absolute;
+  width: 22px;
+  height: 2px;
+  background: #fff7ed;
+  border-radius: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: transform 0.25s ease, opacity 0.2s ease;
+}
+.burgerBar:nth-child(1) { top: 14px; }
+.burgerBar:nth-child(2) { top: 20px; }
+.burgerBar:nth-child(3) { top: 26px; }
+
+/* Transform bars into X when [aria-expanded="true"] */
+.burger[aria-expanded="true"] .burgerBar:nth-child(1) {
+  transform: translateX(-50%) translateY(6px) rotate(45deg);
+}
+.burger[aria-expanded="true"] .burgerBar:nth-child(2) { opacity: 0; }
+.burger[aria-expanded="true"] .burgerBar:nth-child(3) {
+  transform: translateX(-50%) translateY(-6px) rotate(-45deg);
+}
+
+/* --- Backdrop behind slide-down menu --- */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  opacity: 0;
+  pointer-events: none; /* disabled by default */
+  transition: opacity 0.25s ease;
+  z-index: 900; /* under the header but above page */
+}
+.show {
+  opacity: 1;
+  pointer-events: auto; /* clickable when visible */
+}
+
+/* --- Slide-down mobile menu --- */
+.mobileMenu {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  transform: translateY(-100%);
+  transition: transform 0.3s cubic-bezier(.2,.8,.2,1);
+  background: #202e37;
+  padding-top: calc(16px + 64px); /* header offset (top gap + approx nav height) */
+  padding-bottom: 24px;
+  z-index: 950;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.28);
+
+  /* CRITICAL: re-enable interaction for the sheet ONLY when open */
+  pointer-events: none;
+}
+.open {
+  transform: translateY(0);
+  pointer-events: auto; /* now links are clickable */
+}
+
+/* --- NEW: Mobile sheet header with logo --- */
+.mobileHeader {
+  max-width: min(1100px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 1rem 1rem 2rem; 
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.mobileLogo {
+  display: flex;
+  align-items: center;
+  line-height: 0;
+}
+.mobileLogoImg {
+  height: 44px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+
+/* Keep list below the logo */
+.mobileList {
+  list-style: none;
+  margin: 0 auto;
+  padding: 0 1rem;
+  max-width: min(1100px, calc(100% - 2rem));
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.mobileList a {
+  display: block;
+  width: 100%;
+  padding: 0.9rem 0.75rem;
+  text-decoration: none;
+  color: #fff7ed;
+  font-weight: 600;
+  border-radius: 10px;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.mobileList a:hover { background: rgba(255,255,255,0.06); transform: translateY(-1px); }
+.mobileCtaWrap { margin-top: 0.25rem; }
+.mobileCtaWrap .contactBtn { width: 100%; text-align: center; }
+
+/* --- Responsive rules --- */
+@media (max-width: 768px) {
+  .nav { padding: 0.75rem 0.75rem; border-radius: 10px; }
+  .navLinks { display: none; }
+  .burger { display: inline-flex; }
+  .logoImg { height: 36px;}
+}
+
+/* Reduce motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .burgerBar, .mobileMenu, .backdrop, .contactBtn { transition: none; }
+}
