@@ -15,7 +15,7 @@ const freehand = Bree_Serif({
 
 export const metadata = {
   title: "Sidewalk",
-  description: "Sidewalk - Coming Soon",
+  description: "Sidewalk is a Nelson-based web design duo crafting custom websites, branding, and digital experiences that last.",
 };
 
 export default function RootLayout({ children }) {
