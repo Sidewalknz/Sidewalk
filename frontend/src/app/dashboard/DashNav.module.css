@@ -1,9 +1,11 @@
+/* ==== Sidebar base ==== */
 .aside {
-  --sidebar-w: 260px;
+  --sidebar-w: clamp(220px, 21vw, 280px);
   --sidebar-w-collapsed: 72px;
 
   position: sticky;
   top: 0;
+  z-index: 5;
   align-self: flex-start;
   height: 100dvh;
   overflow: hidden;
@@ -19,6 +21,10 @@
   padding: 0.75rem;
 
   transition: width 220ms ease, padding 220ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aside { transition: none; }
 }
 
 .collapsed {
@@ -55,11 +61,7 @@
   overflow: hidden;
 }
 
-.brandLogo {
-  display: block;
-  width: 20px;
-  height: 20px;
-}
+.brandLogo { width: 20px; height: 20px; display: block; }
 
 .brandText {
   opacity: 0.92;
@@ -74,10 +76,10 @@
   pointer-events: none;
 }
 
-/* ==== Collapse Button ==== */
+/* ==== Collapse Button (desktop / tablet) ==== */
 .collapseBtn {
   position: absolute;
-  right: -10px; /* hugs the edge */
+  right: -10px;
   top: 0;
   width: 32px;
   height: 32px;
@@ -92,9 +94,11 @@
   transition: background 140ms ease, transform 140ms ease;
 }
 
-.collapseBtn:hover {
-  background: rgba(255,255,255,0.04);
-  transform: translateX(1px);
+@media (hover: hover) and (pointer: fine) {
+  .collapseBtn:hover {
+    background: rgba(255,255,255,0.04);
+    transform: translateX(1px);
+  }
 }
 
 .collapseBtn:focus-visible {
@@ -109,7 +113,6 @@
   margin-top: 0.75rem;
 }
 
-/* Expanded: pill owns the background; icon is minimal */
 .link {
   display: inline-flex;
   align-items: center;
@@ -124,21 +127,17 @@
   border: 1px solid transparent;
   background: transparent;
 
-  transition:
-    background 140ms ease,
-    border-color 140ms ease,
-    color 140ms ease;
+  transition: background 140ms ease, border-color 140ms ease, color 140ms ease;
 }
 
-.link:hover {
-  background: var(--card);
-  border-color: var(--border);
+@media (hover: hover) and (pointer: fine) {
+  .link:hover {
+    background: var(--card);
+    border-color: var(--border);
+  }
 }
 
-.link:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
+.link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 .active {
   border-color: rgba(16,185,129,0.35);
@@ -147,24 +146,9 @@
 }
 
 /* Icon base */
-.icon {
-  width: 20px;
-  height: 20px;
-  color: var(--muted);
-  display: grid;
-  place-items: center;
-  transition: color 140ms ease, border-color 140ms ease, background 140ms ease, box-shadow 140ms ease;
-}
-
-.icon svg {
-  display: block;
-  width: 20px;
-  height: 20px;
-}
-
-.active .icon {
-  color: var(--accent);
-}
+.icon { width: 20px; height: 20px; color: var(--muted); display: grid; place-items: center; }
+.icon svg { width: 20px; height: 20px; display: block; }
+.active .icon { color: var(--accent); }
 
 .label {
   font-size: 14px;
@@ -175,43 +159,32 @@
   transition: opacity 160ms ease, transform 160ms ease, width 220ms ease;
 }
 
-/* ===== Collapsed behavior: link becomes transparent; icon owns the card/ring ===== */
+/* ===== Collapsed behavior (desktop/tablet) ===== */
 .collapsed .link {
   justify-content: center;
-  padding: 0;                 /* icon card is the hit target */
-  background: transparent;    /* no pill bg */
-  border-color: transparent;  /* no pill border */
-  box-shadow: none;
-}
-
-.collapsed .link:hover {
-  background: transparent;    /* keep link transparent */
-  border-color: transparent;
-}
-
-.collapsed .active {
-  background: transparent;    /* prevent double-pill */
+  padding: 0;
+  background: transparent;
   border-color: transparent;
   box-shadow: none;
 }
 
-/* In collapsed, give the icon a card for touch target */
+.collapsed .link:hover { background: transparent; border-color: transparent; }
+.collapsed .active { background: transparent; border-color: transparent; box-shadow: none; }
+
 .collapsed .icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
+  width: 44px; height: 44px; border-radius: 12px;
   background: linear-gradient(180deg, var(--card), rgba(255,255,255,0.02));
   border: 1px solid var(--border);
 }
 
-/* Hover/focus ring on icon in collapsed */
-.collapsed .link:hover .icon,
-.collapsed .link:focus-visible .icon {
-  background: rgba(255,255,255,0.04);
-  border-color: var(--border);
+@media (hover: hover) and (pointer: fine) {
+  .collapsed .link:hover .icon,
+  .collapsed .link:focus-visible .icon {
+    background: rgba(255,255,255,0.04);
+    border-color: var(--border);
+  }
 }
 
-/* Active state moves to icon only in collapsed */
 .collapsed .active .icon {
   color: var(--accent);
   background: var(--accent-weak);
@@ -219,26 +192,16 @@
   box-shadow: 0 0 0 1px rgba(16,185,129,0.25);
 }
 
-.collapsed .label {
-  opacity: 0;
-  transform: translateX(-6px);
-  width: 0;
-  pointer-events: none;
-}
+.collapsed .label { opacity: 0; transform: translateX(-6px); width: 0; pointer-events: none; }
 
 /* ==== Footer / Logout ==== */
-.footer {
-  margin-top: auto;
-  padding-top: 0.75rem;
-  border-top: 1px dashed var(--border);
-}
+.footer { margin-top: auto; padding-top: 0.75rem; border-top: 1px dashed var(--border); }
 
 .logout {
   width: 100%;
   display: inline-flex;
   align-items: center;
   gap: 10px;
-
   height: 44px;
   padding: 0 12px;
   border-radius: 12px;
@@ -248,60 +211,107 @@
   cursor: pointer;
   transition: background 140ms ease, border-color 140ms ease, color 140ms ease;
 }
+@media (hover: hover) and (pointer: fine) { .logout:hover { background: #141a22; } }
 
-.logout:hover {
-  background: rgba(255,255,255,0.04);
-  color: var(--fg);
-}
-
-.collapsed .logout {
-  justify-content: center;
-  background: transparent;     /* match link behavior */
-}
-
-.collapsed .logout .label {
-  opacity: 0;
-  transform: translateX(-6px);
-  width: 0;
-  pointer-events: none;
-}
-
-.collapsed .logout:hover {
-  background: transparent;
-}
-
+.collapsed .logout { justify-content: center; background: transparent; }
+.collapsed .logout .label { opacity: 0; transform: translateX(-6px); width: 0; pointer-events: none; }
+.collapsed .logout:hover { background: transparent; }
 .collapsed .logout .icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
+  width: 44px; height: 44px; border-radius: 12px;
   background: linear-gradient(180deg, var(--card), rgba(255,255,255,0.02));
   border: 1px solid var(--border);
 }
+.collapsed .logout:hover .icon { background: rgba(255,255,255,0.04); }
 
-.collapsed .logout:hover .icon {
-  background: rgba(255,255,255,0.04);
-}
-
-/* ==== Mobile: sidebar becomes top bar ==== */
+/* ==== Mobile: top bar + hamburger ==== */
 @media (max-width: 720px) {
   .aside {
     position: sticky;
     top: 0;
-    height: auto;
+    height: auto; /* not full height */
     width: 100%;
     border-right: none;
     border-bottom: 1px solid var(--border);
     flex-direction: column;
     padding: 0.5rem 0.75rem;
+    z-index: 10;
+
+    backdrop-filter: saturate(140%) blur(6px);
+    background: color-mix(in oklab, var(--panel) 92%, transparent);
   }
+
+  /* hide desktop nav/footer inside top bar */
+  .aside > .nav { display: none; }
+  .aside > .footer { display: none; }
+
   .collapsed {
     width: 100%;
     padding-left: 0.75rem;
     padding-right: 0.75rem;
   }
-  .collapseBtn {
-    position: static;
-    margin-left: auto;
-    box-shadow: none;
-  }
+
+  .collapseBtn { display: none; } /* use hamburger instead */
 }
+
+/* ==== Hamburger button (mobile only) ==== */
+.hamburgerBtn {
+  display: none;
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--fg);
+  margin-left: auto;
+  display: grid; place-items: center;
+}
+.hamburgerBtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+@media (min-width: 721px) { .hamburgerBtn { display: none !important; } }
+@media (max-width: 720px) { .hamburgerBtn { display: grid; } }
+
+/* ==== Drawer / overlay ==== */
+/* base state (closed) */
+.sheetOverlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 40;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms ease;
+}
+/* open state (CSS Modules class) */
+.openOverlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sheet {
+  position: fixed; top: 0; left: 0;
+  height: 100dvh;
+  width: min(88vw, 320px);
+  background: var(--panel);
+  border-right: 1px solid var(--border);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  z-index: 41;
+  transform: translateX(-100%);
+  transition: transform 220ms ease;
+  display: flex; flex-direction: column;
+  padding: 0.75rem;
+}
+/* open state (CSS Modules class) */
+.sheetOpen { transform: translateX(0); }
+
+.sheetHeader {
+  display: flex; align-items: center; gap: 0.6rem;
+  margin-bottom: 0.5rem;
+}
+.sheetClose {
+  margin-left: auto;
+  width: 32px; height: 32px;
+  border-radius: 8px; border: 1px solid var(--border);
+  background: var(--card); color: var(--fg);
+  display: grid; place-items: center;
+}
+
+/* drawer nav inherits existing .nav/.link/.active styles */
+.sheetFooter { margin-top: auto; padding-top: 0.75rem; border-top: 1px dashed var(--border); }

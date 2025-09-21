@@ -9,11 +9,20 @@
   --accent: #10b981;      /* teal */
   --accent-weak: rgba(16, 185, 129, 0.2);
 
-  display: flex;
-  height: 100dvh;      /* lock to viewport */
-  overflow: hidden;    /* stop body scroll */
+  display: flex;          /* desktop: sidebar + content in a row */
+  height: 100dvh;
+  overflow: hidden;
   background: var(--bg);
   color: var(--fg);
+
+  /* notch-safe for PWA / iOS */
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* 🆕 Mobile: stack vertically so the aside becomes a top bar */
+@media (max-width: 720px) {
+  .shell { flex-direction: column; }
 }
 
 .content {
@@ -21,6 +30,6 @@
   min-width: 0;
   height: 100%;
   overflow: auto;      /* only the content pane scrolls */
-  padding: 1rem 1.25rem;
+  padding: clamp(0.75rem, 1.5vw, 1.25rem);   /* fluid spacing */
   background: var(--bg);
 }
