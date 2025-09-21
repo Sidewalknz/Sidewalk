@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRef, useEffect, useState } from "react";
 import base from "../page.module.css";           // shared layout system (snap, lists, etc.)
 import styles from "./About.module.css";         // about-specific tweaks
-import Section from "../../components/sections/Section";
+import Section from "../components/sections/Section";
 
 const SECTIONS = [
   { id: "hero",   label: "Home" },

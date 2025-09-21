@@ -3,8 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import base from "../page.module.css";
 import styles from "./Services.module.css";
-import Section from "../../components/sections/Section";
-
+import Section from "../components/sections/Section";
 const SECTIONS = [
   { id: "hero", label: "Home" },
   { id: "services", label: "What we do" },

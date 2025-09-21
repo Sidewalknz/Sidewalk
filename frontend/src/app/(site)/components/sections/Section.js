@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import styles from "../../app/page.module.css";
+import styles from "../../page.module.css";
 
 /**
  * Base Section wrapper: handles id, data-title, visibility class, and common layout.

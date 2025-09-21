@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import base from "../page.module.css";
-import Section from "../../components/sections/Section";
+import Section from "../components/sections/Section";
 import styles from "./Contact.module.css";
 
 export default function ContactPage() {

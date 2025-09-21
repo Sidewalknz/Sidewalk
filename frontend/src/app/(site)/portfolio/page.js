@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import base from "../page.module.css";
 import styles from "./Portfolio.module.css";
-import Section from "../../components/sections/Section";
-import projects from "../../data/projects.json"; // { name, type, image }
+import Section from "../components/sections/Section";
+import projects from "../../../data/projects.json"; // { name, type, image }
 
 // Newest entries live at the bottom of projects.json → show newest first
 const ALL_PROJECTS = [...projects].reverse();

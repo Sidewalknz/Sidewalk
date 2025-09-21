@@ -1,0 +1,26 @@
+.shell {
+  /* Dark theme tokens (scoped to dashboard only) */
+  --bg: #0f1117;          /* page background */
+  --panel: #0b0e14;       /* sidebar / headers */
+  --card: #11151c;        /* inputs / cards */
+  --fg: #e5e7eb;          /* main text */
+  --muted: #a1a1aa;       /* secondary text */
+  --border: #1f2733;      /* hairlines */
+  --accent: #10b981;      /* teal */
+  --accent-weak: rgba(16, 185, 129, 0.2);
+
+  display: flex;
+  height: 100dvh;      /* lock to viewport */
+  overflow: hidden;    /* stop body scroll */
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  overflow: auto;      /* only the content pane scrolls */
+  padding: 1rem 1.25rem;
+  background: var(--bg);
+}

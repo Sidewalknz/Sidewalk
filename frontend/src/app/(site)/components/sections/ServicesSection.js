@@ -1,7 +1,7 @@
 "use client";
 
 import Section from "./Section";
-import styles from "../../app/page.module.css";
+import styles from "../../page.module.css";
 
 export default function ServicesSection() {
   return (

@@ -1,0 +1,307 @@
+.aside {
+  --sidebar-w: 260px;
+  --sidebar-w-collapsed: 72px;
+
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  height: 100dvh;
+  overflow: hidden;
+
+  width: var(--sidebar-w);
+  background: var(--panel);
+  color: var(--fg);
+  border-right: 1px solid var(--border);
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem;
+
+  transition: width 220ms ease, padding 220ms ease;
+}
+
+.collapsed {
+  width: var(--sidebar-w-collapsed);
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+/* ==== Top / Branding ==== */
+.top {
+  display: flex;
+  align-items: center;
+  position: relative;
+  gap: 0.6rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  min-height: 36px;
+}
+
+.brandMark {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.brandLogo {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+
+.brandText {
+  opacity: 0.92;
+  white-space: nowrap;
+  transition: opacity 160ms ease, transform 160ms ease, width 220ms ease;
+}
+
+.collapsed .brandText {
+  opacity: 0;
+  transform: translateX(-6px);
+  width: 0;
+  pointer-events: none;
+}
+
+/* ==== Collapse Button ==== */
+.collapseBtn {
+  position: absolute;
+  right: -10px; /* hugs the edge */
+  top: 0;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--fg);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  transition: background 140ms ease, transform 140ms ease;
+}
+
+.collapseBtn:hover {
+  background: rgba(255,255,255,0.04);
+  transform: translateX(1px);
+}
+
+.collapseBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ==== Navigation ==== */
+.nav {
+  display: grid;
+  gap: 6px;
+  margin-top: 0.75rem;
+}
+
+/* Expanded: pill owns the background; icon is minimal */
+.link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+
+  height: 44px;
+  padding: 0 12px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: var(--fg);
+  border: 1px solid transparent;
+  background: transparent;
+
+  transition:
+    background 140ms ease,
+    border-color 140ms ease,
+    color 140ms ease;
+}
+
+.link:hover {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.active {
+  border-color: rgba(16,185,129,0.35);
+  background: var(--accent-weak);
+  box-shadow: inset 0 0 0 1px rgba(16,185,129,0.25);
+}
+
+/* Icon base */
+.icon {
+  width: 20px;
+  height: 20px;
+  color: var(--muted);
+  display: grid;
+  place-items: center;
+  transition: color 140ms ease, border-color 140ms ease, background 140ms ease, box-shadow 140ms ease;
+}
+
+.icon svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+
+.active .icon {
+  color: var(--accent);
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: opacity 160ms ease, transform 160ms ease, width 220ms ease;
+}
+
+/* ===== Collapsed behavior: link becomes transparent; icon owns the card/ring ===== */
+.collapsed .link {
+  justify-content: center;
+  padding: 0;                 /* icon card is the hit target */
+  background: transparent;    /* no pill bg */
+  border-color: transparent;  /* no pill border */
+  box-shadow: none;
+}
+
+.collapsed .link:hover {
+  background: transparent;    /* keep link transparent */
+  border-color: transparent;
+}
+
+.collapsed .active {
+  background: transparent;    /* prevent double-pill */
+  border-color: transparent;
+  box-shadow: none;
+}
+
+/* In collapsed, give the icon a card for touch target */
+.collapsed .icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, var(--card), rgba(255,255,255,0.02));
+  border: 1px solid var(--border);
+}
+
+/* Hover/focus ring on icon in collapsed */
+.collapsed .link:hover .icon,
+.collapsed .link:focus-visible .icon {
+  background: rgba(255,255,255,0.04);
+  border-color: var(--border);
+}
+
+/* Active state moves to icon only in collapsed */
+.collapsed .active .icon {
+  color: var(--accent);
+  background: var(--accent-weak);
+  border-color: rgba(16,185,129,0.35);
+  box-shadow: 0 0 0 1px rgba(16,185,129,0.25);
+}
+
+.collapsed .label {
+  opacity: 0;
+  transform: translateX(-6px);
+  width: 0;
+  pointer-events: none;
+}
+
+/* ==== Footer / Logout ==== */
+.footer {
+  margin-top: auto;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--border);
+}
+
+.logout {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  height: 44px;
+  padding: 0 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--fg);
+  cursor: pointer;
+  transition: background 140ms ease, border-color 140ms ease, color 140ms ease;
+}
+
+.logout:hover {
+  background: rgba(255,255,255,0.04);
+  color: var(--fg);
+}
+
+.collapsed .logout {
+  justify-content: center;
+  background: transparent;     /* match link behavior */
+}
+
+.collapsed .logout .label {
+  opacity: 0;
+  transform: translateX(-6px);
+  width: 0;
+  pointer-events: none;
+}
+
+.collapsed .logout:hover {
+  background: transparent;
+}
+
+.collapsed .logout .icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, var(--card), rgba(255,255,255,0.02));
+  border: 1px solid var(--border);
+}
+
+.collapsed .logout:hover .icon {
+  background: rgba(255,255,255,0.04);
+}
+
+/* ==== Mobile: sidebar becomes top bar ==== */
+@media (max-width: 720px) {
+  .aside {
+    position: sticky;
+    top: 0;
+    height: auto;
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    flex-direction: column;
+    padding: 0.5rem 0.75rem;
+  }
+  .collapsed {
+    width: 100%;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+  .collapseBtn {
+    position: static;
+    margin-left: auto;
+    box-shadow: none;
+  }
+}

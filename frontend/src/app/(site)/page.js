@@ -3,13 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./page.module.css";
 
-import HeroSection from "../components/sections/HeroSection";
-import AboutSection from "../components/sections/AboutSection";
-import WhySection from "../components/sections/WhySection";
-import ServicesSection from "../components/sections/ServicesSection";
-import PortfolioSection from "../components/sections/PortfolioSection";
-import TechSection from "../components/sections/TechSection";
-import ContactSection from "../components/sections/ContactSection";
+import HeroSection from "./components/sections/HeroSection";
+import AboutSection from "./components/sections/AboutSection";
+import WhySection from "./components/sections/WhySection";
+import ServicesSection from "./components/sections/ServicesSection";
+import PortfolioSection from "./components/sections/PortfolioSection";
+import TechSection from "./components/sections/TechSection";
+import ContactSection from "./components/sections/ContactSection";
 
 const SECTIONS = [
   { id: "hero", label: "Home" },
