@@ -213,15 +213,26 @@
 }
 @media (hover: hover) and (pointer: fine) { .logout:hover { background: #141a22; } }
 
-.collapsed .logout { justify-content: center; background: transparent; }
+/* ✅ collapsed: outer button loses border/padding; icon tile carries chrome */
+.collapsed .logout {
+  justify-content: center;
+  background: transparent;
+  border-color: transparent;  /* remove outer border */
+  padding: 0;                 /* remove side padding */
+  box-shadow: none;
+}
 .collapsed .logout .label { opacity: 0; transform: translateX(-6px); width: 0; pointer-events: none; }
-.collapsed .logout:hover { background: transparent; }
+.collapsed .logout:hover { background: transparent; border-color: transparent; }
+
 .collapsed .logout .icon {
   width: 44px; height: 44px; border-radius: 12px;
   background: linear-gradient(180deg, var(--card), rgba(255,255,255,0.02));
   border: 1px solid var(--border);
+  display: grid; place-items: center;
 }
-.collapsed .logout:hover .icon { background: rgba(255,255,255,0.04); }
+@media (hover: hover) and (pointer: fine) {
+  .collapsed .logout:hover .icon { background: rgba(255,255,255,0.04); border-color: var(--border); }
+}
 
 /* ==== Mobile: top bar + hamburger ==== */
 @media (max-width: 720px) {

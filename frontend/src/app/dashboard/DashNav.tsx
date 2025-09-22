@@ -6,23 +6,75 @@ import { usePathname } from 'next/navigation';
 import styles from './DashNav.module.css';
 
 /* Tiny inline icon set (no extra deps) */
-function Icon({ name }: { name: 'home' | 'leads' | 'chevL' | 'chevR' | 'power' | 'menu' | 'x' }) {
-  const common = { width: 20, height: 20, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.8, strokeLinecap: 'round', strokeLinejoin: 'round' } as const;
+function Icon({
+  name,
+}: {
+  name: 'home' | 'leads' | 'chevL' | 'chevR' | 'power' | 'menu' | 'x';
+}) {
+  const common = {
+    width: 20,
+    height: 20,
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    stroke: 'currentColor',
+    strokeWidth: 1.8,
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+  } as const;
   switch (name) {
-    case 'home':  return (<svg {...common}><path d="M3 11.5 12 4l9 7.5" /><path d="M5 10.5V20h14v-9.5" /><path d="M9 20v-6h6v6" /></svg>);
-    case 'leads': return (<svg {...common}><path d="M16 21v-2a4 4 0 0 0-8 0v2" /><circle cx="12" cy="7" r="4" /></svg>);
-    case 'chevL': return (<svg {...common}><path d="M15 18l-6-6 6-6" /></svg>);
-    case 'chevR': return (<svg {...common}><path d="M9 6l6 6-6 6" /></svg>);
-    case 'power': return (<svg {...common}><path d="M12 2v8" /><path d="M5.5 5.5a8 8 0 1 0 13 0" /></svg>);
-    case 'menu':  return (<svg {...common}><path d="M3 6h18M3 12h18M3 18h18" /></svg>);
-    case 'x':     return (<svg {...common}><path d="M18 6L6 18M6 6l12 12" /></svg>);
+    case 'home':
+      return (
+        <svg {...common}>
+          <path d="M3 11.5 12 4l9 7.5" />
+          <path d="M5 10.5V20h14v-9.5" />
+          <path d="M9 20v-6h6v6" />
+        </svg>
+      );
+    case 'leads':
+      return (
+        <svg {...common}>
+          <path d="M16 21v-2a4 4 0 0 0-8 0v2" />
+          <circle cx="12" cy="7" r="4" />
+        </svg>
+      );
+    case 'chevL':
+      return (
+        <svg {...common}>
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+      );
+    case 'chevR':
+      return (
+        <svg {...common}>
+          <path d="M9 6l6 6-6 6" />
+        </svg>
+      );
+    case 'power':
+      return (
+        <svg {...common}>
+          <path d="M12 2v8" />
+          <path d="M5.5 5.5a8 8 0 1 0 13 0" />
+        </svg>
+      );
+    case 'menu':
+      return (
+        <svg {...common}>
+          <path d="M3 6h18M3 12h18M3 18h18" />
+        </svg>
+      );
+    case 'x':
+      return (
+        <svg {...common}>
+          <path d="M18 6L6 18M6 6l12 12" />
+        </svg>
+      );
   }
 }
 
 export default function DashNav() {
   const pathname = usePathname();
-  const [collapsed, setCollapsed] = useState(false);  // desktop collapse
-  const [open, setOpen] = useState(false);            // mobile drawer open
+  const [collapsed, setCollapsed] = useState(false); // desktop collapse
+  const [open, setOpen] = useState(false); // mobile drawer open
   const closeBtnRef = useRef<HTMLButtonElement>(null);
 
   /* Load persisted state */
@@ -36,7 +88,7 @@ export default function DashNav() {
     localStorage.setItem('sw_dash_collapsed', collapsed ? '1' : '0');
   }, [collapsed]);
 
-  /* Auto-collapse on ≤ 1024px, otherwise respect saved preference */
+  /* Auto-collapse on ≤1024px, otherwise respect saved preference */
   useEffect(() => {
     const mql = window.matchMedia('(max-width: 1024px)');
     const apply = () => {
@@ -51,7 +103,10 @@ export default function DashNav() {
   /* Cmd/Ctrl+B toggles sidebar (desktop), Esc closes drawer (mobile) */
   const onKey = useCallback((e: KeyboardEvent) => {
     const metaOrCtrl = e.metaKey || e.ctrlKey;
-    if (metaOrCtrl && e.key.toLowerCase() === 'b') { e.preventDefault(); setCollapsed(v => !v); }
+    if (metaOrCtrl && e.key.toLowerCase() === 'b') {
+      e.preventDefault();
+      setCollapsed((v) => !v);
+    }
     if (e.key === 'Escape') setOpen(false);
   }, []);
   useEffect(() => {
@@ -64,16 +119,20 @@ export default function DashNav() {
     const prev = document.body.style.overflow;
     if (open) document.body.style.overflow = 'hidden';
     else document.body.style.overflow = prev || '';
-    return () => { document.body.style.overflow = prev || ''; };
+    return () => {
+      document.body.style.overflow = prev || '';
+    };
   }, [open]);
 
-  /* Focus the close button when drawer opens (a tiny focus trap) */
+  /* Focus the close button when drawer opens */
   useEffect(() => {
     if (open) setTimeout(() => closeBtnRef.current?.focus(), 0);
   }, [open]);
 
   /* Close drawer when navigating */
-  useEffect(() => { setOpen(false); }, [pathname]);
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
   const items = [
     { href: '/dashboard', label: 'Home', icon: 'home', active: pathname === '/dashboard' },
@@ -100,7 +159,7 @@ export default function DashNav() {
           {/* desktop collapse control (hidden on mobile via CSS) */}
           <button
             className={styles.collapseBtn}
-            onClick={() => setCollapsed(v => !v)}
+            onClick={() => setCollapsed((v) => !v)}
             aria-pressed={collapsed}
             aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
             title={collapsed ? 'Expand' : 'Collapse'}
@@ -121,7 +180,7 @@ export default function DashNav() {
           </button>
         </div>
 
-        {/* Keep the regular nav/footer for desktop/tablet */}
+        {/* Desktop / tablet nav */}
         <nav className={styles.nav} aria-label="Dashboard sections">
           {items.map((it) => (
             <Link
@@ -139,8 +198,14 @@ export default function DashNav() {
         </nav>
 
         <div className={styles.footer}>
-          <button className={styles.logout} onClick={logout}>
-            <span className={styles.icon} aria-hidden><Icon name="power" /></span>
+          <button
+            className={styles.logout}
+            onClick={logout}
+            title={collapsed ? 'Logout' : undefined}  /* tooltip when collapsed */
+          >
+            <span className={styles.icon} aria-hidden>
+              <Icon name="power" />
+            </span>
             <span className={styles.label}>Logout</span>
           </button>
         </div>
@@ -192,7 +257,9 @@ export default function DashNav() {
 
         <div className={styles.sheetFooter}>
           <button className={styles.logout} onClick={logout}>
-            <span className={styles.icon} aria-hidden><Icon name="power" /></span>
+            <span className={styles.icon} aria-hidden>
+              <Icon name="power" />
+            </span>
             <span className={styles.label}>Logout</span>
           </button>
         </div>
