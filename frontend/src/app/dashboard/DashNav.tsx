@@ -135,8 +135,10 @@ export default function DashNav() {
   }, [pathname]);
 
   const items = [
-    { href: '/dashboard', label: 'Home', icon: 'home', active: pathname === '/dashboard' },
-    { href: '/dashboard/leads', label: 'Leads', icon: 'leads', active: pathname?.startsWith('/dashboard/leads') },
+    { href: '/dashboard',          label: 'Home',      icon: 'home',  active: pathname === '/dashboard' },
+    { href: '/dashboard/leads',    label: 'Leads',     icon: 'leads', active: pathname?.startsWith('/dashboard/leads') },
+    { href: '/dashboard/clients',  label: 'Clients',   icon: 'leads', active: pathname?.startsWith('/dashboard/clients') },
+    { href: '/dashboard/portfolio',label: 'Portfolio', icon: 'leads', active: pathname?.startsWith('/dashboard/portfolio') },
   ] as const;
 
   const logout = async () => {

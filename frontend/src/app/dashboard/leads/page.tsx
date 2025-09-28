@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import styles from '../Dashboard.module.css';
 
-const TYPE_VALUES = ['none', 'ecommerce', 'portfolio', 'saas', 'booking'] as const;
+const TYPE_VALUES = ['none', 'ecommerce', 'portfolio', 'saas', 'booking','directory'] as const;
 type LeadType = typeof TYPE_VALUES[number];
 
 type Lead = {
@@ -13,7 +13,7 @@ type Lead = {
   website: string;
   needsNew?: boolean;
   image?: string;
-  type?: string; // raw from sheet; we'll normalize when displaying
+  type?: string; 
 };
 
 const DEFAULT_TAB = process.env.NEXT_PUBLIC_DEFAULT_LEADS_TAB || 'nelson';
