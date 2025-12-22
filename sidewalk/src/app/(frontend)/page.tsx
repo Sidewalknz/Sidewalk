@@ -20,6 +20,7 @@ export default function HomePage() {
         </div>
         <svg className="nav-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 60" preserveAspectRatio="none">
           <path d="M0,30 Q360,0 720,30 T1440,30 L1440,60 L0,60 Z" fill="var(--color-bg)"/>
+          <path d="M0,30 Q360,0 720,30 T1440,30" fill="none" stroke="var(--color-dark)" strokeWidth="6" strokeLinecap="round"/>
         </svg>
       </nav>
 
