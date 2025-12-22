@@ -1,8 +1,20 @@
-import React from 'react'
+'use client'
+
+import React, { useState } from 'react'
 import Image from 'next/image'
 import './styles.css'
 
 export default function HomePage() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen)
+  }
+
+  const closeMenu = () => {
+    setIsMenuOpen(false)
+  }
+
   return (
     <div className="website">
       {/* Navigation */}
@@ -11,11 +23,21 @@ export default function HomePage() {
           <div className="logo">
             <Image src="/logo1.svg" alt="Sidewalk" width={120} height={40} />
           </div>
-          <div className="nav-links">
-            <a href="#about">About</a>
-            <a href="#skills">Skills</a>
-            <a href="#projects">Projects</a>
-            <a href="#contact">Contact</a>
+          <button 
+            className={`menu-toggle ${isMenuOpen ? 'active' : ''}`}
+            onClick={toggleMenu}
+            aria-label="Toggle menu"
+            aria-expanded={isMenuOpen}
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+          <div className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
+            <a href="#about" onClick={closeMenu}>About</a>
+            <a href="#skills" onClick={closeMenu}>Skills</a>
+            <a href="#projects" onClick={closeMenu}>Projects</a>
+            <a href="#contact" onClick={closeMenu}>Contact</a>
           </div>
         </div>
         <svg className="nav-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 60" preserveAspectRatio="none">
@@ -266,21 +288,7 @@ export default function HomePage() {
       {/* Footer */}
       <footer className="footer">
         <div className="container">
-          <div className="footer-content">
-            <div className="footer-brand">
-              <div className="logo">Sidewalk</div>
-              <p>Web solutions crafted with care</p>
-            </div>
-            <div className="footer-links">
-              <a href="#about">About</a>
-              <a href="#skills">Skills</a>
-              <a href="#projects">Projects</a>
-              <a href="#contact">Contact</a>
-            </div>
-          </div>
-          <div className="footer-bottom">
-            <p>&copy; {new Date().getFullYear()} Sidewalk. All rights reserved.</p>
-          </div>
+          <div className="footer-text">sidewalk</div>
         </div>
       </footer>
     </div>
