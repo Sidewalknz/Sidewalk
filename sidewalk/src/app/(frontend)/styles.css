@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap');
+
 :root {
   --color-bg: #F3ECE3;
   --color-dark: #1C2830;
@@ -7,6 +9,7 @@
   --color-text-light: rgba(28, 40, 48, 0.7);
   --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   --font-mono: 'Roboto Mono', 'Courier New', monospace;
+  --font-title: 'Montserrat', sans-serif;
 }
 
 * {
@@ -173,6 +176,7 @@ body {
 }
 
 .hero-badge {
+  font-family: var(--font-title);
   display: inline-block;
   padding: 8px 20px;
   background: var(--color-accent-gold);
@@ -185,6 +189,7 @@ body {
 }
 
 .hero-title {
+  font-family: var(--font-title);
   font-size: clamp(42px, 8vw, 80px);
   font-weight: 800;
   line-height: 1.1;
@@ -373,6 +378,7 @@ section {
 }
 
 .section-label {
+  font-family: var(--font-title);
   display: inline-block;
   padding: 6px 16px;
   background: var(--color-accent-gold);
@@ -385,6 +391,7 @@ section {
 }
 
 .section-title {
+  font-family: var(--font-title);
   font-size: clamp(36px, 6vw, 56px);
   font-weight: 800;
   color: var(--color-dark);
@@ -491,6 +498,7 @@ section {
 }
 
 .skill-name {
+  font-family: var(--font-title);
   font-size: 24px;
   font-weight: 700;
   color: var(--color-dark);
@@ -563,6 +571,7 @@ section {
 }
 
 .project-title {
+  font-family: var(--font-title);
   font-size: 24px;
   font-weight: 700;
   color: var(--color-bg);

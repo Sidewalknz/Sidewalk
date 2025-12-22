@@ -21,7 +21,7 @@ export default function HomePage() {
       <nav className="nav">
         <div className="nav-container">
           <div className="logo">
-            <Image src="/logo1.svg" alt="Sidewalk" width={120} height={40} />
+            <Image src="/logo1.svg" alt="sidewalk" width={120} height={40} />
           </div>
           <button 
             className={`menu-toggle ${isMenuOpen ? 'active' : ''}`}
@@ -34,10 +34,10 @@ export default function HomePage() {
             <span></span>
           </button>
           <div className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
-            <a href="#about" onClick={closeMenu}>About</a>
-            <a href="#skills" onClick={closeMenu}>Skills</a>
-            <a href="#projects" onClick={closeMenu}>Projects</a>
-            <a href="#contact" onClick={closeMenu}>Contact</a>
+            <a href="#about" onClick={closeMenu}>about</a>
+            <a href="#skills" onClick={closeMenu}>skills</a>
+            <a href="#projects" onClick={closeMenu}>projects</a>
+            <a href="#contact" onClick={closeMenu}>contact</a>
           </div>
         </div>
         <svg className="nav-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 60" preserveAspectRatio="none">
@@ -61,18 +61,18 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-content">
-          <div className="hero-badge">Web Solutions Company</div>
+          <div className="hero-badge">web solutions company</div>
           <h1 className="hero-title">
-            Building Modern
-            <span className="highlight"> Web Experiences</span>
+            building modern
+            <span className="highlight"> web experiences</span>
           </h1>
           <p className="hero-description">
-            We specialize in Next.js, Payload CMS, and PostgreSQL. 
-            Self-hosted solutions crafted with precision and care.
+            we specialize in next.js, payload cms, and postgresql. 
+            self-hosted solutions crafted with precision and care.
           </p>
           <div className="hero-cta">
-            <a href="#projects" className="btn btn-primary">View Our Work</a>
-            <a href="#contact" className="btn btn-secondary">Get In Touch</a>
+            <a href="#projects" className="btn btn-primary">view our work</a>
+            <a href="#contact" className="btn btn-secondary">get in touch</a>
           </div>
         </div>
         <div className="hero-visual">
@@ -106,34 +106,32 @@ export default function HomePage() {
       <section id="about" className="about">
         <div className="container">
           <div className="section-header">
-            <span className="section-label">About Us</span>
-            <h2 className="section-title">Small Team, Big Impact</h2>
+            <span className="section-label">about us</span>
+            <h2 className="section-title">small team, big impact</h2>
           </div>
           <div className="about-content">
             <div className="about-text">
               <p>
-                We're a two-person team passionate about creating exceptional web solutions. 
-                Our focus is on building fast, scalable, and maintainable applications using 
-                cutting-edge technologies.
+                we're a nelson-based duo passionate about crafting websites and building brands that connect. 
+                at sidewalk, we bring design and development together to help companies stand out online.
               </p>
               <p>
-                We believe in self-hosting our solutions, giving you complete control and 
-                ownership of your digital presence. Every project is crafted with attention 
-                to detail and a commitment to excellence.
+                we believe in self-hosting solutions that give you complete control over your digital presence, 
+                and we're committed to building tools that improve business workflow and empower companies to work more efficiently.
               </p>
             </div>
             <div className="about-stats">
               <div className="stat">
                 <div className="stat-number">2</div>
-                <div className="stat-label">Team Members</div>
+                <div className="stat-label">team members</div>
               </div>
               <div className="stat">
                 <div className="stat-number">2+</div>
-                <div className="stat-label">Projects Completed</div>
+                <div className="stat-label">projects completed</div>
               </div>
               <div className="stat">
                 <div className="stat-number">100%</div>
-                <div className="stat-label">Self-Hosted</div>
+                <div className="stat-label">self-hosted</div>
               </div>
             </div>
           </div>
@@ -164,8 +162,8 @@ export default function HomePage() {
       <section id="skills" className="skills">
         <div className="container">
           <div className="section-header">
-            <span className="section-label">Our Expertise</span>
-            <h2 className="section-title">Technologies We Master</h2>
+            <span className="section-label">our expertise</span>
+            <h2 className="section-title">technologies we master</h2>
           </div>
           <div className="skills-grid">
             <div className="skill-card">
@@ -174,10 +172,10 @@ export default function HomePage() {
                   <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
                 </svg>
               </div>
-              <h3 className="skill-name">Next.js</h3>
+              <h3 className="skill-name">next.js</h3>
               <p className="skill-description">
-                React framework for production. Server-side rendering, static generation, 
-                and API routes for modern web applications.
+                react framework for production. server-side rendering, static generation, 
+                and api routes for modern web applications.
               </p>
             </div>
             <div className="skill-card">
@@ -188,9 +186,9 @@ export default function HomePage() {
                   <line x1="12" y1="22.08" x2="12" y2="12"/>
                 </svg>
               </div>
-              <h3 className="skill-name">Payload CMS</h3>
+              <h3 className="skill-name">payload cms</h3>
               <p className="skill-description">
-                Headless CMS built with TypeScript. Self-hosted, developer-friendly, 
+                headless cms built with typescript. self-hosted, developer-friendly, 
                 and fully customizable content management.
               </p>
             </div>
@@ -202,9 +200,9 @@ export default function HomePage() {
                   <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
                 </svg>
               </div>
-              <h3 className="skill-name">PostgreSQL</h3>
+              <h3 className="skill-name">postgresql</h3>
               <p className="skill-description">
-                Powerful, open-source relational database. Robust, reliable, and perfect 
+                powerful, open-source relational database. robust, reliable, and perfect 
                 for complex data requirements.
               </p>
             </div>
@@ -236,8 +234,8 @@ export default function HomePage() {
       <section id="projects" className="projects">
         <div className="container">
           <div className="section-header">
-            <span className="section-label">Portfolio</span>
-            <h2 className="section-title">Recent Projects</h2>
+            <span className="section-label">portfolio</span>
+            <h2 className="section-title">recent projects</h2>
           </div>
           <div className="projects-grid">
             <div className="project-card">
@@ -251,15 +249,15 @@ export default function HomePage() {
                 </div>
               </div>
               <div className="project-content">
-                <h3 className="project-title">Project One</h3>
+                <h3 className="project-title">project one</h3>
                 <p className="project-description">
-                  A modern web application built with Next.js and Payload CMS. 
-                  Featuring custom integrations and a beautiful user interface.
+                  a modern web application built with next.js and payload cms. 
+                  featuring custom integrations and a beautiful user interface.
                 </p>
                 <div className="project-tags">
-                  <span className="tag">Next.js</span>
-                  <span className="tag">Payload</span>
-                  <span className="tag">PostgreSQL</span>
+                  <span className="tag">next.js</span>
+                  <span className="tag">payload</span>
+                  <span className="tag">postgresql</span>
                 </div>
               </div>
             </div>
@@ -274,15 +272,15 @@ export default function HomePage() {
                 </div>
               </div>
               <div className="project-content">
-                <h3 className="project-title">Project Two</h3>
+                <h3 className="project-title">project two</h3>
                 <p className="project-description">
-                  An enterprise solution with advanced features and seamless user experience. 
-                  Fully self-hosted with custom deployment pipeline.
+                  an enterprise solution with advanced features and seamless user experience. 
+                  fully self-hosted with custom deployment pipeline.
                 </p>
                 <div className="project-tags">
-                  <span className="tag">Next.js</span>
-                  <span className="tag">Payload</span>
-                  <span className="tag">PostgreSQL</span>
+                  <span className="tag">next.js</span>
+                  <span className="tag">payload</span>
+                  <span className="tag">postgresql</span>
                 </div>
               </div>
             </div>
@@ -314,14 +312,14 @@ export default function HomePage() {
       <section id="contact" className="contact">
         <div className="container">
           <div className="section-header">
-            <span className="section-label">Get In Touch</span>
-            <h2 className="section-title">Let's Build Something Together</h2>
+            <span className="section-label">get in touch</span>
+            <h2 className="section-title">let's build something together</h2>
           </div>
           <div className="contact-content">
             <div className="contact-info">
               <p>
-                Ready to start your next project? We'd love to hear from you. 
-                Whether you need a new website, a custom web application, or 
+                ready to start your next project? we'd love to hear from you. 
+                whether you need a new website, a custom web application, or 
                 help with your existing platform, we're here to help.
               </p>
               <div className="contact-details">
@@ -333,7 +331,7 @@ export default function HomePage() {
                     </svg>
                   </div>
                   <div>
-                    <div className="contact-label">Email</div>
+                    <div className="contact-label">email</div>
                     <div className="contact-value">hello@sidewalk.dev</div>
                   </div>
                 </div>
@@ -344,8 +342,8 @@ export default function HomePage() {
                     </svg>
                   </div>
                   <div>
-                    <div className="contact-label">Phone</div>
-                    <div className="contact-value">Available upon request</div>
+                    <div className="contact-label">phone</div>
+                    <div className="contact-value">available upon request</div>
                   </div>
                 </div>
               </div>
@@ -353,18 +351,18 @@ export default function HomePage() {
             <div className="contact-form-wrapper">
               <form className="contact-form">
                 <div className="form-group">
-                  <label htmlFor="name">Name</label>
+                  <label htmlFor="name">name</label>
                   <input type="text" id="name" name="name" required />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="email">Email</label>
+                  <label htmlFor="email">email</label>
                   <input type="email" id="email" name="email" required />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="message">Message</label>
+                  <label htmlFor="message">message</label>
                   <textarea id="message" name="message" rows={5} required></textarea>
                 </div>
-                <button type="submit" className="btn btn-primary">Send Message</button>
+                <button type="submit" className="btn btn-primary">send message</button>
               </form>
             </div>
           </div>
