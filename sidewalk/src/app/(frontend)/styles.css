@@ -63,9 +63,6 @@ body {
   overflow: visible;
 }
 
-.nav-wave path:nth-child(2) {
-  filter: drop-shadow(0 4px 8px rgba(28, 40, 48, 0.2));
-}
 
 .nav-container {
   max-width: 1200px;

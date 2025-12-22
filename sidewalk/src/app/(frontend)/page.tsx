@@ -19,8 +19,14 @@ export default function HomePage() {
           </div>
         </div>
         <svg className="nav-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 60" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="curveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#B74831" />
+              <stop offset="100%" stopColor="#D7B350" />
+            </linearGradient>
+          </defs>
           <path d="M0,30 Q360,0 720,30 T1440,30 L1440,60 L0,60 Z" fill="var(--color-bg)"/>
-          <path d="M0,30 Q360,0 720,30 T1440,30" fill="none" stroke="var(--color-dark)" strokeWidth="17" strokeLinecap="round"/>
+          <path d="M0,30 Q360,0 720,30 T1440,30" fill="none" stroke="url(#curveGradient)" strokeWidth="17" strokeLinecap="round"/>
         </svg>
       </nav>
 
