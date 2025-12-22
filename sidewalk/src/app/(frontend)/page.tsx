@@ -82,6 +82,13 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Hero/About Divider */}
+      <div className="hero-divider">
+        <svg className="divider-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 60" preserveAspectRatio="none">
+          <path d="M0,0 Q360,60 720,30 T1440,30 L1440,60 L0,60 Z" fill="var(--color-dark)"/>
+        </svg>
+      </div>
+
       {/* About Section */}
       <section id="about" className="about">
         <div className="container">
