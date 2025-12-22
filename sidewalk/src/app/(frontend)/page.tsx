@@ -85,7 +85,20 @@ export default function HomePage() {
       {/* Hero/About Divider */}
       <div className="hero-divider">
         <svg className="divider-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 60" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="dividerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <animate attributeName="x1" values="0%;100%;0%" dur="3s" repeatCount="indefinite"/>
+              <animate attributeName="x2" values="100%;200%;100%" dur="3s" repeatCount="indefinite"/>
+              <stop offset="0%" stopColor="#B74831">
+                <animate attributeName="stopColor" values="#B74831;#D7B350;#B74831" dur="3s" repeatCount="indefinite"/>
+              </stop>
+              <stop offset="100%" stopColor="#D7B350">
+                <animate attributeName="stopColor" values="#D7B350;#B74831;#D7B350" dur="3s" repeatCount="indefinite"/>
+              </stop>
+            </linearGradient>
+          </defs>
           <path d="M0,0 Q360,60 720,30 T1440,30 L1440,60 L0,60 Z" fill="var(--color-dark)"/>
+          <path d="M0,0 Q360,60 720,30 T1440,30" fill="none" stroke="url(#dividerGradient)" strokeWidth="5" strokeLinecap="round"/>
         </svg>
       </div>
 
