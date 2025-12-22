@@ -1,4 +1,5 @@
 import React from 'react'
+import Image from 'next/image'
 import './styles.css'
 
 export default function HomePage() {
@@ -7,7 +8,9 @@ export default function HomePage() {
       {/* Navigation */}
       <nav className="nav">
         <div className="nav-container">
-          <div className="logo">Sidewalk</div>
+          <div className="logo">
+            <Image src="/logo1.svg" alt="Sidewalk" width={120} height={40} />
+          </div>
           <div className="nav-links">
             <a href="#about">About</a>
             <a href="#skills">Skills</a>
@@ -15,6 +18,9 @@ export default function HomePage() {
             <a href="#contact">Contact</a>
           </div>
         </div>
+        <svg className="nav-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 60" preserveAspectRatio="none">
+          <path d="M0,30 Q360,0 720,30 T1440,30 L1440,60 L0,60 Z" fill="var(--color-bg)"/>
+        </svg>
       </nav>
 
       {/* Hero Section */}
