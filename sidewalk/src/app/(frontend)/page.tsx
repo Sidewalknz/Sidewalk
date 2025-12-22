@@ -43,8 +43,14 @@ export default function HomePage() {
         <svg className="nav-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 60" preserveAspectRatio="none">
           <defs>
             <linearGradient id="curveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#B74831" />
-              <stop offset="100%" stopColor="#D7B350" />
+              <animate attributeName="x1" values="0%;100%;0%" dur="3s" repeatCount="indefinite"/>
+              <animate attributeName="x2" values="100%;200%;100%" dur="3s" repeatCount="indefinite"/>
+              <stop offset="0%" stopColor="#B74831">
+                <animate attributeName="stopColor" values="#B74831;#D7B350;#B74831" dur="3s" repeatCount="indefinite"/>
+              </stop>
+              <stop offset="100%" stopColor="#D7B350">
+                <animate attributeName="stopColor" values="#D7B350;#B74831;#D7B350" dur="3s" repeatCount="indefinite"/>
+              </stop>
             </linearGradient>
           </defs>
           <path d="M0,30 Q360,0 720,30 T1440,30 L1440,60 L0,60 Z" fill="var(--color-bg)"/>
