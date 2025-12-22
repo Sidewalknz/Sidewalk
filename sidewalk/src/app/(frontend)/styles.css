@@ -160,7 +160,8 @@ body {
   justify-content: center;
   position: relative;
   padding: 150px 24px 80px;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: visible;
   margin-top: 50px;
 }
 
@@ -265,18 +266,40 @@ body {
 .hero-divider {
   position: relative;
   width: 100%;
-  height: 60px;
-  overflow: hidden;
-  background: var(--color-bg);
+  height: 90px;
+  overflow: visible;
+  background: transparent;
+  margin-top: -60px;
+  margin-bottom: 0;
+  z-index: 10;
 }
 
 .divider-wave {
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
   width: 100%;
-  height: 60px;
+  height: 90px;
   pointer-events: none;
+}
+
+.section-divider {
+  position: relative;
+  width: 100%;
+  height: 90px;
+  overflow: visible;
+  background: var(--color-dark);
+  margin-top: -60px;
+  margin-bottom: 0;
+  z-index: 10;
+}
+
+.section-divider-dark {
+  background: var(--color-dark);
+}
+
+.section-divider-light {
+  background: var(--color-bg);
 }
 
 .floating-shape {
@@ -340,6 +363,8 @@ body {
 section {
   padding: 100px 0;
   position: relative;
+  overflow-x: hidden;
+  overflow-y: visible;
 }
 
 .section-header {

@@ -84,7 +84,7 @@ export default function HomePage() {
 
       {/* Hero/About Divider */}
       <div className="hero-divider">
-        <svg className="divider-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 60" preserveAspectRatio="none">
+        <svg className="divider-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 -30 1440 90" preserveAspectRatio="none">
           <defs>
             <linearGradient id="dividerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
               <animate attributeName="x1" values="0%;100%;0%" dur="3s" repeatCount="indefinite"/>
@@ -140,6 +140,26 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* About/Skills Divider */}
+      <div className="section-divider">
+        <svg className="divider-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 -30 1440 90" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="sectionDividerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <animate attributeName="x1" values="0%;100%;0%" dur="3s" repeatCount="indefinite"/>
+              <animate attributeName="x2" values="100%;200%;100%" dur="3s" repeatCount="indefinite"/>
+              <stop offset="0%" stopColor="#B74831">
+                <animate attributeName="stopColor" values="#B74831;#D7B350;#B74831" dur="3s" repeatCount="indefinite"/>
+              </stop>
+              <stop offset="100%" stopColor="#D7B350">
+                <animate attributeName="stopColor" values="#D7B350;#B74831;#D7B350" dur="3s" repeatCount="indefinite"/>
+              </stop>
+            </linearGradient>
+          </defs>
+          <path d="M0,0 Q360,60 720,30 T1440,30 L1440,90 L0,90 Z" fill="var(--color-bg)"/>
+          <path d="M0,0 Q360,60 720,30 T1440,30" fill="none" stroke="url(#sectionDividerGradient)" strokeWidth="5" strokeLinecap="round"/>
+        </svg>
+      </div>
+
       {/* Skills Section */}
       <section id="skills" className="skills">
         <div className="container">
@@ -191,6 +211,26 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Skills/Projects Divider */}
+      <div className="section-divider section-divider-light">
+        <svg className="divider-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 -30 1440 90" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="skillsProjectsDividerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <animate attributeName="x1" values="0%;100%;0%" dur="3s" repeatCount="indefinite"/>
+              <animate attributeName="x2" values="100%;200%;100%" dur="3s" repeatCount="indefinite"/>
+              <stop offset="0%" stopColor="#B74831">
+                <animate attributeName="stopColor" values="#B74831;#D7B350;#B74831" dur="3s" repeatCount="indefinite"/>
+              </stop>
+              <stop offset="100%" stopColor="#D7B350">
+                <animate attributeName="stopColor" values="#D7B350;#B74831;#D7B350" dur="3s" repeatCount="indefinite"/>
+              </stop>
+            </linearGradient>
+          </defs>
+          <path d="M0,0 Q360,60 720,30 T1440,30 L1440,90 L0,90 Z" fill="var(--color-dark)"/>
+          <path d="M0,0 Q360,60 720,30 T1440,30" fill="none" stroke="url(#skillsProjectsDividerGradient)" strokeWidth="5" strokeLinecap="round"/>
+        </svg>
+      </div>
 
       {/* Projects Section */}
       <section id="projects" className="projects">
@@ -249,6 +289,26 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Projects/Contact Divider */}
+      <div className="section-divider section-divider-dark">
+        <svg className="divider-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 -30 1440 90" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="projectsContactDividerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <animate attributeName="x1" values="0%;100%;0%" dur="3s" repeatCount="indefinite"/>
+              <animate attributeName="x2" values="100%;200%;100%" dur="3s" repeatCount="indefinite"/>
+              <stop offset="0%" stopColor="#B74831">
+                <animate attributeName="stopColor" values="#B74831;#D7B350;#B74831" dur="3s" repeatCount="indefinite"/>
+              </stop>
+              <stop offset="100%" stopColor="#D7B350">
+                <animate attributeName="stopColor" values="#D7B350;#B74831;#D7B350" dur="3s" repeatCount="indefinite"/>
+              </stop>
+            </linearGradient>
+          </defs>
+          <path d="M0,0 Q360,60 720,30 T1440,30 L1440,90 L0,90 Z" fill="var(--color-bg)"/>
+          <path d="M0,0 Q360,60 720,30 T1440,30" fill="none" stroke="url(#projectsContactDividerGradient)" strokeWidth="5" strokeLinecap="round"/>
+        </svg>
+      </div>
 
       {/* Contact Section */}
       <section id="contact" className="contact">
@@ -310,6 +370,26 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Contact/Footer Divider */}
+      <div className="section-divider section-divider-light">
+        <svg className="divider-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 -30 1440 90" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="contactFooterDividerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <animate attributeName="x1" values="0%;100%;0%" dur="3s" repeatCount="indefinite"/>
+              <animate attributeName="x2" values="100%;200%;100%" dur="3s" repeatCount="indefinite"/>
+              <stop offset="0%" stopColor="#B74831">
+                <animate attributeName="stopColor" values="#B74831;#D7B350;#B74831" dur="3s" repeatCount="indefinite"/>
+              </stop>
+              <stop offset="100%" stopColor="#D7B350">
+                <animate attributeName="stopColor" values="#D7B350;#B74831;#D7B350" dur="3s" repeatCount="indefinite"/>
+              </stop>
+            </linearGradient>
+          </defs>
+          <path d="M0,0 Q360,60 720,30 T1440,30 L1440,90 L0,90 Z" fill="var(--color-dark)"/>
+          <path d="M0,0 Q360,60 720,30 T1440,30" fill="none" stroke="url(#contactFooterDividerGradient)" strokeWidth="5" strokeLinecap="round"/>
+        </svg>
+      </div>
 
       {/* Footer */}
       <footer className="footer">
