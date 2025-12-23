@@ -6,9 +6,8 @@ export default function Logo() {
       display: 'flex', 
       alignItems: 'center', 
       justifyContent: 'center',
-      height: '100%', 
-      minHeight: '40px',
-      width: 'auto'
+      width: '100%',
+      padding: '1rem 0'
     }}>
       <img
         src="/logo3.svg"
@@ -16,7 +15,7 @@ export default function Logo() {
         style={{ 
           height: 'auto', 
           width: 'auto', 
-          maxHeight: '40px',
+          maxHeight: '60px',
           maxWidth: '200px',
           display: 'block',
           objectFit: 'contain'
