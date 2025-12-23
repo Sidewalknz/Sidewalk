@@ -175,18 +175,6 @@ body {
   animation: fadeInUp 0.8s ease;
 }
 
-.hero-badge {
-  font-family: var(--font-title);
-  display: inline-block;
-  padding: 8px 20px;
-  background: var(--color-accent-gold);
-  color: var(--color-dark);
-  border-radius: 50px;
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 24px;
-  letter-spacing: 0.5px;
-}
 
 .hero-title {
   font-family: var(--font-title);

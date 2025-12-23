@@ -61,10 +61,9 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-content">
-          <div className="hero-badge">web solutions company</div>
           <h1 className="hero-title">
-            building modern
-            <span className="highlight"> web experiences</span>
+            craft digital
+            <span className="highlight"> experiences</span>
           </h1>
           <p className="hero-description">
             we specialize in next.js, payload cms, and postgresql. 
