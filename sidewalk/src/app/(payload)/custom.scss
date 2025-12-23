@@ -1,0 +1,53 @@
+// Custom styles for Payload admin
+
+// Ensure logo icon has proper spacing and vertical alignment
+[data-payload-component="graphics.Icon"],
+[data-payload-component="graphics.Icon"] > div {
+  margin-right: 50px !important;
+  padding-right: 50px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  vertical-align: middle !important;
+  height: 100% !important;
+  position: relative !important;
+  z-index: 1 !important;
+  
+  img {
+    margin-right: 0 !important;
+    max-width: 50px !important;
+    height: 20px !important;
+    vertical-align: middle !important;
+    position: relative !important;
+    z-index: 1 !important;
+  }
+}
+
+// Additional spacing for the icon container
+nav [data-payload-component="graphics.Icon"],
+nav [data-payload-component="graphics.Icon"] > div {
+  margin-right: 32px !important;
+}
+
+// Ensure Logo component has proper spacing in breadcrumb to avoid overlapping with text
+[data-payload-component="graphics.Logo"] {
+  margin-right: 16px !important;
+  padding-right: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  flex-shrink: 0 !important;
+  max-width: fit-content !important;
+  
+  > div {
+    width: auto !important;
+    max-width: fit-content !important;
+    margin-right: 0 !important;
+    padding-right: 0 !important;
+  }
+  
+  img {
+    margin-right: 0 !important;
+    display: block !important;
+    max-width: 200px !important;
+  }
+}
+

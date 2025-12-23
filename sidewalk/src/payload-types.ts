@@ -69,6 +69,7 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    clients: Client;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -78,6 +79,7 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    clients: ClientsSelect<false> | ClientsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -161,6 +163,77 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "clients".
+ */
+export interface Client {
+  id: number;
+  companyName: string;
+  ownerName: string;
+  website?: string | null;
+  email: string;
+  phone?: string | null;
+  type: 'ecommerce' | 'portfolio' | 'business' | 'blog' | 'other';
+  /**
+   * What the client paid for (can add multiple products)
+   */
+  products: {
+    productName: string;
+    productDescription?: string | null;
+    /**
+     * The price paid for this product
+     */
+    price?: number | null;
+    /**
+     * Monthly recurring fee for this product
+     */
+    monthlyFee?: number | null;
+    /**
+     * Payment due date for this product
+     */
+    dueDate?: string | null;
+    id?: string | null;
+  }[];
+  notes?: string | null;
+  /**
+   * Single image icon for the client
+   */
+  icon?: (number | null) | Media;
+  /**
+   * Multiple images for the client gallery
+   */
+  gallery?:
+    | {
+        image: number | Media;
+        caption?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Description of the client/project
+   */
+  description?: string | null;
+  /**
+   * Challenges faced during the project
+   */
+  challenges?: string | null;
+  /**
+   * List of features for this project
+   */
+  features?:
+    | {
+        feature: string;
+        /**
+         * Description of this feature
+         */
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -190,6 +263,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'clients';
+        value: number | Client;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -272,6 +349,48 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "clients_select".
+ */
+export interface ClientsSelect<T extends boolean = true> {
+  companyName?: T;
+  ownerName?: T;
+  website?: T;
+  email?: T;
+  phone?: T;
+  type?: T;
+  products?:
+    | T
+    | {
+        productName?: T;
+        productDescription?: T;
+        price?: T;
+        monthlyFee?: T;
+        dueDate?: T;
+        id?: T;
+      };
+  notes?: T;
+  icon?: T;
+  gallery?:
+    | T
+    | {
+        image?: T;
+        caption?: T;
+        id?: T;
+      };
+  description?: T;
+  challenges?: T;
+  features?:
+    | T
+    | {
+        feature?: T;
+        description?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
