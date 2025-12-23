@@ -10,7 +10,7 @@ export default function Logo() {
       padding: '1rem 0'
     }}>
       <img
-        src="/logo3.svg"
+        src="/logo1.svg"
         alt="Logo"
         style={{ 
           height: 'auto', 
@@ -21,10 +21,10 @@ export default function Logo() {
           objectFit: 'contain'
         }}
         onError={(e) => {
-          // Fallback to logo3.svg if image fails to load
+          // Fallback to logo1.svg if image fails to load
           const target = e.target as HTMLImageElement
-          if (!target.src.endsWith('/logo3.svg')) {
-            target.src = '/logo3.svg'
+          if (!target.src.endsWith('/logo1.svg')) {
+            target.src = '/logo1.svg'
           }
         }}
       />
