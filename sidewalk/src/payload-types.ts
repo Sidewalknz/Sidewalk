@@ -193,21 +193,6 @@ export interface Client {
     dueDate?: string | null;
     id?: string | null;
   }[];
-  notes?: string | null;
-  /**
-   * Single image icon for the client
-   */
-  icon?: (number | null) | Media;
-  /**
-   * Multiple images for the client gallery
-   */
-  gallery?:
-    | {
-        image: number | Media;
-        caption?: string | null;
-        id?: string | null;
-      }[]
-    | null;
   /**
    * Description of the client/project
    */
@@ -229,6 +214,21 @@ export interface Client {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Single image icon for the client
+   */
+  icon?: (number | null) | Media;
+  /**
+   * Multiple images for the client gallery
+   */
+  gallery?:
+    | {
+        image: number | Media;
+        caption?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  notes?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -371,15 +371,6 @@ export interface ClientsSelect<T extends boolean = true> {
         dueDate?: T;
         id?: T;
       };
-  notes?: T;
-  icon?: T;
-  gallery?:
-    | T
-    | {
-        image?: T;
-        caption?: T;
-        id?: T;
-      };
   description?: T;
   challenges?: T;
   features?:
@@ -389,6 +380,15 @@ export interface ClientsSelect<T extends boolean = true> {
         description?: T;
         id?: T;
       };
+  icon?: T;
+  gallery?:
+    | T
+    | {
+        image?: T;
+        caption?: T;
+        id?: T;
+      };
+  notes?: T;
   updatedAt?: T;
   createdAt?: T;
 }
