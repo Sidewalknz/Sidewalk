@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
+import { gsap } from 'gsap'
 import './styles.css'
 
 type Tab = 'home' | 'about' | 'skills' | 'projects' | 'contact'
@@ -19,8 +20,188 @@ export default function HomePage() {
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const isScrollingRef = useRef(false)
   const containerRef = useRef<HTMLDivElement>(null)
+  
+  // Refs for animated elements
+  const contentRef = useRef<HTMLDivElement>(null)
+  const heroTopRef = useRef<HTMLDivElement>(null)
+  const heroTitleRef = useRef<HTMLHeadingElement>(null)
+  const heroSubtitleRef = useRef<HTMLHeadingElement>(null)
+  const heroDescRef = useRef<HTMLParagraphElement>(null)
+  const timelineRef = useRef<gsap.core.Timeline | null>(null)
 
   const activeTabData = tabs.find(tab => tab.id === activeTab) || tabs[0]
+
+  // Animation function
+  const animateContentIn = (tab: Tab) => {
+    if (!contentRef.current) return
+
+    // Kill existing timeline
+    if (timelineRef.current) {
+      timelineRef.current.kill()
+    }
+
+    // Reset content position
+    gsap.set(contentRef.current, { opacity: 0, y: 30 })
+
+    // Create new timeline
+    const tl = gsap.timeline()
+
+    // Animate content in
+    tl.to(contentRef.current, {
+      opacity: 1,
+      y: 0,
+      duration: 0.5,
+      ease: 'power3.out',
+    })
+
+    // Tab-specific animations
+    if (tab === 'home') {
+      animateHomeSection(tl)
+    } else if (tab === 'about') {
+      animateAboutSection(tl)
+    } else if (tab === 'skills') {
+      animateSkillsSection(tl)
+    } else if (tab === 'projects') {
+      animateProjectsSection(tl)
+    } else if (tab === 'contact') {
+      animateContactSection(tl)
+    }
+
+    timelineRef.current = tl
+  }
+
+  const animateHomeSection = (tl: gsap.core.Timeline) => {
+    if (!heroTopRef.current || !heroTitleRef.current || !heroSubtitleRef.current || !heroDescRef.current) return
+
+    gsap.set([heroTopRef.current, heroTitleRef.current, heroSubtitleRef.current, heroDescRef.current], {
+      opacity: 0,
+      y: 40,
+    })
+
+    tl.to(heroTopRef.current, {
+      opacity: 1,
+      y: 0,
+      duration: 0.6,
+      ease: 'power3.out',
+    }, '-=0.3')
+      .to(heroTitleRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.7,
+        ease: 'power3.out',
+      }, '-=0.4')
+      .to(heroSubtitleRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'back.out(1.2)',
+        scale: 1,
+      }, '-=0.5')
+      .to(heroDescRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        ease: 'power3.out',
+      }, '-=0.4')
+  }
+
+  const animateAboutSection = (tl: gsap.core.Timeline) => {
+    const stats = contentRef.current?.querySelectorAll('.stat')
+    if (!stats || stats.length === 0) return
+
+    // Animate stats with stagger
+    gsap.set(stats, {
+      opacity: 0,
+      y: 30,
+      scale: 0.9,
+    })
+
+    tl.to(stats, {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 0.6,
+      stagger: 0.15,
+      ease: 'back.out(1.4)',
+    }, '-=0.2')
+  }
+
+  const animateSkillsSection = (tl: gsap.core.Timeline) => {
+    const skillCards = contentRef.current?.querySelectorAll('.skill-card')
+    if (!skillCards || skillCards.length === 0) return
+
+    gsap.set(skillCards, {
+      opacity: 0,
+      y: 50,
+      rotationX: -15,
+    })
+
+    tl.to(skillCards, {
+      opacity: 1,
+      y: 0,
+      rotationX: 0,
+      duration: 0.7,
+      stagger: 0.2,
+      ease: 'power3.out',
+    }, '-=0.2')
+  }
+
+  const animateProjectsSection = (tl: gsap.core.Timeline) => {
+    const projectCards = contentRef.current?.querySelectorAll('.project-card')
+    if (!projectCards || projectCards.length === 0) return
+
+    gsap.set(projectCards, {
+      opacity: 0,
+      scale: 0.8,
+      y: 40,
+    })
+
+    tl.to(projectCards, {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      duration: 0.6,
+      stagger: 0.15,
+      ease: 'back.out(1.3)',
+    }, '-=0.2')
+  }
+
+  const animateContactSection = (tl: gsap.core.Timeline) => {
+    const formElements = contentRef.current?.querySelectorAll('.contact-form > *')
+    if (!formElements || formElements.length === 0) return
+
+    gsap.set(formElements, {
+      opacity: 0,
+      x: -30,
+    })
+
+    tl.to(formElements, {
+      opacity: 1,
+      x: 0,
+      duration: 0.5,
+      stagger: 0.1,
+      ease: 'power3.out',
+    }, '-=0.2')
+  }
+
+  // Animate tab changes
+  useEffect(() => {
+    // Use requestAnimationFrame to ensure DOM is ready after React render
+    const rafId = requestAnimationFrame(() => {
+      if (contentRef.current) {
+        animateContentIn(activeTab)
+      }
+    })
+
+    // Cleanup on unmount or before next animation
+    return () => {
+      cancelAnimationFrame(rafId)
+      if (timelineRef.current) {
+        timelineRef.current.kill()
+        timelineRef.current = null
+      }
+    }
+  }, [activeTab])
 
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
@@ -79,22 +260,22 @@ export default function HomePage() {
       {/* Main Content Area */}
       <div className="main-content">
         {activeTab === 'home' && (
-          <div className="tab-content home-content">
-            <div className="hero-top">
+          <div ref={contentRef} className="tab-content home-content">
+            <div ref={heroTopRef} className="hero-top">
               <span className="hero-we-are">we are</span>
-              <h1 className="hero-title">sidewalk</h1>
+              <h1 ref={heroTitleRef} className="hero-title">sidewalk</h1>
             </div>
-            <h2 className="hero-subtitle">
+            <h2 ref={heroSubtitleRef} className="hero-subtitle">
               web solutions
             </h2>
-            <p className="hero-description">
+            <p ref={heroDescRef} className="hero-description">
               helping businesses streamline workflow through self-hosted web solutions
             </p>
           </div>
         )}
 
         {activeTab === 'about' && (
-          <div className="tab-content about-content">
+          <div ref={contentRef} className="tab-content about-content">
             <span className="section-label">about us</span>
             <h2 className="section-title">small team, big impact</h2>
             <div className="about-text">
@@ -125,7 +306,7 @@ export default function HomePage() {
         )}
 
         {activeTab === 'skills' && (
-          <div className="tab-content skills-content">
+          <div ref={contentRef} className="tab-content skills-content">
             <span className="section-label">our expertise</span>
             <h2 className="section-title">technologies we master</h2>
             <div className="skills-grid">
@@ -174,7 +355,7 @@ export default function HomePage() {
         )}
 
         {activeTab === 'projects' && (
-          <div className="tab-content projects-content">
+          <div ref={contentRef} className="tab-content projects-content">
             <span className="section-label">portfolio</span>
             <h2 className="section-title">recent projects</h2>
             <div className="projects-grid">
@@ -229,7 +410,7 @@ export default function HomePage() {
         )}
 
         {activeTab === 'contact' && (
-          <div className="tab-content contact-content">
+          <div ref={contentRef} className="tab-content contact-content">
             <span className="section-label">get in touch</span>
             <h2 className="section-title">let's build something together</h2>
             <div className="contact-wrapper">
