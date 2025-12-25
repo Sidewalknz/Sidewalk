@@ -53,8 +53,18 @@ export default function HomePage() {
               </stop>
             </linearGradient>
           </defs>
-          <path d="M0,30 Q360,0 720,30 T1440,30 L1440,60 L0,60 Z" fill="var(--color-bg)"/>
           <g className="wave-path">
+            <path d="M-2880,30 Q-2520,0 -2160,30 T-1440,30 Q-1080,0 -720,30 T0,30 Q360,0 720,30 T1440,30 Q1800,0 2160,30 T2880,30 Q3240,0 3600,30 T4320,30 L4320,60 L-2880,60 Z" fill="var(--color-bg)">
+              <animateTransform
+                attributeName="transform"
+                type="translate"
+                from="0,0"
+                to="1440,0"
+                dur="8s"
+                repeatCount="indefinite"
+                calcMode="linear"
+              />
+            </path>
             <path d="M-2880,30 Q-2520,0 -2160,30 T-1440,30 Q-1080,0 -720,30 T0,30 Q360,0 720,30 T1440,30 Q1800,0 2160,30 T2880,30 Q3240,0 3600,30 T4320,30" fill="none" stroke="url(#curveGradient)" strokeWidth="17" strokeLinecap="round">
               <animateTransform
                 attributeName="transform"
