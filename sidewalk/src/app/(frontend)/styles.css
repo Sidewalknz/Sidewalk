@@ -66,6 +66,10 @@ body {
   overflow: visible;
 }
 
+.wave-path {
+  transform-origin: 0 0;
+}
+
 
 .nav-container {
   max-width: 1200px;
