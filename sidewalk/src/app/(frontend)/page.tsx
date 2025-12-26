@@ -41,8 +41,59 @@ export default function HomePage() {
   // Refs for animated elements
   const contentRef = useRef<HTMLDivElement>(null)
   const timelineRef = useRef<gsap.core.Timeline | null>(null)
+  const sidewalkTopRef = useRef<HTMLDivElement>(null)
+  const sidewalkBottomRef = useRef<HTMLDivElement>(null)
+  const sidewalkTimelineRef = useRef<gsap.core.Timeline | null>(null)
 
   const activeTabData = tabs.find(tab => tab.id === activeTab) || tabs[0]
+
+  // Animation function for sidewalk texts
+  const animateSidewalkTexts = () => {
+    if (!sidewalkTopRef.current || !sidewalkBottomRef.current) return
+
+    // Kill existing timeline
+    if (sidewalkTimelineRef.current) {
+      sidewalkTimelineRef.current.kill()
+    }
+
+    // Calculate the distance between top and bottom texts
+    // Both texts should start overlapping at the middle position
+    // Top text starts from below (positive y) and moves up to its position
+    // Bottom text starts from above (negative y) and moves down to its position
+    // Use a larger offset to ensure proper overlap (scales with viewport)
+    const offset = Math.max(100, window.innerHeight * 0.12) // Responsive offset
+
+    // Set initial positions - both texts overlapping at the middle
+    // Top text starts below its final position
+    gsap.set(sidewalkTopRef.current, {
+      y: offset, // Start below, will move up to 0
+      opacity: 1,
+    })
+    
+    // Bottom text starts above its final position
+    gsap.set(sidewalkBottomRef.current, {
+      y: -offset, // Start above, will move down to 0
+      opacity: 1,
+    })
+
+    // Create new timeline
+    const tl = gsap.timeline()
+
+    // Animate both texts to their final positions simultaneously
+    tl.to(sidewalkTopRef.current, {
+      y: 0,
+      duration: 0.8,
+      ease: 'power3.out',
+    }, 0)
+    
+    tl.to(sidewalkBottomRef.current, {
+      y: 0,
+      duration: 0.8,
+      ease: 'power3.out',
+    }, 0) // Start both animations at the same time
+
+    sidewalkTimelineRef.current = tl
+  }
 
   // Animation function
   const animateContentIn = (tab: Tab) => {
@@ -160,6 +211,21 @@ export default function HomePage() {
     }, '-=0.2')
   }
 
+  // Animate sidewalk texts on mount and tab changes
+  useEffect(() => {
+    const rafId = requestAnimationFrame(() => {
+      animateSidewalkTexts()
+    })
+
+    return () => {
+      cancelAnimationFrame(rafId)
+      if (sidewalkTimelineRef.current) {
+        sidewalkTimelineRef.current.kill()
+        sidewalkTimelineRef.current = null
+      }
+    }
+  }, [activeTab])
+
   // Animate tab changes
   useEffect(() => {
     // Use requestAnimationFrame to ensure DOM is ready after React render
@@ -238,9 +304,9 @@ export default function HomePage() {
         className={`swiss-title ${activeTab === 'about' || activeTab === 'projects' ? 'swiss-title-light' : 'swiss-title-dark'}`}
         style={{ '--bg-color': activeTabData.color } as React.CSSProperties}
       >
-        <div className="swiss-title-top">SIDEWALK</div>
+        <div ref={sidewalkTopRef} className="swiss-title-top">SIDEWALK</div>
         <div className="swiss-title-middle">{getPageTitle(activeTab)}</div>
-        <div className="swiss-title-bottom">SIDEWALK</div>
+        <div ref={sidewalkBottomRef} className="swiss-title-bottom">SIDEWALK</div>
       </div>
 
       {/* Main Content Area */}
