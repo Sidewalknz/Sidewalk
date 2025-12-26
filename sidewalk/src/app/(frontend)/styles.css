@@ -98,8 +98,38 @@ body {
   color: var(--color-bg);
 }
 
-.swiss-title-bottom {
+.swiss-title-bottom-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   margin-top: -0.15em;
+}
+
+.swiss-title-bottom {
+  margin-top: 0;
+}
+
+.swiss-title-tagline {
+  font-family: var(--font-title);
+  font-size: clamp(10px, 1.5vw, 20px);
+  font-weight: 700;
+  color: var(--color-dark);
+  text-transform: lowercase;
+  letter-spacing: 0.5px;
+  line-height: 1.4;
+  margin-top: 0.5em;
+  max-width: clamp(350px, 9vw, 950px);
+  text-align: left;
+  white-space: normal;
+}
+
+.swiss-title-tagline .tagline-highlight {
+  color: var(--color-accent-red);
+}
+
+/* Light text for dark backgrounds (red and dark pages) */
+.swiss-title-light .swiss-title-tagline {
+  color: var(--color-bg);
 }
 
 .swiss-title-middle {

@@ -306,7 +306,10 @@ export default function HomePage() {
       >
         <div ref={sidewalkTopRef} className="swiss-title-top">SIDEWALK</div>
         <div className="swiss-title-middle">{getPageTitle(activeTab)}</div>
-        <div ref={sidewalkBottomRef} className="swiss-title-bottom">SIDEWALK</div>
+        <div className="swiss-title-bottom-container">
+          <div ref={sidewalkBottomRef} className="swiss-title-bottom">SIDEWALK</div>
+          <div className="swiss-title-tagline">empowering businesses with <span className="tagline-highlight">self-hosted</span> web solutions that <span className="tagline-highlight">streamline</span> workflow and <span className="tagline-highlight">elevate</span> their digital presence</div>
+        </div>
       </div>
 
       {/* Main Content Area */}
