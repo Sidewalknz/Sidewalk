@@ -16,6 +16,58 @@ const tabs: { id: Tab; label: string; color: string }[] = [
   { id: 'contact', label: 'Contact', color: '#F3ECE3' }, // cream
 ]
 
+// Helper function to wrap words in spans for animation
+const wrapWords = (node: React.ReactNode): React.ReactNode => {
+  if (typeof node === 'string') {
+    // Split by spaces and wrap each word
+    const words = node.split(/(\s+)/)
+    return words.map((word, index) => {
+      if (word.match(/^\s+$/)) {
+        // Preserve whitespace
+        return <React.Fragment key={index}>{word}</React.Fragment>
+      }
+      return (
+        <span key={index} className="tagline-word">
+          {word}
+        </span>
+      )
+    })
+  }
+
+  if (React.isValidElement(node)) {
+    const props = node.props as { className?: string; children?: React.ReactNode }
+    
+    // If it's a span with className, preserve it but process children
+    if (node.type === 'span' && props.className) {
+      return React.cloneElement(node as React.ReactElement<{ className?: string; children?: React.ReactNode }>, {
+        key: node.key,
+        children: wrapWords(props.children),
+      } as any)
+    }
+    
+    // If it's a br tag, preserve it
+    if (node.type === 'br') {
+      return node
+    }
+
+    // For other elements, process children
+    if (props && props.children) {
+      return React.cloneElement(node as React.ReactElement<{ children?: React.ReactNode }>, {
+        key: node.key,
+        children: wrapWords(props.children),
+      } as any)
+    }
+  }
+
+  if (Array.isArray(node)) {
+    return node.map((child, index) => (
+      <React.Fragment key={index}>{wrapWords(child)}</React.Fragment>
+    ))
+  }
+
+  return node
+}
+
 const getPageTitle = (tab: Tab, selectedClient?: Client | null): string => {
   switch (tab) {
     case 'home':
@@ -53,14 +105,18 @@ const getPageTagline = (tab: Tab, selectedClient?: Client | null): React.ReactNo
     case 'skills':
       return (
         <>
-          we specialize in modern web technologies that power scalable, self-hosted solutions. our current stack includes <span className="tagline-highlight-dark">next.js</span> for production-ready react applications, <span className="tagline-highlight-dark">payload</span> for flexible content management, and <span className="tagline-highlight-dark">postgres</span> for robust data storage.
+          we specialize in modern web technologies that power scalable, self-hosted solutions. our current stack includes <span className="tagline-highlight">next.js</span> for production-ready react applications, <span className="tagline-highlight">payload</span> for flexible content management, and <span className="tagline-highlight">postgres</span> for robust data storage.
         </>
       )
     case 'projects':
       // Projects content is handled separately in the JSX
       return null
     case 'contact':
-      return "ready to start your next project? we'd love to hear from you. whether you need a new website, a custom web application, or help with your existing platform, we're here to help. reach out and let's build something together."
+      return (
+        <>
+          ready to start your next project? we'd love to hear from you. whether you need a new website, a custom web application, or help with your existing platform, we're here to help. reach out and let's build something together.
+        </>
+      )
     default:
       return null
   }
@@ -80,6 +136,10 @@ export default function HomePage() {
   const sidewalkTopRef = useRef<HTMLDivElement>(null)
   const sidewalkBottomRef = useRef<HTMLDivElement>(null)
   const sidewalkTimelineRef = useRef<gsap.core.Timeline | null>(null)
+  const taglineRef = useRef<HTMLDivElement>(null)
+  const taglineTimelineRef = useRef<gsap.core.Timeline | null>(null)
+  const projectsTaglineRef = useRef<HTMLDivElement>(null)
+  const projectsTaglineTimelineRef = useRef<gsap.core.Timeline | null>(null)
 
   const activeTabData = tabs.find(tab => tab.id === activeTab) || tabs[0]
 
@@ -152,6 +212,75 @@ export default function HomePage() {
     sidewalkTimelineRef.current = tl
   }
 
+  // Animation function for tagline words
+  const animateTaglineWords = () => {
+    // Animate regular tagline
+    if (taglineRef.current) {
+      // Kill existing timeline
+      if (taglineTimelineRef.current) {
+        taglineTimelineRef.current.kill()
+      }
+
+      // Get all tagline words
+      const words = taglineRef.current.querySelectorAll('.tagline-word')
+      if (words.length > 0) {
+        // Set initial state for all words
+        gsap.set(words, {
+          opacity: 0,
+          y: 20,
+        })
+
+        // Create new timeline
+        const tl = gsap.timeline()
+
+        // Animate each word in sequence
+        words.forEach((word, index) => {
+          tl.to(word, {
+            opacity: 1,
+            y: 0,
+            duration: 0.4,
+            ease: 'power3.out',
+          }, index * 0.05) // Stagger by 0.05 seconds for faster word-by-word animation
+        })
+
+        taglineTimelineRef.current = tl
+      }
+    }
+
+    // Animate projects tagline
+    if (projectsTaglineRef.current) {
+      // Kill existing timeline
+      if (projectsTaglineTimelineRef.current) {
+        projectsTaglineTimelineRef.current.kill()
+      }
+
+      // Get all tagline words in projects tagline
+      const words = projectsTaglineRef.current.querySelectorAll('.tagline-word')
+      if (words.length > 0) {
+        // Set initial state for all words
+        gsap.set(words, {
+          opacity: 0,
+          y: 20,
+        })
+
+        // Create new timeline
+        const tl = gsap.timeline()
+
+        // Animate each word in sequence
+        words.forEach((word, index) => {
+          tl.to(word, {
+            opacity: 1,
+            y: 0,
+            duration: 0.4,
+            ease: 'power3.out',
+          }, index * 0.05) // Stagger by 0.05 seconds for faster word-by-word animation
+        })
+
+        projectsTaglineTimelineRef.current = tl
+      }
+    }
+  }
+
   // Animation function
   const animateContentIn = (tab: Tab) => {
     if (!contentRef.current) return
@@ -200,6 +329,8 @@ export default function HomePage() {
       if (contentRef.current) {
         animateContentIn(activeTab)
       }
+      // Animate tagline words
+      animateTaglineWords()
     })
 
     // Cleanup on unmount or before next animation
@@ -209,8 +340,16 @@ export default function HomePage() {
         timelineRef.current.kill()
         timelineRef.current = null
       }
+      if (taglineTimelineRef.current) {
+        taglineTimelineRef.current.kill()
+        taglineTimelineRef.current = null
+      }
+      if (projectsTaglineTimelineRef.current) {
+        projectsTaglineTimelineRef.current.kill()
+        projectsTaglineTimelineRef.current = null
+      }
     }
-  }, [activeTab])
+  }, [activeTab, selectedClient])
 
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
@@ -283,7 +422,7 @@ export default function HomePage() {
         <div className="swiss-title-bottom-container">
           <div ref={sidewalkBottomRef} className="swiss-title-bottom">SIDEWALK</div>
           {activeTab === 'projects' ? (
-            <div className="swiss-title-tagline projects-tagline">
+            <div ref={projectsTaglineRef} className="swiss-title-tagline projects-tagline">
               {selectedClient ? (
                 <div className="projects-tagline-columns">
                   {/* Column 1: All Projects */}
@@ -301,7 +440,7 @@ export default function HomePage() {
                   
                   {/* Column 2: Description */}
                   <div className="projects-tagline-col-2">
-                    {selectedClient.description && <div className="project-detail-section">{selectedClient.description}</div>}
+                    {selectedClient.description && <div className="project-detail-section">{wrapWords(selectedClient.description)}</div>}
                   </div>
                   
                   {/* Column 3: Features */}
@@ -310,7 +449,7 @@ export default function HomePage() {
                       <div className="project-detail-section">
                         {selectedClient.features.map((feature, index) => (
                           <div key={feature.id || index} className="project-feature">
-                            {feature.feature}{feature.description && ` — ${feature.description}`}
+                            {wrapWords(feature.feature)}{feature.description && wrapWords(` — ${feature.description}`)}
                           </div>
                         ))}
                       </div>
@@ -337,7 +476,7 @@ export default function HomePage() {
                                 className="project-gallery-image"
                               />
                               {item.caption && (
-                                <div className="project-gallery-caption">{item.caption}</div>
+                                <div className="project-gallery-caption">{wrapWords(item.caption)}</div>
                               )}
                             </div>
                           )
@@ -360,7 +499,7 @@ export default function HomePage() {
                     ))}
                   </div>
                   <div className="projects-tagline-col-2">
-                    our portfolio showcases modern web applications built with cutting-edge technology. each project represents our commitment to self-hosted solutions, custom integrations, and beautiful user experiences that help businesses thrive online.
+                    {wrapWords("our portfolio showcases modern web applications built with cutting-edge technology. each project represents our commitment to self-hosted solutions, custom integrations, and beautiful user experiences that help businesses thrive online.")}
                   </div>
                   <div className="projects-tagline-col-3"></div>
                   <div className="projects-tagline-col-4"></div>
@@ -369,10 +508,10 @@ export default function HomePage() {
             </div>
           ) : (
             getPageTagline(activeTab, selectedClient) && (
-              <div className="swiss-title-tagline">
+              <div ref={taglineRef} className="swiss-title-tagline">
                 <div className="tagline-columns">
                   <div className="tagline-col-left">
-                    {getPageTagline(activeTab, selectedClient)}
+                    {wrapWords(getPageTagline(activeTab, selectedClient))}
                   </div>
                   <div className="tagline-col-right"></div>
                 </div>

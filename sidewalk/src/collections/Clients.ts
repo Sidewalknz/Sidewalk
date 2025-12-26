@@ -6,6 +6,9 @@ export const Clients: CollectionConfig = {
     useAsTitle: 'companyName',
     defaultColumns: ['companyName', 'ownerName', 'type', 'email', 'totalCost'],
   },
+  access: {
+    read: () => true, // Allow public read access
+  },
   fields: [
     {
       type: 'tabs',
