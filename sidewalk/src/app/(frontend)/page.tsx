@@ -33,7 +33,7 @@ const getPageTitle = (tab: Tab, selectedClient?: Client | null): string => {
   }
 }
 
-const getPageTagline = (tab: Tab): React.ReactNode => {
+const getPageTagline = (tab: Tab, selectedClient?: Client | null): React.ReactNode => {
   switch (tab) {
     case 'home':
       return (
@@ -57,6 +57,7 @@ const getPageTagline = (tab: Tab): React.ReactNode => {
         </>
       )
     case 'projects':
+      // Projects content is handled separately in the JSX
       return null
     case 'contact':
       return "ready to start your next project? we'd love to hear from you. whether you need a new website, a custom web application, or help with your existing platform, we're here to help. reach out and let's build something together."
@@ -90,10 +91,6 @@ export default function HomePage() {
         .then(data => {
           if (data.docs && data.docs.length > 0) {
             setClients(data.docs)
-            // Select first client by default if none selected
-            if (!selectedClient) {
-              setSelectedClient(data.docs[0])
-            }
           }
         })
         .catch(err => console.error('Error fetching clients:', err))
@@ -285,10 +282,31 @@ export default function HomePage() {
         </div>
         <div className="swiss-title-bottom-container">
           <div ref={sidewalkBottomRef} className="swiss-title-bottom">SIDEWALK</div>
-          {getPageTagline(activeTab) && (
-            <div className="swiss-title-tagline">
-              {getPageTagline(activeTab)}
+          {activeTab === 'projects' ? (
+            <div className="swiss-title-tagline projects-tagline">
+              <div className="projects-tagline-columns">
+                <div className="projects-tagline-col-1">
+                  {selectedClient?.description || 'select a project to view details'}
+                </div>
+                <div className="projects-tagline-col-2">
+                  {clients.map((client) => (
+                    <button
+                      key={client.id}
+                      className={`projects-company-link ${selectedClient?.id === client.id ? 'active' : ''}`}
+                      onClick={() => setSelectedClient(client)}
+                    >
+                      {client.companyName}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
+          ) : (
+            getPageTagline(activeTab, selectedClient) && (
+              <div className="swiss-title-tagline">
+                {getPageTagline(activeTab, selectedClient)}
+              </div>
+            )
           )}
         </div>
       </div>
@@ -315,96 +333,7 @@ export default function HomePage() {
 
         {activeTab === 'projects' && (
           <div ref={contentRef} className="tab-content projects-content">
-            {selectedClient && (
-              <div className="projects-grid-layout">
-                {/* Column 1: Description */}
-                <div className="projects-col projects-col-description">
-                  <h3 className="projects-col-title">description</h3>
-                  <div className="projects-col-content">
-                    {selectedClient.description || <p>No description available.</p>}
-                  </div>
-                </div>
-
-                {/* Column 2: Company Names */}
-                <div className="projects-col projects-col-companies">
-                  <h3 className="projects-col-title">companies</h3>
-                  <div className="companies-list">
-                    {clients.map((client) => (
-                      <button
-                        key={client.id}
-                        className={`company-button ${selectedClient.id === client.id ? 'active' : ''}`}
-                        onClick={() => setSelectedClient(client)}
-                      >
-                        {client.companyName}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Column 3: Features */}
-                <div className="projects-col projects-col-features">
-                  <h3 className="projects-col-title">features</h3>
-                  <div className="projects-col-content">
-                    {selectedClient.features && selectedClient.features.length > 0 ? (
-                      <ul className="features-list">
-                        {selectedClient.features.map((feature, index) => (
-                          <li key={feature.id || index} className="feature-item">
-                            <strong>{feature.feature}</strong>
-                            {feature.description && (
-                              <span className="feature-description"> — {feature.description}</span>
-                            )}
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <p>No features listed.</p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Column 4: Challenges */}
-                <div className="projects-col projects-col-challenges">
-                  <h3 className="projects-col-title">challenges</h3>
-                  <div className="projects-col-content">
-                    {selectedClient.challenges || <p>No challenges listed.</p>}
-                  </div>
-                </div>
-
-                {/* Column 5: Gallery */}
-                <div className="projects-col projects-col-images">
-                  <h3 className="projects-col-title">gallery</h3>
-                  <div className="projects-col-content">
-                    {selectedClient.gallery && selectedClient.gallery.length > 0 ? (
-                      <div className="gallery-grid">
-                        {selectedClient.gallery.map((item, index) => {
-                          const image = typeof item.image === 'object' && item.image !== null 
-                            ? item.image 
-                            : null
-                          if (!image || !image.url) return null
-                          
-                          return (
-                            <div key={item.id || index} className="gallery-item">
-                              <Image
-                                src={image.url}
-                                alt={item.caption || selectedClient.companyName || 'Project image'}
-                                width={image.width || 400}
-                                height={image.height || 300}
-                                className="gallery-image"
-                              />
-                              {item.caption && (
-                                <p className="gallery-caption">{item.caption}</p>
-                              )}
-                            </div>
-                          )
-                        })}
-                      </div>
-                    ) : (
-                      <p>No images available.</p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
+            {/* Content moved to tagline area */}
           </div>
         )}
 

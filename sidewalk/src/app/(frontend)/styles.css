@@ -132,6 +132,65 @@ body {
   color: var(--color-dark);
 }
 
+/* Projects Tagline Layout */
+.projects-tagline {
+  max-width: none !important;
+}
+
+.projects-tagline-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+.projects-tagline-col-1,
+.projects-tagline-col-2 {
+  font-family: var(--font-title);
+  font-size: clamp(10px, 1.5vw, 20px);
+  font-weight: 700;
+  color: #F3ECE3;
+  line-height: 1.4;
+  letter-spacing: 0.5px;
+  text-transform: lowercase;
+}
+
+.projects-tagline-col-2 {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.projects-company-link {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--font-title);
+  font-size: clamp(10px, 1.5vw, 20px);
+  font-weight: 700;
+  color: #F3ECE3;
+  line-height: 1.4;
+  letter-spacing: 0.5px;
+  text-transform: lowercase;
+  transition: color 0.3s ease;
+  margin-bottom: 1em;
+}
+
+.projects-company-link:last-child {
+  margin-bottom: 0;
+}
+
+.projects-company-link:hover {
+  color: var(--color-accent-red);
+}
+
+.projects-company-link.active {
+  color: var(--color-accent-red);
+}
+
 /* Light text for dark backgrounds (red and dark pages) */
 .swiss-title-light .swiss-title-tagline {
   color: var(--color-bg);
@@ -400,9 +459,66 @@ body {
 /* Projects Content */
 .projects-content {
   text-align: left;
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 2rem;
+}
+
+.projects-two-column {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+.projects-col-1 {
+  font-family: var(--font-title);
+  font-size: clamp(10px, 1.5vw, 20px);
+  font-weight: 700;
+  color: #F3ECE3;
+  line-height: 1.4;
+  letter-spacing: 0.5px;
+  text-transform: lowercase;
+}
+
+.projects-blurb {
+  color: #F3ECE3;
+}
+
+.projects-col-2 {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.company-list-item {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--font-title);
+  font-size: clamp(10px, 1.5vw, 20px);
+  font-weight: 700;
+  color: #F3ECE3;
+  line-height: 1.4;
+  letter-spacing: 0.5px;
+  text-transform: lowercase;
+  transition: color 0.3s ease;
+  margin-bottom: 1em;
+}
+
+.company-list-item:last-child {
+  margin-bottom: 0;
+}
+
+.company-list-item:hover {
+  color: var(--color-accent-red);
+}
+
+.company-list-item.active {
+  color: var(--color-accent-red);
 }
 
 .projects-grid-layout {
@@ -439,6 +555,17 @@ body {
 
 .projects-col-content p {
   margin: 0;
+}
+
+/* Companies Selector */
+.companies-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  align-items: center;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 /* Companies List */
