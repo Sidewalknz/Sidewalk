@@ -172,9 +172,9 @@ body {
   width: 100%;
 }
 
-/* When no project selected, use 2 columns with equal width */
+/* When no project selected, use 4 columns */
 .projects-tagline-columns-initial {
-  grid-template-columns: 1fr 1fr !important;
+  grid-template-columns: 1fr 1fr 1fr 1fr !important;
 }
 
 .projects-tagline-columns-initial .projects-tagline-col-1,
