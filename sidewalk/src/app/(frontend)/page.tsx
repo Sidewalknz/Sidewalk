@@ -349,6 +349,9 @@ export default function HomePage() {
               ) : (
                 <div className="projects-tagline-columns projects-tagline-columns-initial">
                   <div className="projects-tagline-col-1">
+                    our portfolio showcases modern web applications built with cutting-edge technology. each project represents our commitment to self-hosted solutions, custom integrations, and beautiful user experiences that help businesses thrive online.
+                  </div>
+                  <div className="projects-tagline-col-2">
                     {clients.map((client) => (
                       <button
                         key={client.id}
@@ -358,9 +361,6 @@ export default function HomePage() {
                         {client.companyName}
                       </button>
                     ))}
-                  </div>
-                  <div className="projects-tagline-col-2">
-                    our portfolio showcases modern web applications built with cutting-edge technology. each project represents our commitment to self-hosted solutions, custom integrations, and beautiful user experiences that help businesses thrive online.
                   </div>
                 </div>
               )}

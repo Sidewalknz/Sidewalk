@@ -172,9 +172,14 @@ body {
   width: 100%;
 }
 
-/* When no project selected, use 2 columns */
+/* When no project selected, use 2 columns with equal width */
 .projects-tagline-columns-initial {
   grid-template-columns: 1fr 1fr !important;
+}
+
+.projects-tagline-columns-initial .projects-tagline-col-1,
+.projects-tagline-columns-initial .projects-tagline-col-2 {
+  max-width: clamp(350px, 9vw, 950px);
 }
 
 .projects-tagline-single-col {
@@ -204,12 +209,14 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0;
+  text-align: left;
 }
 
 .projects-tagline-col-2 {
   display: flex;
   flex-direction: column;
   gap: 0;
+  text-align: left;
 }
 
 .projects-tagline-col-3,
@@ -271,12 +278,8 @@ body {
   letter-spacing: 0.5px;
   text-transform: lowercase;
   transition: color 0.3s ease;
-  margin-bottom: 1em;
   pointer-events: auto;
-}
-
-.projects-company-link:last-child {
-  margin-bottom: 0;
+  display: block;
 }
 
 .projects-company-link:hover {
