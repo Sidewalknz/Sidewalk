@@ -63,6 +63,60 @@ body {
   display: block;
 }
 
+/* Swiss Typography Title */
+.swiss-title {
+  position: fixed;
+  left: 50%;
+  top: 15%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 0.65;
+  pointer-events: none;
+}
+
+.swiss-title-top,
+.swiss-title-bottom {
+  font-family: var(--font-title);
+  font-size: clamp(96px, 18vw, 250px);
+  font-weight: 800;
+  color: var(--color-accent-red);
+  text-transform: uppercase;
+  letter-spacing: -8px;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  position: relative;
+  z-index: 1;
+}
+
+.swiss-title-bottom {
+  margin-top: -0.15em;
+}
+
+.swiss-title-middle {
+  font-family: var(--font-title);
+  font-size: clamp(64px, 12vw, 170px);
+  font-weight: 800;
+  color: var(--color-dark);
+  text-transform: lowercase;
+  letter-spacing: -4px;
+  margin: -0.4em 0 -0.4em 0;
+  padding: 0.4em 3.5em;
+  white-space: nowrap;
+  position: relative;
+  z-index: 2;
+  background-color: #F3ECE3;
+}
+
+/* Adjust middle text color for dark backgrounds */
+.swiss-title-dark .swiss-title-middle {
+  color: var(--color-dark);
+  background-color: #F3ECE3;
+}
+
 /* Main Content Area */
 .main-content {
   flex: 1;

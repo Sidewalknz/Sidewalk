@@ -15,6 +15,23 @@ const tabs: { id: Tab; label: string; color: string }[] = [
   { id: 'contact', label: 'Contact', color: '#F3ECE3' }, // cream
 ]
 
+const getPageTitle = (tab: Tab): string => {
+  switch (tab) {
+    case 'home':
+      return 'web solutions'
+    case 'about':
+      return 'about'
+    case 'skills':
+      return 'skills'
+    case 'projects':
+      return 'projects'
+    case 'contact':
+      return 'contact'
+    default:
+      return 'web solutions'
+  }
+}
+
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState<Tab>('home')
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null)
@@ -23,10 +40,6 @@ export default function HomePage() {
   
   // Refs for animated elements
   const contentRef = useRef<HTMLDivElement>(null)
-  const heroTopRef = useRef<HTMLDivElement>(null)
-  const heroTitleRef = useRef<HTMLHeadingElement>(null)
-  const heroSubtitleRef = useRef<HTMLHeadingElement>(null)
-  const heroDescRef = useRef<HTMLParagraphElement>(null)
   const timelineRef = useRef<gsap.core.Timeline | null>(null)
 
   const activeTabData = tabs.find(tab => tab.id === activeTab) || tabs[0]
@@ -55,9 +68,7 @@ export default function HomePage() {
     })
 
     // Tab-specific animations
-    if (tab === 'home') {
-      animateHomeSection(tl)
-    } else if (tab === 'about') {
+    if (tab === 'about') {
       animateAboutSection(tl)
     } else if (tab === 'skills') {
       animateSkillsSection(tl)
@@ -68,41 +79,6 @@ export default function HomePage() {
     }
 
     timelineRef.current = tl
-  }
-
-  const animateHomeSection = (tl: gsap.core.Timeline) => {
-    if (!heroTopRef.current || !heroTitleRef.current || !heroSubtitleRef.current || !heroDescRef.current) return
-
-    gsap.set([heroTopRef.current, heroTitleRef.current, heroSubtitleRef.current, heroDescRef.current], {
-      opacity: 0,
-      y: 40,
-    })
-
-    tl.to(heroTopRef.current, {
-      opacity: 1,
-      y: 0,
-      duration: 0.6,
-      ease: 'power3.out',
-    }, '-=0.3')
-      .to(heroTitleRef.current, {
-        opacity: 1,
-        y: 0,
-        duration: 0.7,
-        ease: 'power3.out',
-      }, '-=0.4')
-      .to(heroSubtitleRef.current, {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        ease: 'back.out(1.2)',
-        scale: 1,
-      }, '-=0.5')
-      .to(heroDescRef.current, {
-        opacity: 1,
-        y: 0,
-        duration: 0.6,
-        ease: 'power3.out',
-      }, '-=0.4')
   }
 
   const animateAboutSection = (tl: gsap.core.Timeline) => {
@@ -257,20 +233,18 @@ export default function HomePage() {
         <Image src="/logo1.svg" alt="sidewalk" width={120} height={40} />
       </div>
 
+      {/* Swiss Typography Title */}
+      <div className={`swiss-title ${activeTab === 'projects' ? 'swiss-title-dark' : ''}`}>
+        <div className="swiss-title-top">SIDEWALK</div>
+        <div className="swiss-title-middle">{getPageTitle(activeTab)}</div>
+        <div className="swiss-title-bottom">SIDEWALK</div>
+      </div>
+
       {/* Main Content Area */}
       <div className="main-content">
         {activeTab === 'home' && (
           <div ref={contentRef} className="tab-content home-content">
-            <div ref={heroTopRef} className="hero-top">
-              <span className="hero-we-are">we are</span>
-              <h1 ref={heroTitleRef} className="hero-title">sidewalk</h1>
-            </div>
-            <h2 ref={heroSubtitleRef} className="hero-subtitle">
-              web solutions
-            </h2>
-            <p ref={heroDescRef} className="hero-description">
-              helping businesses streamline workflow through self-hosted web solutions
-            </p>
+            {/* Content removed - using Swiss Typography title instead */}
           </div>
         )}
 
