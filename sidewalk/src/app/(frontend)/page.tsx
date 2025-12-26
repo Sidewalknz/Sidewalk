@@ -234,7 +234,10 @@ export default function HomePage() {
       </div>
 
       {/* Swiss Typography Title */}
-      <div className={`swiss-title ${activeTab === 'projects' ? 'swiss-title-dark' : ''}`}>
+      <div 
+        className={`swiss-title ${activeTab === 'about' || activeTab === 'projects' ? 'swiss-title-light' : 'swiss-title-dark'}`}
+        style={{ '--bg-color': activeTabData.color } as React.CSSProperties}
+      >
         <div className="swiss-title-top">SIDEWALK</div>
         <div className="swiss-title-middle">{getPageTitle(activeTab)}</div>
         <div className="swiss-title-bottom">SIDEWALK</div>

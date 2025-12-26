@@ -82,7 +82,7 @@ body {
   font-family: var(--font-title);
   font-size: clamp(96px, 18vw, 250px);
   font-weight: 800;
-  color: var(--color-accent-red);
+  color: var(--color-dark);
   text-transform: uppercase;
   letter-spacing: -8px;
   margin: 0;
@@ -90,6 +90,12 @@ body {
   white-space: nowrap;
   position: relative;
   z-index: 1;
+}
+
+/* Light text for dark backgrounds (red and dark pages) */
+.swiss-title-light .swiss-title-top,
+.swiss-title-light .swiss-title-bottom {
+  color: var(--color-bg);
 }
 
 .swiss-title-bottom {
@@ -100,7 +106,7 @@ body {
   font-family: var(--font-title);
   font-size: clamp(64px, 12vw, 170px);
   font-weight: 800;
-  color: var(--color-dark);
+  color: var(--color-accent-red);
   text-transform: lowercase;
   letter-spacing: -4px;
   margin: -0.4em 0 -0.4em 0;
@@ -108,13 +114,18 @@ body {
   white-space: nowrap;
   position: relative;
   z-index: 2;
-  background-color: #F3ECE3;
+  background-color: var(--bg-color, #F3ECE3);
 }
 
-/* Adjust middle text color for dark backgrounds */
+/* Text color adjustments based on background */
+/* Light backgrounds (cream, yellow) - use dark/red text */
 .swiss-title-dark .swiss-title-middle {
-  color: var(--color-dark);
-  background-color: #F3ECE3;
+  color: var(--color-accent-red);
+}
+
+/* Dark backgrounds (red, dark) - use light text */
+.swiss-title-light .swiss-title-middle {
+  color: var(--color-bg);
 }
 
 /* Main Content Area */
