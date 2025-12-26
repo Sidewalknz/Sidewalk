@@ -127,6 +127,10 @@ body {
   color: var(--color-accent-red);
 }
 
+.swiss-title-tagline .tagline-highlight-dark {
+  color: var(--color-dark);
+}
+
 /* Light text for dark backgrounds (red and dark pages) */
 .swiss-title-light .swiss-title-tagline {
   color: var(--color-bg);

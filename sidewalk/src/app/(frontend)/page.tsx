@@ -10,7 +10,7 @@ type Tab = 'home' | 'about' | 'skills' | 'projects' | 'contact'
 const tabs: { id: Tab; label: string; color: string }[] = [
   { id: 'home', label: 'Home', color: '#F3ECE3' }, // cream
   { id: 'about', label: 'About', color: '#B74831' }, // red
-  { id: 'skills', label: 'Skills', color: '#D7B350' }, // yellow
+  { id: 'skills', label: 'Technologies', color: '#D7B350' }, // yellow
   { id: 'projects', label: 'Projects', color: '#1C2830' }, // brand color
   { id: 'contact', label: 'Contact', color: '#F3ECE3' }, // cream
 ]
@@ -22,13 +22,45 @@ const getPageTitle = (tab: Tab): string => {
     case 'about':
       return 'about'
     case 'skills':
-      return 'skills'
+      return 'technology'
     case 'projects':
       return 'projects'
     case 'contact':
       return 'contact'
     default:
       return 'web solutions'
+  }
+}
+
+const getPageTagline = (tab: Tab): React.ReactNode => {
+  switch (tab) {
+    case 'home':
+      return (
+        <>
+          empowering businesses with <span className="tagline-highlight">self-hosted</span> web solutions that <span className="tagline-highlight">streamline</span> workflow and <span className="tagline-highlight">elevate</span> their digital presence
+        </>
+      )
+    case 'about':
+      return (
+        <>
+          we're a nelson-based duo passionate about crafting websites and building brands that connect. at sidewalk, we bring <span className="tagline-highlight-dark">design and development</span> together to help companies stand out online.
+          <br />
+          <br />
+          we believe in <span className="tagline-highlight-dark">self-hosting</span> solutions that give you complete control over your digital presence, and we're committed to building tools that improve <span className="tagline-highlight-dark">business workflow</span> and empower companies to work more efficiently.
+        </>
+      )
+    case 'skills':
+      return (
+        <>
+          we specialize in modern web technologies that power scalable, self-hosted solutions. our current stack includes <span className="tagline-highlight-dark">next.js</span> for production-ready react applications, <span className="tagline-highlight-dark">payload</span> for flexible content management, and <span className="tagline-highlight-dark">postgres</span> for robust data storage.
+        </>
+      )
+    case 'projects':
+      return "our portfolio showcases modern web applications built with cutting-edge technology. each project represents our commitment to self-hosted solutions, custom integrations, and beautiful user experiences that help businesses thrive online."
+    case 'contact':
+      return "ready to start your next project? we'd love to hear from you. whether you need a new website, a custom web application, or help with your existing platform, we're here to help. reach out and let's build something together."
+    default:
+      return null
   }
 }
 
@@ -118,97 +150,7 @@ export default function HomePage() {
       ease: 'power3.out',
     })
 
-    // Tab-specific animations
-    if (tab === 'about') {
-      animateAboutSection(tl)
-    } else if (tab === 'skills') {
-      animateSkillsSection(tl)
-    } else if (tab === 'projects') {
-      animateProjectsSection(tl)
-    } else if (tab === 'contact') {
-      animateContactSection(tl)
-    }
-
     timelineRef.current = tl
-  }
-
-  const animateAboutSection = (tl: gsap.core.Timeline) => {
-    const stats = contentRef.current?.querySelectorAll('.stat')
-    if (!stats || stats.length === 0) return
-
-    // Animate stats with stagger
-    gsap.set(stats, {
-      opacity: 0,
-      y: 30,
-      scale: 0.9,
-    })
-
-    tl.to(stats, {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      duration: 0.6,
-      stagger: 0.15,
-      ease: 'back.out(1.4)',
-    }, '-=0.2')
-  }
-
-  const animateSkillsSection = (tl: gsap.core.Timeline) => {
-    const skillCards = contentRef.current?.querySelectorAll('.skill-card')
-    if (!skillCards || skillCards.length === 0) return
-
-    gsap.set(skillCards, {
-      opacity: 0,
-      y: 50,
-      rotationX: -15,
-    })
-
-    tl.to(skillCards, {
-      opacity: 1,
-      y: 0,
-      rotationX: 0,
-      duration: 0.7,
-      stagger: 0.2,
-      ease: 'power3.out',
-    }, '-=0.2')
-  }
-
-  const animateProjectsSection = (tl: gsap.core.Timeline) => {
-    const projectCards = contentRef.current?.querySelectorAll('.project-card')
-    if (!projectCards || projectCards.length === 0) return
-
-    gsap.set(projectCards, {
-      opacity: 0,
-      scale: 0.8,
-      y: 40,
-    })
-
-    tl.to(projectCards, {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      duration: 0.6,
-      stagger: 0.15,
-      ease: 'back.out(1.3)',
-    }, '-=0.2')
-  }
-
-  const animateContactSection = (tl: gsap.core.Timeline) => {
-    const formElements = contentRef.current?.querySelectorAll('.contact-form > *')
-    if (!formElements || formElements.length === 0) return
-
-    gsap.set(formElements, {
-      opacity: 0,
-      x: -30,
-    })
-
-    tl.to(formElements, {
-      opacity: 1,
-      x: 0,
-      duration: 0.5,
-      stagger: 0.1,
-      ease: 'power3.out',
-    }, '-=0.2')
   }
 
   // Animate sidewalk texts on mount and tab changes
@@ -308,7 +250,11 @@ export default function HomePage() {
         <div className="swiss-title-middle">{getPageTitle(activeTab)}</div>
         <div className="swiss-title-bottom-container">
           <div ref={sidewalkBottomRef} className="swiss-title-bottom">SIDEWALK</div>
-          <div className="swiss-title-tagline">empowering businesses with <span className="tagline-highlight">self-hosted</span> web solutions that <span className="tagline-highlight">streamline</span> workflow and <span className="tagline-highlight">elevate</span> their digital presence</div>
+          {getPageTagline(activeTab) && (
+            <div className="swiss-title-tagline">
+              {getPageTagline(activeTab)}
+            </div>
+          )}
         </div>
       </div>
 
@@ -322,195 +268,25 @@ export default function HomePage() {
 
         {activeTab === 'about' && (
           <div ref={contentRef} className="tab-content about-content">
-            <span className="section-label">about us</span>
-            <h2 className="section-title">small team, big impact</h2>
-            <div className="about-text">
-              <p>
-                we're a nelson-based duo passionate about crafting websites and building brands that connect. 
-                at sidewalk, we bring design and development together to help companies stand out online.
-              </p>
-              <p>
-                we believe in self-hosting solutions that give you complete control over your digital presence, 
-                and we're committed to building tools that improve business workflow and empower companies to work more efficiently.
-              </p>
-            </div>
-            <div className="about-stats">
-              <div className="stat">
-                <div className="stat-number">2</div>
-                <div className="stat-label">team members</div>
-              </div>
-              <div className="stat">
-                <div className="stat-number">2+</div>
-                <div className="stat-label">projects completed</div>
-              </div>
-              <div className="stat">
-                <div className="stat-number">100%</div>
-                <div className="stat-label">self-hosted</div>
-              </div>
-            </div>
+            {/* Content removed - using Swiss Typography title and tagline instead */}
           </div>
         )}
 
         {activeTab === 'skills' && (
           <div ref={contentRef} className="tab-content skills-content">
-            <span className="section-label">our expertise</span>
-            <h2 className="section-title">technologies we master</h2>
-            <div className="skills-grid">
-              <div className="skill-card">
-                <div className="skill-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                  </svg>
-                </div>
-                <h3 className="skill-name">next.js</h3>
-                <p className="skill-description">
-                  react framework for production. server-side rendering, static generation, 
-                  and api routes for modern web applications.
-                </p>
-              </div>
-              <div className="skill-card">
-                <div className="skill-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-                    <line x1="12" y1="22.08" x2="12" y2="12"/>
-                  </svg>
-                </div>
-                <h3 className="skill-name">payload cms</h3>
-                <p className="skill-description">
-                  headless cms built with typescript. self-hosted, developer-friendly, 
-                  and fully customizable content management.
-                </p>
-              </div>
-              <div className="skill-card">
-                <div className="skill-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <ellipse cx="12" cy="5" rx="9" ry="3"/>
-                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
-                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
-                  </svg>
-                </div>
-                <h3 className="skill-name">postgresql</h3>
-                <p className="skill-description">
-                  powerful, open-source relational database. robust, reliable, and perfect 
-                  for complex data requirements.
-                </p>
-              </div>
-            </div>
+            {/* Content removed - using Swiss Typography title and tagline instead */}
           </div>
         )}
 
         {activeTab === 'projects' && (
           <div ref={contentRef} className="tab-content projects-content">
-            <span className="section-label">portfolio</span>
-            <h2 className="section-title">recent projects</h2>
-            <div className="projects-grid">
-              <div className="project-card">
-                <div className="project-image">
-                  <div className="project-placeholder">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                      <line x1="3" y1="9" x2="21" y2="9"/>
-                      <line x1="9" y1="21" x2="9" y2="9"/>
-                    </svg>
-                  </div>
-                </div>
-                <div className="project-content">
-                  <h3 className="project-title">project one</h3>
-                  <p className="project-description">
-                    a modern web application built with next.js and payload cms. 
-                    featuring custom integrations and a beautiful user interface.
-                  </p>
-                  <div className="project-tags">
-                    <span className="tag">next.js</span>
-                    <span className="tag">payload</span>
-                    <span className="tag">postgresql</span>
-                  </div>
-                </div>
-              </div>
-              <div className="project-card">
-                <div className="project-image">
-                  <div className="project-placeholder">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                      <line x1="3" y1="9" x2="21" y2="9"/>
-                      <line x1="9" y1="21" x2="9" y2="9"/>
-                    </svg>
-                  </div>
-                </div>
-                <div className="project-content">
-                  <h3 className="project-title">project two</h3>
-                  <p className="project-description">
-                    an enterprise solution with advanced features and seamless user experience. 
-                    fully self-hosted with custom deployment pipeline.
-                  </p>
-                  <div className="project-tags">
-                    <span className="tag">next.js</span>
-                    <span className="tag">payload</span>
-                    <span className="tag">postgresql</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+            {/* Content removed - using Swiss Typography title and tagline instead */}
           </div>
         )}
 
         {activeTab === 'contact' && (
           <div ref={contentRef} className="tab-content contact-content">
-            <span className="section-label">get in touch</span>
-            <h2 className="section-title">let's build something together</h2>
-            <div className="contact-wrapper">
-              <div className="contact-info">
-                <p>
-                  ready to start your next project? we'd love to hear from you. 
-                  whether you need a new website, a custom web application, or 
-                  help with your existing platform, we're here to help.
-                </p>
-                <div className="contact-details">
-                  <div className="contact-item">
-                    <div className="contact-icon">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                        <polyline points="22,6 12,13 2,6"/>
-                      </svg>
-                    </div>
-                    <div>
-                      <div className="contact-label">email</div>
-                      <div className="contact-value">admin@sidewalks.co.nz</div>
-                    </div>
-                  </div>
-                  <div className="contact-item">
-                    <div className="contact-icon">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                        <circle cx="12" cy="10" r="3"/>
-                      </svg>
-                    </div>
-                    <div>
-                      <div className="contact-label">location</div>
-                      <div className="contact-value">nelson, new zealand</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="contact-form-wrapper">
-                <form className="contact-form">
-                  <div className="form-group">
-                    <label htmlFor="name">name</label>
-                    <input type="text" id="name" name="name" required />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="email">email</label>
-                    <input type="email" id="email" name="email" required />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="message">message</label>
-                    <textarea id="message" name="message" rows={5} required></textarea>
-                  </div>
-                  <button type="submit" className="btn btn-primary">send message</button>
-                </form>
-              </div>
-            </div>
+            {/* Content removed - using Swiss Typography title and tagline instead */}
           </div>
         )}
       </div>
