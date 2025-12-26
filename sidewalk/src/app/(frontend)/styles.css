@@ -102,7 +102,7 @@ body {
 .swiss-title-bottom-container {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   margin-top: -0.15em;
 }
 
@@ -119,9 +119,30 @@ body {
   letter-spacing: 0.5px;
   line-height: 1.4;
   margin-top: 0.5em;
-  max-width: clamp(350px, 9vw, 950px);
-  text-align: left;
+  max-width: 1400px;
+  width: 100%;
+  text-align: center;
   white-space: normal;
+  display: flex;
+  justify-content: center;
+}
+
+.tagline-columns {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  gap: 4rem;
+  align-items: start;
+  width: 100%;
+  max-width: 1400px;
+}
+
+.tagline-col-left {
+  text-align: left;
+  max-width: clamp(350px, 9vw, 950px);
+}
+
+.tagline-col-right {
+  /* Empty column for layout consistency */
 }
 
 .swiss-title-tagline .tagline-highlight {
@@ -135,17 +156,28 @@ body {
 /* Projects Tagline Layout */
 .projects-tagline {
   max-width: none !important;
+  pointer-events: auto;
+  text-align: center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .projects-tagline-columns {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 4rem;
   align-items: start;
+  max-width: 1400px;
+  width: 100%;
 }
 
-.projects-tagline-col-1,
-.projects-tagline-col-2 {
+/* When no project selected, use 2 columns */
+.projects-tagline-columns-initial {
+  grid-template-columns: 1fr 1fr !important;
+}
+
+.projects-tagline-single-col {
   font-family: var(--font-title);
   font-size: clamp(10px, 1.5vw, 20px);
   font-weight: 700;
@@ -155,10 +187,73 @@ body {
   text-transform: lowercase;
 }
 
+.projects-tagline-col-1,
+.projects-tagline-col-2,
+.projects-tagline-col-3,
+.projects-tagline-col-4 {
+  font-family: var(--font-title);
+  font-size: clamp(10px, 1.5vw, 20px);
+  font-weight: 700;
+  color: #F3ECE3;
+  line-height: 1.4;
+  letter-spacing: 0.5px;
+  text-transform: lowercase;
+}
+
+.projects-tagline-col-1 {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
 .projects-tagline-col-2 {
   display: flex;
   flex-direction: column;
   gap: 0;
+}
+
+.projects-tagline-col-3,
+.projects-tagline-col-4 {
+  font-family: var(--font-title);
+  font-size: clamp(10px, 1.5vw, 20px);
+  font-weight: 700;
+  color: #F3ECE3;
+  line-height: 1.4;
+  letter-spacing: 0.5px;
+  text-transform: lowercase;
+}
+
+.projects-tagline-col-3 {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.projects-other-link {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--font-title);
+  font-size: clamp(10px, 1.5vw, 20px);
+  font-weight: 700;
+  color: #F3ECE3;
+  line-height: 1.4;
+  letter-spacing: 0.5px;
+  text-transform: lowercase;
+  transition: color 0.3s ease;
+  margin-bottom: 1em;
+  pointer-events: auto;
+}
+
+.projects-other-link:last-child {
+  margin-bottom: 0;
+}
+
+.projects-other-link:hover {
+  color: var(--color-accent-red);
 }
 
 .projects-company-link {
@@ -177,6 +272,7 @@ body {
   text-transform: lowercase;
   transition: color 0.3s ease;
   margin-bottom: 1em;
+  pointer-events: auto;
 }
 
 .projects-company-link:last-child {
@@ -189,6 +285,51 @@ body {
 
 .projects-company-link.active {
   color: var(--color-accent-red);
+}
+
+.project-detail-section {
+  margin-bottom: 1.5em;
+}
+
+.project-detail-section:last-child {
+  margin-bottom: 0;
+}
+
+.project-feature {
+  margin-bottom: 0.8em;
+}
+
+.project-feature:last-child {
+  margin-bottom: 0;
+}
+
+/* Project Gallery */
+.project-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
+}
+
+.project-gallery-item {
+  width: 100%;
+}
+
+.project-gallery-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.project-gallery-caption {
+  margin-top: 0.5em;
+  font-size: clamp(10px, 1.5vw, 20px);
+  color: #F3ECE3;
+  font-family: var(--font-title);
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.5px;
+  text-transform: lowercase;
 }
 
 /* Light text for dark backgrounds (red and dark pages) */

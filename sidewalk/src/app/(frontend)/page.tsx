@@ -284,27 +284,96 @@ export default function HomePage() {
           <div ref={sidewalkBottomRef} className="swiss-title-bottom">SIDEWALK</div>
           {activeTab === 'projects' ? (
             <div className="swiss-title-tagline projects-tagline">
-              <div className="projects-tagline-columns">
-                <div className="projects-tagline-col-1">
-                  {selectedClient?.description || 'select a project to view details'}
+              {selectedClient ? (
+                <div className="projects-tagline-columns">
+                  {/* Column 1: All Projects */}
+                  <div className="projects-tagline-col-1">
+                    {clients.map((client) => (
+                      <button
+                        key={client.id}
+                        className={`projects-company-link ${selectedClient.id === client.id ? 'active' : ''}`}
+                        onClick={() => setSelectedClient(client)}
+                      >
+                        {client.companyName}
+                      </button>
+                    ))}
+                  </div>
+                  
+                  {/* Column 2: Description */}
+                  <div className="projects-tagline-col-2">
+                    {selectedClient.description && <div className="project-detail-section">{selectedClient.description}</div>}
+                  </div>
+                  
+                  {/* Column 3: Features */}
+                  <div className="projects-tagline-col-3">
+                    {selectedClient.features && selectedClient.features.length > 0 && (
+                      <div className="project-detail-section">
+                        {selectedClient.features.map((feature, index) => (
+                          <div key={feature.id || index} className="project-feature">
+                            {feature.feature}{feature.description && ` — ${feature.description}`}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Column 4: Gallery */}
+                  <div className="projects-tagline-col-4">
+                    {selectedClient.gallery && selectedClient.gallery.length > 0 && (
+                      <div className="project-gallery">
+                        {selectedClient.gallery.map((item, index) => {
+                          const image = typeof item.image === 'object' && item.image !== null 
+                            ? item.image 
+                            : null
+                          if (!image || !image.url) return null
+                          
+                          return (
+                            <div key={item.id || index} className="project-gallery-item">
+                              <Image
+                                src={image.url}
+                                alt={item.caption || selectedClient.companyName || 'Project image'}
+                                width={image.width || 400}
+                                height={image.height || 300}
+                                className="project-gallery-image"
+                              />
+                              {item.caption && (
+                                <div className="project-gallery-caption">{item.caption}</div>
+                              )}
+                            </div>
+                          )
+                        })}
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <div className="projects-tagline-col-2">
-                  {clients.map((client) => (
-                    <button
-                      key={client.id}
-                      className={`projects-company-link ${selectedClient?.id === client.id ? 'active' : ''}`}
-                      onClick={() => setSelectedClient(client)}
-                    >
-                      {client.companyName}
-                    </button>
-                  ))}
+              ) : (
+                <div className="projects-tagline-columns projects-tagline-columns-initial">
+                  <div className="projects-tagline-col-1">
+                    {clients.map((client) => (
+                      <button
+                        key={client.id}
+                        className="projects-company-link"
+                        onClick={() => setSelectedClient(client)}
+                      >
+                        {client.companyName}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="projects-tagline-col-2">
+                    our portfolio showcases modern web applications built with cutting-edge technology. each project represents our commitment to self-hosted solutions, custom integrations, and beautiful user experiences that help businesses thrive online.
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           ) : (
             getPageTagline(activeTab, selectedClient) && (
               <div className="swiss-title-tagline">
-                {getPageTagline(activeTab, selectedClient)}
+                <div className="tagline-columns">
+                  <div className="tagline-col-left">
+                    {getPageTagline(activeTab, selectedClient)}
+                  </div>
+                  <div className="tagline-col-right"></div>
+                </div>
               </div>
             )
           )}
