@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { gsap } from 'gsap'
+import type { Client } from '@/payload-types'
 import './styles.css'
 
 type Tab = 'home' | 'about' | 'skills' | 'projects' | 'contact'
@@ -15,7 +16,7 @@ const tabs: { id: Tab; label: string; color: string }[] = [
   { id: 'contact', label: 'Contact', color: '#F3ECE3' }, // cream
 ]
 
-const getPageTitle = (tab: Tab): string => {
+const getPageTitle = (tab: Tab, selectedClient?: Client | null): string => {
   switch (tab) {
     case 'home':
       return 'web solutions'
@@ -24,7 +25,7 @@ const getPageTitle = (tab: Tab): string => {
     case 'skills':
       return 'technology'
     case 'projects':
-      return 'projects'
+      return selectedClient?.companyName || 'projects'
     case 'contact':
       return 'contact'
     default:
@@ -56,7 +57,7 @@ const getPageTagline = (tab: Tab): React.ReactNode => {
         </>
       )
     case 'projects':
-      return "our portfolio showcases modern web applications built with cutting-edge technology. each project represents our commitment to self-hosted solutions, custom integrations, and beautiful user experiences that help businesses thrive online."
+      return null
     case 'contact':
       return "ready to start your next project? we'd love to hear from you. whether you need a new website, a custom web application, or help with your existing platform, we're here to help. reach out and let's build something together."
     default:
@@ -66,6 +67,8 @@ const getPageTagline = (tab: Tab): React.ReactNode => {
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState<Tab>('home')
+  const [clients, setClients] = useState<Client[]>([])
+  const [selectedClient, setSelectedClient] = useState<Client | null>(null)
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const isScrollingRef = useRef(false)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -78,6 +81,31 @@ export default function HomePage() {
   const sidewalkTimelineRef = useRef<gsap.core.Timeline | null>(null)
 
   const activeTabData = tabs.find(tab => tab.id === activeTab) || tabs[0]
+
+  // Fetch clients when projects tab is active
+  useEffect(() => {
+    if (activeTab === 'projects') {
+      fetch('/api/clients?depth=2&limit=100')
+        .then(res => res.json())
+        .then(data => {
+          if (data.docs && data.docs.length > 0) {
+            setClients(data.docs)
+            // Select first client by default if none selected
+            if (!selectedClient) {
+              setSelectedClient(data.docs[0])
+            }
+          }
+        })
+        .catch(err => console.error('Error fetching clients:', err))
+    }
+  }, [activeTab])
+
+  // Reset selected client when leaving projects tab
+  useEffect(() => {
+    if (activeTab !== 'projects') {
+      setSelectedClient(null)
+    }
+  }, [activeTab])
 
   // Animation function for sidewalk texts
   const animateSidewalkTexts = () => {
@@ -238,7 +266,12 @@ export default function HomePage() {
     <div ref={containerRef} className="website" style={{ backgroundColor: activeTabData.color }}>
       {/* Logo */}
       <div className="logo-container">
-        <Image src="/logo1.svg" alt="sidewalk" width={120} height={40} />
+        <Image 
+          src={activeTab === 'projects' ? "/logo.svg" : "/logo1.svg"} 
+          alt="sidewalk" 
+          width={120} 
+          height={40} 
+        />
       </div>
 
       {/* Swiss Typography Title */}
@@ -247,7 +280,9 @@ export default function HomePage() {
         style={{ '--bg-color': activeTabData.color } as React.CSSProperties}
       >
         <div ref={sidewalkTopRef} className="swiss-title-top">SIDEWALK</div>
-        <div className="swiss-title-middle">{getPageTitle(activeTab)}</div>
+        <div className={`swiss-title-middle ${activeTab === 'projects' && !selectedClient ? 'projects-title' : ''}`}>
+          {getPageTitle(activeTab, selectedClient)}
+        </div>
         <div className="swiss-title-bottom-container">
           <div ref={sidewalkBottomRef} className="swiss-title-bottom">SIDEWALK</div>
           {getPageTagline(activeTab) && (
@@ -280,7 +315,96 @@ export default function HomePage() {
 
         {activeTab === 'projects' && (
           <div ref={contentRef} className="tab-content projects-content">
-            {/* Content removed - using Swiss Typography title and tagline instead */}
+            {selectedClient && (
+              <div className="projects-grid-layout">
+                {/* Column 1: Description */}
+                <div className="projects-col projects-col-description">
+                  <h3 className="projects-col-title">description</h3>
+                  <div className="projects-col-content">
+                    {selectedClient.description || <p>No description available.</p>}
+                  </div>
+                </div>
+
+                {/* Column 2: Company Names */}
+                <div className="projects-col projects-col-companies">
+                  <h3 className="projects-col-title">companies</h3>
+                  <div className="companies-list">
+                    {clients.map((client) => (
+                      <button
+                        key={client.id}
+                        className={`company-button ${selectedClient.id === client.id ? 'active' : ''}`}
+                        onClick={() => setSelectedClient(client)}
+                      >
+                        {client.companyName}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Column 3: Features */}
+                <div className="projects-col projects-col-features">
+                  <h3 className="projects-col-title">features</h3>
+                  <div className="projects-col-content">
+                    {selectedClient.features && selectedClient.features.length > 0 ? (
+                      <ul className="features-list">
+                        {selectedClient.features.map((feature, index) => (
+                          <li key={feature.id || index} className="feature-item">
+                            <strong>{feature.feature}</strong>
+                            {feature.description && (
+                              <span className="feature-description"> — {feature.description}</span>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p>No features listed.</p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Column 4: Challenges */}
+                <div className="projects-col projects-col-challenges">
+                  <h3 className="projects-col-title">challenges</h3>
+                  <div className="projects-col-content">
+                    {selectedClient.challenges || <p>No challenges listed.</p>}
+                  </div>
+                </div>
+
+                {/* Column 5: Gallery */}
+                <div className="projects-col projects-col-images">
+                  <h3 className="projects-col-title">gallery</h3>
+                  <div className="projects-col-content">
+                    {selectedClient.gallery && selectedClient.gallery.length > 0 ? (
+                      <div className="gallery-grid">
+                        {selectedClient.gallery.map((item, index) => {
+                          const image = typeof item.image === 'object' && item.image !== null 
+                            ? item.image 
+                            : null
+                          if (!image || !image.url) return null
+                          
+                          return (
+                            <div key={item.id || index} className="gallery-item">
+                              <Image
+                                src={image.url}
+                                alt={item.caption || selectedClient.companyName || 'Project image'}
+                                width={image.width || 400}
+                                height={image.height || 300}
+                                className="gallery-image"
+                              />
+                              {item.caption && (
+                                <p className="gallery-caption">{item.caption}</p>
+                              )}
+                            </div>
+                          )
+                        })}
+                      </div>
+                    ) : (
+                      <p>No images available.</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
