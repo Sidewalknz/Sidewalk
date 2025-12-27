@@ -216,140 +216,262 @@ export default function HomePage() {
     sidewalkTimelineRef.current = tl
   }
 
-  // Animation function for tagline words
+  // Animation function for tagline words - animates columns first, then words within each column
   const animateTaglineWords = () => {
-    // Animate regular tagline
-    if (taglineRef.current) {
+    // Animate regular tagline (home, about, skills - 2 columns)
+    if (taglineRef.current && activeTab !== 'contact' && activeTab !== 'projects') {
       // Kill existing timeline
       if (taglineTimelineRef.current) {
         taglineTimelineRef.current.kill()
       }
 
-      // Get all tagline words
-      const words = taglineRef.current.querySelectorAll('.tagline-word')
-      if (words.length > 0) {
-        // Set initial state for all words
-        gsap.set(words, {
-          opacity: 0,
-          y: 20,
+      const tl = gsap.timeline()
+      const colLeft = taglineRef.current.querySelector('.tagline-col-left')
+      const colRight = taglineRef.current.querySelector('.tagline-col-right')
+
+      // Animate column 1 (left) first
+      if (colLeft) {
+        gsap.set(colLeft, { opacity: 0, y: 30 })
+        const words = colLeft.querySelectorAll('.tagline-word')
+        if (words.length > 0) {
+          gsap.set(words, { opacity: 0, y: 20 })
+        }
+
+        // Animate column in
+        tl.to(colLeft, {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+          ease: 'power3.out',
         })
 
-        // Create new timeline
-        const tl = gsap.timeline()
-
-        // Animate each word in sequence
+        // Animate words within column 1 (start during column animation)
         words.forEach((word, index) => {
           tl.to(word, {
             opacity: 1,
             y: 0,
             duration: 0.4,
             ease: 'power3.out',
-          }, index * 0.05) // Stagger by 0.05 seconds for faster word-by-word animation
+          }, 0.1 + index * 0.05) // Start words animation 0.1s into column animation
         })
-
-        taglineTimelineRef.current = tl
       }
+
+      // Animate column 2 (right) after column 1
+      if (colRight) {
+        gsap.set(colRight, { opacity: 0, y: 30 })
+        const words = colRight.querySelectorAll('.tagline-word')
+        if (words.length > 0) {
+          gsap.set(words, { opacity: 0, y: 20 })
+        }
+
+        // Animate column in after column 1
+        tl.to(colRight, {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+          ease: 'power3.out',
+        }, '+=0.2') // Start after column 1 with a small delay
+
+        // Animate words within column 2 (start during column animation)
+        words.forEach((word, index) => {
+          tl.to(word, {
+            opacity: 1,
+            y: 0,
+            duration: 0.4,
+            ease: 'power3.out',
+          }, `-=${0.4 - index * 0.05}`) // Start words animation during column animation
+        })
+      }
+
+      taglineTimelineRef.current = tl
     }
 
-    // Animate projects tagline
+    // Animate projects tagline (4 columns)
     if (projectsTaglineRef.current) {
       // Kill existing timeline
       if (projectsTaglineTimelineRef.current) {
         projectsTaglineTimelineRef.current.kill()
       }
 
-      // Get all tagline words in projects tagline
-      const words = projectsTaglineRef.current.querySelectorAll('.tagline-word')
-      if (words.length > 0) {
-        // Set initial state for all words
-        gsap.set(words, {
-          opacity: 0,
-          y: 20,
-        })
+      const tl = gsap.timeline()
+      const columns = [
+        projectsTaglineRef.current.querySelector('.projects-tagline-col-1'),
+        projectsTaglineRef.current.querySelector('.projects-tagline-col-2'),
+        projectsTaglineRef.current.querySelector('.projects-tagline-col-3'),
+        projectsTaglineRef.current.querySelector('.projects-tagline-col-4'),
+      ].filter(Boolean) as Element[]
 
-        // Create new timeline
-        const tl = gsap.timeline()
+      // Animate each column in sequence (1, 2, 3, 4)
+      columns.forEach((col, colIndex) => {
+        if (!col) return
 
-        // Animate each word in sequence
-        words.forEach((word, index) => {
+        gsap.set(col, { opacity: 0, y: 30 })
+        const words = col.querySelectorAll('.tagline-word')
+        const buttons = col.querySelectorAll('.projects-company-link')
+        const images = col.querySelectorAll('.project-gallery-image')
+        const captions = col.querySelectorAll('.project-gallery-caption')
+        
+        // Set initial state for all child elements
+        if (words.length > 0) {
+          gsap.set(words, { opacity: 0, y: 20 })
+        }
+        if (buttons.length > 0) {
+          gsap.set(buttons, { opacity: 0, y: 20 })
+        }
+        if (images.length > 0) {
+          gsap.set(images, { opacity: 0, y: 20 })
+        }
+        if (captions.length > 0) {
+          gsap.set(captions, { opacity: 0, y: 20 })
+        }
+
+        // Calculate start time for this column (stagger by 0.3 seconds)
+        const columnStartTime = colIndex * 0.3
+
+        // Animate column in
+        tl.to(col, {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+          ease: 'power3.out',
+        }, columnStartTime)
+
+        // Animate words within column (start during column animation)
+        words.forEach((word, wordIndex) => {
           tl.to(word, {
             opacity: 1,
             y: 0,
             duration: 0.4,
             ease: 'power3.out',
-          }, index * 0.05) // Stagger by 0.05 seconds for faster word-by-word animation
+          }, columnStartTime + 0.1 + wordIndex * 0.05)
         })
 
-        projectsTaglineTimelineRef.current = tl
-      }
-    }
-
-    // Animate contact social links and form fields
-    if (activeTab === 'contact' && taglineRef.current) {
-      // Animate social links after tagline text
-      const socialLinks = taglineRef.current.querySelectorAll('.social-link')
-      if (socialLinks.length > 0) {
-        // Get tagline words to calculate when to start social links animation
-        const taglineWords = taglineRef.current.querySelectorAll('.contact-tagline-col-1 .tagline-word')
-        const taglineWordCount = taglineWords?.length || 0
-        const taglineAnimationEnd = taglineWordCount * 0.05 + 0.4
-
-        gsap.set(socialLinks, {
-          opacity: 0,
-          y: 20,
-        })
-
-        const socialTl = gsap.timeline()
-        socialLinks.forEach((link, index) => {
-          socialTl.to(link, {
+        // Animate buttons within column
+        buttons.forEach((button, btnIndex) => {
+          tl.to(button, {
             opacity: 1,
             y: 0,
             duration: 0.4,
             ease: 'power3.out',
-          }, taglineAnimationEnd + index * 0.1)
+          }, columnStartTime + 0.1 + btnIndex * 0.1)
         })
 
-        if (taglineTimelineRef.current) {
-          taglineTimelineRef.current.add(socialTl, 0)
-        }
+        // Animate images within column
+        images.forEach((image, imgIndex) => {
+          tl.to(image, {
+            opacity: 1,
+            y: 0,
+            duration: 0.4,
+            ease: 'power3.out',
+          }, columnStartTime + 0.1 + imgIndex * 0.15)
+        })
+
+        // Animate captions within column
+        captions.forEach((caption, capIndex) => {
+          tl.to(caption, {
+            opacity: 1,
+            y: 0,
+            duration: 0.4,
+            ease: 'power3.out',
+          }, columnStartTime + 0.1 + capIndex * 0.1)
+        })
+      })
+
+      projectsTaglineTimelineRef.current = tl
+    }
+
+    // Animate contact tagline (4 columns)
+    if (activeTab === 'contact' && taglineRef.current) {
+      // Kill existing timeline
+      if (taglineTimelineRef.current) {
+        taglineTimelineRef.current.kill()
       }
 
-      // Animate contact form fields after location text
-      if (contactFormFieldsRef.current) {
-        const formFields = contactFormFieldsRef.current.querySelectorAll('.contact-form-field')
-        const submitBtn = contactFormFieldsRef.current.querySelector('.contact-submit-btn')
-        const allFormElements = [...Array.from(formFields), submitBtn].filter(Boolean) as Element[]
+      const tl = gsap.timeline()
+      const columns = [
+        taglineRef.current.querySelector('.contact-tagline-col-1'),
+        taglineRef.current.querySelector('.contact-tagline-col-2'),
+        taglineRef.current.querySelector('.contact-tagline-col-3'),
+        taglineRef.current.querySelector('.contact-tagline-col-4'),
+      ].filter(Boolean) as Element[]
+
+      // Animate each column in sequence (1, 2, 3, 4)
+      columns.forEach((col, colIndex) => {
+        if (!col) return
+
+        gsap.set(col, { opacity: 0, y: 30 })
+        const words = col.querySelectorAll('.tagline-word')
+        const socialLinks = col.querySelectorAll('.social-link')
+        const formFields = col.querySelectorAll('.contact-form-field')
+        const submitBtn = col.querySelector('.contact-submit-btn')
         
-        if (allFormElements.length > 0) {
-          // Set initial state for form fields and button
-          gsap.set(allFormElements, {
-            opacity: 0,
-            y: 20,
-          })
-
-          // Get the location text words to calculate when to start form animation
-          const locationWords = taglineRef.current?.querySelectorAll('.contact-tagline-col-3 .tagline-word')
-          const locationWordCount = locationWords?.length || 0
-          const locationAnimationEnd = locationWordCount * 0.05 + 0.4 // When location animation ends
-
-          // Create timeline for form fields, starting after location animation
-          const formTl = gsap.timeline()
-          
-          allFormElements.forEach((element, index) => {
-            formTl.to(element, {
-              opacity: 1,
-              y: 0,
-              duration: 0.4,
-              ease: 'power3.out',
-            }, locationAnimationEnd + index * 0.1) // Start after location, stagger by 0.1s
-          })
-
-          // Merge with existing tagline timeline if it exists
-          if (taglineTimelineRef.current) {
-            taglineTimelineRef.current.add(formTl, 0)
-          }
+        // Set initial state for all child elements
+        if (words.length > 0) {
+          gsap.set(words, { opacity: 0, y: 20 })
         }
-      }
+        if (socialLinks.length > 0) {
+          gsap.set(socialLinks, { opacity: 0, y: 20 })
+        }
+        if (formFields.length > 0) {
+          gsap.set(formFields, { opacity: 0, y: 20 })
+        }
+        if (submitBtn) {
+          gsap.set(submitBtn, { opacity: 0, y: 20 })
+        }
+
+        // Calculate start time for this column (stagger by 0.3 seconds)
+        const columnStartTime = colIndex * 0.3
+
+        // Animate column in
+        tl.to(col, {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+          ease: 'power3.out',
+        }, columnStartTime)
+
+        // Animate words within column (start during column animation)
+        words.forEach((word, wordIndex) => {
+          tl.to(word, {
+            opacity: 1,
+            y: 0,
+            duration: 0.4,
+            ease: 'power3.out',
+          }, columnStartTime + 0.1 + wordIndex * 0.05)
+        })
+
+        // Animate social links within column
+        socialLinks.forEach((link, linkIndex) => {
+          tl.to(link, {
+            opacity: 1,
+            y: 0,
+            duration: 0.4,
+            ease: 'power3.out',
+          }, columnStartTime + 0.1 + linkIndex * 0.1)
+        })
+
+        // Animate form fields within column
+        formFields.forEach((field, fieldIndex) => {
+          tl.to(field, {
+            opacity: 1,
+            y: 0,
+            duration: 0.4,
+            ease: 'power3.out',
+          }, columnStartTime + 0.1 + fieldIndex * 0.1)
+        })
+
+        // Animate submit button within column
+        if (submitBtn) {
+          tl.to(submitBtn, {
+            opacity: 1,
+            y: 0,
+            duration: 0.4,
+            ease: 'power3.out',
+          }, columnStartTime + 0.1 + formFields.length * 0.1)
+        }
+      })
+
+      taglineTimelineRef.current = tl
     }
   }
 
