@@ -114,7 +114,7 @@ const getPageTagline = (tab: Tab, selectedClient?: Client | null): React.ReactNo
     case 'contact':
       return (
         <>
-          ready to start your next project? we'd love to hear from you. whether you need a new website, a custom web application, or help with your existing platform, we're here to help. reach out and let's build something together.
+          ready to start your next project? we'd love to <span className="tagline-highlight">hear from you</span>. whether you need a <span className="tagline-highlight">new website</span>, a <span className="tagline-highlight">custom web application</span>, or help with your <span className="tagline-highlight">existing platform</span>, we're here to help. <span className="tagline-highlight">reach out</span> and let's build something together.
         </>
       )
     default:
@@ -126,6 +126,9 @@ export default function HomePage() {
   const [activeTab, setActiveTab] = useState<Tab>('home')
   const [clients, setClients] = useState<Client[]>([])
   const [selectedClient, setSelectedClient] = useState<Client | null>(null)
+  const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const isScrollingRef = useRef(false)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -140,6 +143,7 @@ export default function HomePage() {
   const taglineTimelineRef = useRef<gsap.core.Timeline | null>(null)
   const projectsTaglineRef = useRef<HTMLDivElement>(null)
   const projectsTaglineTimelineRef = useRef<gsap.core.Timeline | null>(null)
+  const contactFormFieldsRef = useRef<HTMLFormElement>(null)
 
   const activeTabData = tabs.find(tab => tab.id === activeTab) || tabs[0]
 
@@ -279,6 +283,74 @@ export default function HomePage() {
         projectsTaglineTimelineRef.current = tl
       }
     }
+
+    // Animate contact social links and form fields
+    if (activeTab === 'contact' && taglineRef.current) {
+      // Animate social links after tagline text
+      const socialLinks = taglineRef.current.querySelectorAll('.social-link')
+      if (socialLinks.length > 0) {
+        // Get tagline words to calculate when to start social links animation
+        const taglineWords = taglineRef.current.querySelectorAll('.contact-tagline-col-1 .tagline-word')
+        const taglineWordCount = taglineWords?.length || 0
+        const taglineAnimationEnd = taglineWordCount * 0.05 + 0.4
+
+        gsap.set(socialLinks, {
+          opacity: 0,
+          y: 20,
+        })
+
+        const socialTl = gsap.timeline()
+        socialLinks.forEach((link, index) => {
+          socialTl.to(link, {
+            opacity: 1,
+            y: 0,
+            duration: 0.4,
+            ease: 'power3.out',
+          }, taglineAnimationEnd + index * 0.1)
+        })
+
+        if (taglineTimelineRef.current) {
+          taglineTimelineRef.current.add(socialTl, 0)
+        }
+      }
+
+      // Animate contact form fields after location text
+      if (contactFormFieldsRef.current) {
+        const formFields = contactFormFieldsRef.current.querySelectorAll('.contact-form-field')
+        const submitBtn = contactFormFieldsRef.current.querySelector('.contact-submit-btn')
+        const allFormElements = [...Array.from(formFields), submitBtn].filter(Boolean) as Element[]
+        
+        if (allFormElements.length > 0) {
+          // Set initial state for form fields and button
+          gsap.set(allFormElements, {
+            opacity: 0,
+            y: 20,
+          })
+
+          // Get the location text words to calculate when to start form animation
+          const locationWords = taglineRef.current?.querySelectorAll('.contact-tagline-col-3 .tagline-word')
+          const locationWordCount = locationWords?.length || 0
+          const locationAnimationEnd = locationWordCount * 0.05 + 0.4 // When location animation ends
+
+          // Create timeline for form fields, starting after location animation
+          const formTl = gsap.timeline()
+          
+          allFormElements.forEach((element, index) => {
+            formTl.to(element, {
+              opacity: 1,
+              y: 0,
+              duration: 0.4,
+              ease: 'power3.out',
+            }, locationAnimationEnd + index * 0.1) // Start after location, stagger by 0.1s
+          })
+
+          // Merge with existing tagline timeline if it exists
+          if (taglineTimelineRef.current) {
+            taglineTimelineRef.current.add(formTl, 0)
+          }
+        }
+      }
+    }
   }
 
   // Animation function
@@ -398,6 +470,40 @@ export default function HomePage() {
     }
   }, [])
 
+  const handleContactSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    setSubmitStatus('idle')
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(contactForm),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        setSubmitStatus('success')
+        setContactForm({ name: '', email: '', message: '' })
+        // Reset status after 3 seconds
+        setTimeout(() => setSubmitStatus('idle'), 3000)
+      } else {
+        setSubmitStatus('error')
+        setTimeout(() => setSubmitStatus('idle'), 3000)
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error)
+      setSubmitStatus('error')
+      setTimeout(() => setSubmitStatus('idle'), 3000)
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   return (
     <div ref={containerRef} className="website" style={{ backgroundColor: activeTabData.color }}>
       {/* Logo */}
@@ -505,6 +611,79 @@ export default function HomePage() {
                   <div className="projects-tagline-col-4"></div>
                 </div>
               )}
+            </div>
+          ) : activeTab === 'contact' ? (
+            <div ref={taglineRef} className="swiss-title-tagline contact-tagline">
+              <div className="contact-tagline-columns">
+                <div className="contact-tagline-col-1">
+                  {wrapWords(getPageTagline(activeTab, selectedClient))}
+                </div>
+                <div className="contact-tagline-col-2">
+                  <div className="social-links">
+                    <a href="https://www.instagram.com/sidewalk.co.nz/" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="Instagram">
+                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.266.07 1.646.07 4.85 0 3.204-.012 3.584-.07 4.85-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.646.07-4.85.07-3.204 0-3.584-.012-4.85-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.646-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.646-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" fill="currentColor"/>
+                      </svg>
+                    </a>
+                    <a href="https://www.facebook.com/profile.php?id=61581022527859" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="Facebook">
+                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" fill="currentColor"/>
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+                <div className="contact-tagline-col-3">
+                  <a href="mailto:admin@sidewalks.co.nz" className="contact-email-link">
+                    {wrapWords('admin@sidewalks.co.nz')}
+                  </a>
+                  <br />
+                  {wrapWords('nelson, new zealand')}
+                </div>
+                <div className="contact-tagline-col-4">
+                  <form ref={contactFormFieldsRef} className="contact-form-fields" onSubmit={handleContactSubmit}>
+                    <div className="contact-form-field">
+                      <input 
+                        type="text" 
+                        placeholder="name" 
+                        className="contact-input" 
+                        value={contactForm.name}
+                        onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div className="contact-form-field">
+                      <input 
+                        type="email" 
+                        placeholder="email" 
+                        className="contact-input" 
+                        value={contactForm.email}
+                        onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div className="contact-form-field">
+                      <textarea 
+                        placeholder="message" 
+                        className="contact-textarea" 
+                        rows={4}
+                        value={contactForm.message}
+                        onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
+                        required
+                      ></textarea>
+                    </div>
+                    <button 
+                      type="submit" 
+                      className="contact-submit-btn" 
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? 'sending...' : submitStatus === 'success' ? 'sent!' : 'send'}
+                    </button>
+                    {submitStatus === 'error' && (
+                      <div className="contact-form-error">error sending message. please try again.</div>
+                    )}
+                  </form>
+                </div>
+              </div>
             </div>
           ) : (
             getPageTagline(activeTab, selectedClient) && (
