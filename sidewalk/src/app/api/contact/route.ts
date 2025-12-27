@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
       from: process.env.GMAIL_USER,
       to: process.env.GMAIL_USER, // Send to yourself
       replyTo: email,
-      subject: `Contact Form Submission from ${name}`,
+      subject: `Contact Form from ${name}`,
       html: `
         <h2>New Contact Form Submission</h2>
         <p><strong>Name:</strong> ${name}</p>
