@@ -119,26 +119,33 @@ body {
   letter-spacing: 0.5px;
   line-height: 1.4;
   margin-top: 0.5em;
-  max-width: 1400px;
   width: 100%;
+  padding: 0;
   text-align: center;
   white-space: normal;
   display: flex;
   justify-content: center;
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .tagline-columns {
   display: grid;
   grid-template-columns: 1fr 3fr;
-  gap: 4rem;
+  gap: clamp(2rem, 4vw, 4rem);
   align-items: start;
   width: 100%;
-  max-width: 1400px;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 0;
 }
 
 .tagline-col-left {
   text-align: left;
-  max-width: clamp(350px, 9vw, 950px);
+  max-width: clamp(300px, 9vw, 950px);
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 
 .tagline-col-right {
@@ -160,21 +167,26 @@ body {
 
 /* Projects Tagline Layout */
 .projects-tagline {
-  max-width: none !important;
   pointer-events: auto;
   text-align: center;
   width: 100%;
   display: flex;
   justify-content: center;
+  padding: 0;
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .projects-tagline-columns {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  gap: 4rem;
+  gap: clamp(2rem, 4vw, 4rem);
   align-items: start;
-  max-width: 1400px;
+  max-width: 100%;
   width: 100%;
+  box-sizing: border-box;
+  padding: 0;
 }
 
 /* When no project selected, use 4 columns */
@@ -184,7 +196,9 @@ body {
 
 .projects-tagline-columns-initial .projects-tagline-col-1,
 .projects-tagline-columns-initial .projects-tagline-col-2 {
-  max-width: clamp(350px, 9vw, 950px);
+  max-width: clamp(300px, 9vw, 950px);
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 
 .projects-tagline-single-col {
@@ -215,12 +229,16 @@ body {
   flex-direction: column;
   gap: 0;
   text-align: left;
-  max-width: clamp(350px, 9vw, 950px);
+  max-width: clamp(300px, 9vw, 950px);
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 
 .projects-tagline-col-2 {
   display: block;
   text-align: left;
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 
 .projects-tagline-col-3,
@@ -238,6 +256,8 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0;
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 
 .projects-other-link {
@@ -885,21 +905,26 @@ body {
 
 /* Contact Tagline Layout */
 .contact-tagline {
-  max-width: none !important;
   pointer-events: auto;
   text-align: center;
   width: 100%;
   display: flex;
   justify-content: center;
+  padding: 0;
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .contact-tagline-columns {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  gap: 4rem;
+  gap: clamp(2rem, 4vw, 4rem);
   align-items: start;
-  max-width: 1400px;
+  max-width: 100%;
   width: 100%;
+  box-sizing: border-box;
+  padding: 0;
 }
 
 .contact-tagline-col-1,
@@ -913,23 +938,33 @@ body {
   line-height: 1.4;
   letter-spacing: 0.5px;
   text-transform: lowercase;
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 
 .contact-tagline-col-1 {
   text-align: left;
-  max-width: clamp(350px, 9vw, 950px);
+  max-width: clamp(300px, 9vw, 950px);
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 
 .contact-tagline-col-2 {
   text-align: left;
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 
 .contact-tagline-col-3 {
   text-align: left;
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 
 .contact-tagline-col-4 {
   text-align: left;
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 
 .social-links {
