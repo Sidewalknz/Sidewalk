@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { gsap } from 'gsap'
-import type { Client } from '@/payload-types'
 import './styles.css'
 
 type Tab = 'home' | 'about' | 'skills' | 'projects' | 'contact'
@@ -68,7 +67,7 @@ const wrapWords = (node: React.ReactNode): React.ReactNode => {
   return node
 }
 
-const getPageTitle = (tab: Tab, selectedClient?: Client | null): string => {
+const getPageTitle = (tab: Tab): string => {
   switch (tab) {
     case 'home':
       return 'web solutions'
@@ -77,7 +76,7 @@ const getPageTitle = (tab: Tab, selectedClient?: Client | null): string => {
     case 'skills':
       return 'services'
     case 'projects':
-      return selectedClient?.companyName || 'projects'
+      return 'projects'
     case 'contact':
       return 'contact'
     default:
@@ -85,7 +84,7 @@ const getPageTitle = (tab: Tab, selectedClient?: Client | null): string => {
   }
 }
 
-const getPageTagline = (tab: Tab, selectedClient?: Client | null): React.ReactNode => {
+const getPageTagline = (tab: Tab): React.ReactNode => {
   switch (tab) {
     case 'home':
       return (
@@ -109,12 +108,23 @@ const getPageTagline = (tab: Tab, selectedClient?: Client | null): React.ReactNo
         </>
       )
     case 'projects':
-      // Projects content is handled separately in the JSX
-      return null
+      return (
+        <>
+          empowering businesses with <span className="tagline-highlight">self-hosted</span> web solutions that <span className="tagline-highlight">streamline</span> workflow and <span className="tagline-highlight">elevate</span> their digital presence
+        </>
+      )
     case 'contact':
       return (
         <>
-          ready to start your next project? we'd love to <span className="tagline-highlight">hear from you</span>. whether you need a <span className="tagline-highlight">new website</span>, a <span className="tagline-highlight">custom web application</span>, or help with your <span className="tagline-highlight">existing platform</span>, we're here to help. <span className="tagline-highlight">reach out</span> and let's build something together.
+          ready to start your next<br />
+          project? we'd love to <span className="tagline-highlight">hear</span><br />
+          <span className="tagline-highlight">from you</span>. whether you<br />
+          need a new <span className="tagline-highlight">website</span>, a<br />
+          <span className="tagline-highlight">custom web application</span>, or<br />
+          help with your <span className="tagline-highlight">existing</span><br />
+          <span className="tagline-highlight">platform</span>, we're here to<br />
+          help. <span className="tagline-highlight">reach out</span> and let's<br />
+          build something together.
         </>
       )
     default:
@@ -124,11 +134,9 @@ const getPageTagline = (tab: Tab, selectedClient?: Client | null): React.ReactNo
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState<Tab>('home')
-  const [clients, setClients] = useState<Client[]>([])
-  const [selectedClient, setSelectedClient] = useState<Client | null>(null)
-  const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' })
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' })
+  const [formStatus, setFormStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const [formError, setFormError] = useState<string>('')
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const isScrollingRef = useRef(false)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -141,32 +149,8 @@ export default function HomePage() {
   const sidewalkTimelineRef = useRef<gsap.core.Timeline | null>(null)
   const taglineRef = useRef<HTMLDivElement>(null)
   const taglineTimelineRef = useRef<gsap.core.Timeline | null>(null)
-  const projectsTaglineRef = useRef<HTMLDivElement>(null)
-  const projectsTaglineTimelineRef = useRef<gsap.core.Timeline | null>(null)
-  const contactFormFieldsRef = useRef<HTMLFormElement>(null)
 
   const activeTabData = tabs.find(tab => tab.id === activeTab) || tabs[0]
-
-  // Fetch clients when projects tab is active
-  useEffect(() => {
-    if (activeTab === 'projects') {
-      fetch('/api/clients?depth=2&limit=100')
-        .then(res => res.json())
-        .then(data => {
-          if (data.docs && data.docs.length > 0) {
-            setClients(data.docs)
-          }
-        })
-        .catch(err => console.error('Error fetching clients:', err))
-    }
-  }, [activeTab])
-
-  // Reset selected client when leaving projects tab
-  useEffect(() => {
-    if (activeTab !== 'projects') {
-      setSelectedClient(null)
-    }
-  }, [activeTab])
 
   // Animation function for sidewalk texts
   const animateSidewalkTexts = () => {
@@ -218,256 +202,56 @@ export default function HomePage() {
 
   // Animation function for tagline words - animates columns first, then words within each column
   const animateTaglineWords = () => {
-    // Animate regular tagline (home, about, skills - 2 columns)
-    if (taglineRef.current && activeTab !== 'contact' && activeTab !== 'projects') {
+    if (taglineRef.current) {
       // Kill existing timeline
       if (taglineTimelineRef.current) {
         taglineTimelineRef.current.kill()
       }
 
       const tl = gsap.timeline()
-      const colLeft = taglineRef.current.querySelector('.tagline-col-left')
-      const colRight = taglineRef.current.querySelector('.tagline-col-right')
 
-      // Animate column 1 (left) first
-      if (colLeft) {
-        gsap.set(colLeft, { opacity: 0, y: 30 })
-        const words = colLeft.querySelectorAll('.tagline-word')
+      // Handle 4-column layout for all tabs
+      const col1 = taglineRef.current.querySelector('.contact-tagline-col-1')
+      const col2 = taglineRef.current.querySelector('.contact-tagline-col-2')
+      const col3 = taglineRef.current.querySelector('.contact-tagline-col-3')
+      const col4 = taglineRef.current.querySelector('.contact-tagline-col-4')
+
+      // Animate column 1 first
+      if (col1) {
+        gsap.set(col1, { opacity: 0, y: 30 })
+        const words = col1.querySelectorAll('.tagline-word')
         if (words.length > 0) {
           gsap.set(words, { opacity: 0, y: 20 })
         }
 
-        // Animate column in
-        tl.to(colLeft, {
+        tl.to(col1, {
           opacity: 1,
           y: 0,
           duration: 0.5,
           ease: 'power3.out',
         })
 
-        // Animate words within column 1 (start during column animation)
         words.forEach((word, index) => {
           tl.to(word, {
             opacity: 1,
             y: 0,
             duration: 0.4,
             ease: 'power3.out',
-          }, 0.1 + index * 0.05) // Start words animation 0.1s into column animation
+          }, 0.1 + index * 0.05)
         })
       }
 
-      // Animate column 2 (right) after column 1
-      if (colRight) {
-        gsap.set(colRight, { opacity: 0, y: 30 })
-        const words = colRight.querySelectorAll('.tagline-word')
-        if (words.length > 0) {
-          gsap.set(words, { opacity: 0, y: 20 })
-        }
-
-        // Animate column in after column 1
-        tl.to(colRight, {
-          opacity: 1,
-          y: 0,
-          duration: 0.5,
-          ease: 'power3.out',
-        }, '+=0.2') // Start after column 1 with a small delay
-
-        // Animate words within column 2 (start during column animation)
-        words.forEach((word, index) => {
-          tl.to(word, {
+      // Animate columns 2, 3, and 4 (empty columns)
+      const emptyCols = [col2, col3, col4].filter(Boolean)
+      emptyCols.forEach((col, colIndex) => {
+        if (col) {
+          gsap.set(col, { opacity: 0, y: 30 })
+          tl.to(col, {
             opacity: 1,
             y: 0,
-            duration: 0.4,
+            duration: 0.5,
             ease: 'power3.out',
-          }, `-=${0.4 - index * 0.05}`) // Start words animation during column animation
-        })
-      }
-
-      taglineTimelineRef.current = tl
-    }
-
-    // Animate projects tagline (4 columns)
-    if (projectsTaglineRef.current) {
-      // Kill existing timeline
-      if (projectsTaglineTimelineRef.current) {
-        projectsTaglineTimelineRef.current.kill()
-      }
-
-      const tl = gsap.timeline()
-      const columns = [
-        projectsTaglineRef.current.querySelector('.projects-tagline-col-1'),
-        projectsTaglineRef.current.querySelector('.projects-tagline-col-2'),
-        projectsTaglineRef.current.querySelector('.projects-tagline-col-3'),
-        projectsTaglineRef.current.querySelector('.projects-tagline-col-4'),
-      ].filter(Boolean) as Element[]
-
-      // Animate each column in sequence (1, 2, 3, 4)
-      columns.forEach((col, colIndex) => {
-        if (!col) return
-
-        gsap.set(col, { opacity: 0, y: 30 })
-        const words = col.querySelectorAll('.tagline-word')
-        const buttons = col.querySelectorAll('.projects-company-link')
-        const images = col.querySelectorAll('.project-gallery-image')
-        const captions = col.querySelectorAll('.project-gallery-caption')
-        
-        // Set initial state for all child elements
-        if (words.length > 0) {
-          gsap.set(words, { opacity: 0, y: 20 })
-        }
-        if (buttons.length > 0) {
-          gsap.set(buttons, { opacity: 0, y: 20 })
-        }
-        if (images.length > 0) {
-          gsap.set(images, { opacity: 0, y: 20 })
-        }
-        if (captions.length > 0) {
-          gsap.set(captions, { opacity: 0, y: 20 })
-        }
-
-        // Calculate start time for this column (stagger by 0.3 seconds)
-        const columnStartTime = colIndex * 0.3
-
-        // Animate column in
-        tl.to(col, {
-          opacity: 1,
-          y: 0,
-          duration: 0.5,
-          ease: 'power3.out',
-        }, columnStartTime)
-
-        // Animate words within column (start during column animation)
-        words.forEach((word, wordIndex) => {
-          tl.to(word, {
-            opacity: 1,
-            y: 0,
-            duration: 0.4,
-            ease: 'power3.out',
-          }, columnStartTime + 0.1 + wordIndex * 0.05)
-        })
-
-        // Animate buttons within column
-        buttons.forEach((button, btnIndex) => {
-          tl.to(button, {
-            opacity: 1,
-            y: 0,
-            duration: 0.4,
-            ease: 'power3.out',
-          }, columnStartTime + 0.1 + btnIndex * 0.1)
-        })
-
-        // Animate images within column
-        images.forEach((image, imgIndex) => {
-          tl.to(image, {
-            opacity: 1,
-            y: 0,
-            duration: 0.4,
-            ease: 'power3.out',
-          }, columnStartTime + 0.1 + imgIndex * 0.15)
-        })
-
-        // Animate captions within column
-        captions.forEach((caption, capIndex) => {
-          tl.to(caption, {
-            opacity: 1,
-            y: 0,
-            duration: 0.4,
-            ease: 'power3.out',
-          }, columnStartTime + 0.1 + capIndex * 0.1)
-        })
-      })
-
-      projectsTaglineTimelineRef.current = tl
-    }
-
-    // Animate contact tagline (4 columns)
-    if (activeTab === 'contact' && taglineRef.current) {
-      // Kill existing timeline
-      if (taglineTimelineRef.current) {
-        taglineTimelineRef.current.kill()
-      }
-
-      const tl = gsap.timeline()
-      const columns = [
-        taglineRef.current.querySelector('.contact-tagline-col-1'),
-        taglineRef.current.querySelector('.contact-tagline-col-2'),
-        taglineRef.current.querySelector('.contact-tagline-col-3'),
-        taglineRef.current.querySelector('.contact-tagline-col-4'),
-      ].filter(Boolean) as Element[]
-
-      // Animate each column in sequence (1, 2, 3, 4)
-      columns.forEach((col, colIndex) => {
-        if (!col) return
-
-        gsap.set(col, { opacity: 0, y: 30 })
-        const words = col.querySelectorAll('.tagline-word')
-        const socialLinks = col.querySelectorAll('.social-link')
-        const formFields = col.querySelectorAll('.contact-form-field')
-        const submitBtn = col.querySelector('.contact-submit-btn')
-        
-        // Set initial state for all child elements
-        if (words.length > 0) {
-          gsap.set(words, { opacity: 0, y: 20 })
-        }
-        if (socialLinks.length > 0) {
-          gsap.set(socialLinks, { opacity: 0, y: 20 })
-        }
-        if (formFields.length > 0) {
-          gsap.set(formFields, { opacity: 0, y: 20 })
-        }
-        if (submitBtn) {
-          gsap.set(submitBtn, { opacity: 0, y: 20 })
-        }
-
-        // Calculate start time for this column (stagger by 0.3 seconds)
-        const columnStartTime = colIndex * 0.3
-
-        // Animate column in
-        tl.to(col, {
-          opacity: 1,
-          y: 0,
-          duration: 0.5,
-          ease: 'power3.out',
-        }, columnStartTime)
-
-        // Animate words within column (start during column animation)
-        words.forEach((word, wordIndex) => {
-          tl.to(word, {
-            opacity: 1,
-            y: 0,
-            duration: 0.4,
-            ease: 'power3.out',
-          }, columnStartTime + 0.1 + wordIndex * 0.05)
-        })
-
-        // Animate social links within column
-        socialLinks.forEach((link, linkIndex) => {
-          tl.to(link, {
-            opacity: 1,
-            y: 0,
-            duration: 0.4,
-            ease: 'power3.out',
-          }, columnStartTime + 0.1 + linkIndex * 0.1)
-        })
-
-        // Animate form fields within column
-        formFields.forEach((field, fieldIndex) => {
-          tl.to(field, {
-            opacity: 1,
-            y: 0,
-            duration: 0.4,
-            ease: 'power3.out',
-          }, columnStartTime + 0.1 + fieldIndex * 0.1)
-        })
-
-        // Animate submit button within column
-        if (submitBtn) {
-          tl.to(submitBtn, {
-            opacity: 1,
-            y: 0,
-            duration: 0.4,
-            ease: 'power3.out',
-          }, columnStartTime + 0.1 + formFields.length * 0.1)
+          }, `+=${0.1 + colIndex * 0.1}`)
         }
       })
 
@@ -538,12 +322,8 @@ export default function HomePage() {
         taglineTimelineRef.current.kill()
         taglineTimelineRef.current = null
       }
-      if (projectsTaglineTimelineRef.current) {
-        projectsTaglineTimelineRef.current.kill()
-        projectsTaglineTimelineRef.current = null
-      }
     }
-  }, [activeTab, selectedClient])
+  }, [activeTab])
 
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
@@ -592,46 +372,12 @@ export default function HomePage() {
     }
   }, [])
 
-  const handleContactSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    setSubmitStatus('idle')
-
-    try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(contactForm),
-      })
-
-      const data = await response.json()
-
-      if (response.ok) {
-        setSubmitStatus('success')
-        setContactForm({ name: '', email: '', message: '' })
-        // Reset status after 3 seconds
-        setTimeout(() => setSubmitStatus('idle'), 3000)
-      } else {
-        setSubmitStatus('error')
-        setTimeout(() => setSubmitStatus('idle'), 3000)
-      }
-    } catch (error) {
-      console.error('Error submitting form:', error)
-      setSubmitStatus('error')
-      setTimeout(() => setSubmitStatus('idle'), 3000)
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
-
   return (
     <div ref={containerRef} className="website" style={{ backgroundColor: activeTabData.color }}>
       {/* Logo */}
       <div className="logo-container">
         <Image 
-          src={activeTab === 'projects' ? "/logo.svg" : "/logo1.svg"} 
+          src="/logo1.svg" 
           alt="sidewalk" 
           width={120} 
           height={40} 
@@ -644,180 +390,124 @@ export default function HomePage() {
         style={{ '--bg-color': activeTabData.color } as React.CSSProperties}
       >
         <div ref={sidewalkTopRef} className="swiss-title-top">SIDEWALK</div>
-        <div className={`swiss-title-middle ${activeTab === 'projects' && !selectedClient ? 'projects-title' : ''}`}>
-          {getPageTitle(activeTab, selectedClient)}
+        <div className="swiss-title-middle">
+          {getPageTitle(activeTab)}
         </div>
         <div className="swiss-title-bottom-container">
           <div ref={sidewalkBottomRef} className="swiss-title-bottom">SIDEWALK</div>
-          {activeTab === 'projects' ? (
-            <div ref={projectsTaglineRef} className="swiss-title-tagline projects-tagline">
-              {selectedClient ? (
-                <div className="projects-tagline-columns">
-                  {/* Column 1: All Projects */}
-                  <div className="projects-tagline-col-1">
-                    {clients.map((client) => (
-                      <button
-                        key={client.id}
-                        className={`projects-company-link ${selectedClient.id === client.id ? 'active' : ''}`}
-                        onClick={() => setSelectedClient(client)}
-                      >
-                        {client.companyName}
-                      </button>
-                    ))}
-                  </div>
-                  
-                  {/* Column 2: Description */}
-                  <div className="projects-tagline-col-2">
-                    {selectedClient.description && <div className="project-detail-section">{wrapWords(selectedClient.description)}</div>}
-                  </div>
-                  
-                  {/* Column 3: Features */}
-                  <div className="projects-tagline-col-3">
-                    {selectedClient.features && selectedClient.features.length > 0 && (
-                      <div className="project-detail-section">
-                        {selectedClient.features.map((feature, index) => (
-                          <div key={feature.id || index} className="project-feature">
-                            {wrapWords(feature.feature)}{feature.description && wrapWords(` — ${feature.description}`)}
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                  
-                  {/* Column 4: Gallery */}
-                  <div className="projects-tagline-col-4">
-                    {selectedClient.gallery && selectedClient.gallery.length > 0 && (
-                      <div className="project-gallery">
-                        {selectedClient.gallery.map((item, index) => {
-                          const image = typeof item.image === 'object' && item.image !== null 
-                            ? item.image 
-                            : null
-                          if (!image || !image.url) return null
-                          
-                          return (
-                            <div key={item.id || index} className="project-gallery-item">
-                              <Image
-                                src={image.url}
-                                alt={item.caption || selectedClient.companyName || 'Project image'}
-                                width={image.width || 400}
-                                height={image.height || 300}
-                                className="project-gallery-image"
-                              />
-                              {item.caption && (
-                                <div className="project-gallery-caption">{wrapWords(item.caption)}</div>
-                              )}
-                            </div>
-                          )
-                        })}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ) : (
-                <div className="projects-tagline-columns projects-tagline-columns-initial">
-                  <div className="projects-tagline-col-1">
-                    {clients.map((client) => (
-                      <button
-                        key={client.id}
-                        className="projects-company-link"
-                        onClick={() => setSelectedClient(client)}
-                      >
-                        {client.companyName}
-                      </button>
-                    ))}
-                  </div>
-                  <div className="projects-tagline-col-2">
-                    {wrapWords("our portfolio showcases modern web applications built with comprehensive services. each project represents our commitment to self-hosted solutions, custom integrations, and beautiful user experiences that help businesses thrive online.")}
-                  </div>
-                  <div className="projects-tagline-col-3"></div>
-                  <div className="projects-tagline-col-4"></div>
-                </div>
-              )}
-            </div>
-          ) : activeTab === 'contact' ? (
-            <div ref={taglineRef} className="swiss-title-tagline contact-tagline">
+          {getPageTagline(activeTab) && (
+            <div ref={taglineRef} className="swiss-title-tagline">
               <div className="contact-tagline-columns">
                 <div className="contact-tagline-col-1">
-                  {wrapWords(getPageTagline(activeTab, selectedClient))}
+                  {wrapWords(getPageTagline(activeTab))}
                 </div>
                 <div className="contact-tagline-col-2">
-                  <div className="social-links">
-                    <a href="https://www.instagram.com/sidewalk.co.nz/" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="Instagram">
-                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.266.07 1.646.07 4.85 0 3.204-.012 3.584-.07 4.85-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.646.07-4.85.07-3.204 0-3.584-.012-4.85-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.646-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.646-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" fill="currentColor"/>
-                      </svg>
-                    </a>
-                    <a href="https://www.facebook.com/profile.php?id=61581022527859" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="Facebook">
-                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" fill="currentColor"/>
-                      </svg>
-                    </a>
-                  </div>
+                  {activeTab === 'contact' && (
+                    <div className="social-links">
+                      <a href="https://www.facebook.com/profile.php?id=61581022527859" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="Facebook">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                        </svg>
+                      </a>
+                      <a href="https://www.instagram.com/sidewalk.co.nz/" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="Instagram">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                      </a>
+                    </div>
+                  )}
                 </div>
                 <div className="contact-tagline-col-3">
-                  <a href="mailto:admin@sidewalks.co.nz" className="contact-email-link">
-                    {wrapWords('admin@sidewalks.co.nz')}
-                  </a>
-                  <br />
-                  {wrapWords('nelson, new zealand')}
+                  {activeTab === 'contact' && (
+                    <>
+                      <div><a href="mailto:admin@sidewalks.co.nz" className="contact-email-link">admin@sidewalks.co.nz</a></div>
+                      <div>nelson, new zealand</div>
+                    </>
+                  )}
                 </div>
                 <div className="contact-tagline-col-4">
-                  <form ref={contactFormFieldsRef} className="contact-form-fields" onSubmit={handleContactSubmit}>
-                    <div className="contact-form-field">
-                      <input 
-                        type="text" 
-                        placeholder="name" 
-                        className="contact-input" 
-                        value={contactForm.name}
-                        onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
-                        required
-                      />
-                    </div>
-                    <div className="contact-form-field">
-                      <input 
-                        type="email" 
-                        placeholder="email" 
-                        className="contact-input" 
-                        value={contactForm.email}
-                        onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
-                        required
-                      />
-                    </div>
-                    <div className="contact-form-field">
-                      <textarea 
-                        placeholder="message" 
-                        className="contact-textarea" 
-                        rows={4}
-                        value={contactForm.message}
-                        onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
-                        required
-                      ></textarea>
-                    </div>
-                    <button 
-                      type="submit" 
-                      className="contact-submit-btn" 
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? 'sending...' : submitStatus === 'success' ? 'sent!' : 'send'}
-                    </button>
-                    {submitStatus === 'error' && (
-                      <div className="contact-form-error">error sending message. please try again.</div>
-                    )}
-                  </form>
+                  {activeTab === 'contact' && (
+                    <form className="contact-form-fields" onSubmit={async (e) => {
+                      e.preventDefault()
+                      setFormStatus('loading')
+                      setFormError('')
+
+                      try {
+                        const response = await fetch('/api/contact', {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                          },
+                          body: JSON.stringify(formData),
+                        })
+
+                        const data = await response.json()
+
+                        if (!response.ok) {
+                          throw new Error(data.error || 'Failed to send message')
+                        }
+
+                        setFormStatus('success')
+                        setFormData({ name: '', email: '', message: '' })
+                        
+                        // Reset status after 3 seconds
+                        setTimeout(() => {
+                          setFormStatus('idle')
+                        }, 3000)
+                      } catch (error) {
+                        setFormStatus('error')
+                        setFormError(error instanceof Error ? error.message : 'Failed to send message. Please try again.')
+                      }
+                    }}>
+                      <div className="contact-form-field">
+                        <input
+                          type="text"
+                          className="contact-input"
+                          placeholder="name"
+                          value={formData.name}
+                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                          required
+                          disabled={formStatus === 'loading'}
+                        />
+                      </div>
+                      <div className="contact-form-field">
+                        <input
+                          type="email"
+                          className="contact-input"
+                          placeholder="email"
+                          value={formData.email}
+                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                          required
+                          disabled={formStatus === 'loading'}
+                        />
+                      </div>
+                      <div className="contact-form-field">
+                        <textarea
+                          className="contact-textarea"
+                          placeholder="message"
+                          value={formData.message}
+                          onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                          required
+                          disabled={formStatus === 'loading'}
+                        />
+                      </div>
+                      <button 
+                        type="submit" 
+                        className="contact-submit-btn"
+                        disabled={formStatus === 'loading'}
+                      >
+                        {formStatus === 'loading' ? 'sending...' : formStatus === 'success' ? 'sent!' : 'send'}
+                      </button>
+                      {formError && (
+                        <div className="contact-form-error">
+                          {formError}
+                        </div>
+                      )}
+                    </form>
+                  )}
                 </div>
               </div>
             </div>
-          ) : (
-            getPageTagline(activeTab, selectedClient) && (
-              <div ref={taglineRef} className="swiss-title-tagline">
-                <div className="tagline-columns">
-                  <div className="tagline-col-left">
-                    {wrapWords(getPageTagline(activeTab, selectedClient))}
-                  </div>
-                  <div className="tagline-col-right"></div>
-                </div>
-              </div>
-            )
           )}
         </div>
       </div>
@@ -887,3 +577,4 @@ export default function HomePage() {
     </div>
   )
 }
+

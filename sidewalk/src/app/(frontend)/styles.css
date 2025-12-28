@@ -128,6 +128,8 @@ body {
   box-sizing: border-box;
   margin-left: auto;
   margin-right: auto;
+  pointer-events: auto;
+  user-select: text;
 }
 
 .tagline-columns {
@@ -934,12 +936,13 @@ body {
   font-family: var(--font-title);
   font-size: clamp(10px, 1.5vw, 20px);
   font-weight: 700;
-  color: var(--color-dark);
+  color: inherit;
   line-height: 1.4;
   letter-spacing: 0.5px;
   text-transform: lowercase;
   min-width: 0;
   overflow-wrap: break-word;
+  user-select: text;
 }
 
 .contact-tagline-col-1 {
@@ -955,6 +958,20 @@ body {
   overflow-wrap: break-word;
 }
 
+.contact-tagline-col-2 .social-links {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+}
+
+.contact-tagline-col-2 .social-link {
+  color: inherit;
+  width: 32px;
+  height: 32px;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
 .contact-tagline-col-3 {
   text-align: left;
   min-width: 0;
@@ -965,6 +982,16 @@ body {
   text-align: left;
   min-width: 0;
   overflow-wrap: break-word;
+}
+
+.contact-tagline-col-4 .contact-form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.contact-tagline-col-4 .contact-form-field {
+  width: 100%;
 }
 
 .social-links {
@@ -993,7 +1020,7 @@ body {
 }
 
 .contact-email-link {
-  color: var(--color-dark);
+  color: inherit;
   text-decoration: none;
   transition: color 0.3s ease;
   display: inline-block;
@@ -1024,7 +1051,7 @@ body {
   font-family: var(--font-title);
   font-size: clamp(10px, 1.5vw, 20px);
   font-weight: 700;
-  color: var(--color-dark);
+  color: inherit;
   background: transparent;
   transition: all 0.3s ease;
   text-transform: lowercase;
