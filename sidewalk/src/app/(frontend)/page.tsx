@@ -7,6 +7,31 @@ import './styles.css'
 
 type Tab = 'home' | 'about' | 'skills' | 'projects' | 'contact'
 
+type Project = {
+  id: string
+  name: string
+  description: string
+  features: string[]
+  gallery: string[] // Image URLs or paths
+}
+
+const projects: Project[] = [
+  {
+    id: 'student-tours',
+    name: 'the student tours',
+    description: '',
+    features: [],
+    gallery: []
+  },
+  {
+    id: 'under-the-hood-bbq',
+    name: 'under the hood bbq',
+    description: '',
+    features: [],
+    gallery: []
+  }
+]
+
 const tabs: { id: Tab; label: string; color: string }[] = [
   { id: 'home', label: 'Home', color: '#F3ECE3' }, // cream
   { id: 'about', label: 'About', color: '#B74831' }, // red
@@ -67,7 +92,7 @@ const wrapWords = (node: React.ReactNode): React.ReactNode => {
   return node
 }
 
-const getPageTitle = (tab: Tab): string => {
+const getPageTitle = (tab: Tab, selectedProject?: Project | null): string => {
   switch (tab) {
     case 'home':
       return 'web solutions'
@@ -76,7 +101,7 @@ const getPageTitle = (tab: Tab): string => {
     case 'skills':
       return 'services'
     case 'projects':
-      return 'projects'
+      return selectedProject ? selectedProject.name : 'projects'
     case 'contact':
       return 'contact'
     default:
@@ -108,11 +133,8 @@ const getPageTagline = (tab: Tab): React.ReactNode => {
         </>
       )
     case 'projects':
-      return (
-        <>
-          empowering businesses with <span className="tagline-highlight">self-hosted</span> web solutions that <span className="tagline-highlight">streamline</span> workflow and <span className="tagline-highlight">elevate</span> their digital presence
-        </>
-      )
+      // Projects tagline is now shown in column 2 when no project is selected
+      return null
     case 'contact':
       return (
         <>
@@ -134,6 +156,8 @@ const getPageTagline = (tab: Tab): React.ReactNode => {
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState<Tab>('home')
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null)
+  const [projectsList, setProjectsList] = useState<Project[]>(projects)
   const [formData, setFormData] = useState({ name: '', email: '', message: '' })
   const [formStatus, setFormStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [formError, setFormError] = useState<string>('')
@@ -300,6 +324,35 @@ export default function HomePage() {
     }
   }, [activeTab])
 
+  // Fetch projects from API
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await fetch('/api/projects')
+        if (response.ok) {
+          const data = await response.json()
+          if (data.projects && data.projects.length > 0) {
+            setProjectsList(data.projects)
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching projects:', error)
+        // Keep the default projects array if API fails
+      }
+    }
+
+    if (activeTab === 'projects') {
+      fetchProjects()
+    }
+  }, [activeTab])
+
+  // Reset selected project when switching away from projects tab
+  useEffect(() => {
+    if (activeTab !== 'projects') {
+      setSelectedProject(null)
+    }
+  }, [activeTab])
+
   // Animate tab changes
   useEffect(() => {
     // Use requestAnimationFrame to ensure DOM is ready after React render
@@ -323,7 +376,7 @@ export default function HomePage() {
         taglineTimelineRef.current = null
       }
     }
-  }, [activeTab])
+  }, [activeTab, selectedProject])
 
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
@@ -391,17 +444,54 @@ export default function HomePage() {
       >
         <div ref={sidewalkTopRef} className="swiss-title-top">SIDEWALK</div>
         <div className="swiss-title-middle">
-          {getPageTitle(activeTab)}
+          {getPageTitle(activeTab, selectedProject)}
         </div>
         <div className="swiss-title-bottom-container">
           <div ref={sidewalkBottomRef} className="swiss-title-bottom">SIDEWALK</div>
-          {getPageTagline(activeTab) && (
+          {(getPageTagline(activeTab) || activeTab === 'projects') && (
             <div ref={taglineRef} className="swiss-title-tagline">
               <div className="contact-tagline-columns">
                 <div className="contact-tagline-col-1">
-                  {wrapWords(getPageTagline(activeTab))}
+                  {activeTab === 'projects' ? (
+                    <div className="project-list">
+                      {projectsList.map((project) => (
+                        <button
+                          key={project.id}
+                          className={`project-name-btn ${selectedProject?.id === project.id ? 'active' : ''}`}
+                          onClick={() => setSelectedProject(project)}
+                        >
+                          {project.name}
+                        </button>
+                      ))}
+                    </div>
+                  ) : (
+                    wrapWords(getPageTagline(activeTab))
+                  )}
                 </div>
                 <div className="contact-tagline-col-2">
+                  {activeTab === 'projects' && selectedProject && (
+                    <div className="project-description">
+                      {selectedProject.description || 'No description available.'}
+                    </div>
+                  )}
+                  {activeTab === 'projects' && !selectedProject && (
+                    <>
+                      {wrapWords(
+                        <>
+                          our portfolio showcases<br />
+                          <span className="tagline-highlight">modern web applications</span><br />
+                          built with comprehensive<br />
+                          <span className="tagline-highlight">services</span>. each project<br />
+                          represents our<br />
+                          commitment to <span className="tagline-highlight">self-hosted</span><br />
+                          solutions, <span className="tagline-highlight">custom</span><br />
+                          <span className="tagline-highlight">integrations</span>, and <span className="tagline-highlight">beautiful</span><br />
+                          <span className="tagline-highlight">user experiences</span> that help<br />
+                          <span className="tagline-highlight">businesses</span> thrive online.
+                        </>
+                      )}
+                    </>
+                  )}
                   {activeTab === 'contact' && (
                     <div className="social-links">
                       <a href="https://www.facebook.com/profile.php?id=61581022527859" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="Facebook">
@@ -418,6 +508,19 @@ export default function HomePage() {
                   )}
                 </div>
                 <div className="contact-tagline-col-3">
+                  {activeTab === 'projects' && selectedProject && (
+                    <div className="project-features">
+                      {selectedProject.features && selectedProject.features.length > 0 ? (
+                        <ul className="features-list">
+                          {selectedProject.features.map((feature, index) => (
+                            <li key={index}>{feature}</li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <div>No features listed.</div>
+                      )}
+                    </div>
+                  )}
                   {activeTab === 'contact' && (
                     <>
                       <div><a href="mailto:admin@sidewalks.co.nz" className="contact-email-link">admin@sidewalks.co.nz</a></div>
@@ -426,6 +529,27 @@ export default function HomePage() {
                   )}
                 </div>
                 <div className="contact-tagline-col-4">
+                  {activeTab === 'projects' && selectedProject && (
+                    <div className="project-gallery">
+                      {selectedProject.gallery && selectedProject.gallery.length > 0 ? (
+                        <div className="gallery-grid">
+                          {selectedProject.gallery.map((image, index) => (
+                            <div key={index} className="gallery-item">
+                              <Image
+                                src={image}
+                                alt={`${selectedProject.name} gallery image ${index + 1}`}
+                                width={400}
+                                height={300}
+                                className="gallery-image"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div>No gallery images available.</div>
+                      )}
+                    </div>
+                  )}
                   {activeTab === 'contact' && (
                     <form className="contact-form-fields" onSubmit={async (e) => {
                       e.preventDefault()
