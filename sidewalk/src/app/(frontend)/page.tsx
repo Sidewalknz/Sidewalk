@@ -11,7 +11,7 @@ type Tab = 'home' | 'about' | 'skills' | 'projects' | 'contact'
 const tabs: { id: Tab; label: string; color: string }[] = [
   { id: 'home', label: 'Home', color: '#F3ECE3' }, // cream
   { id: 'about', label: 'About', color: '#B74831' }, // red
-  { id: 'skills', label: 'Technologies', color: '#D7B350' }, // yellow
+  { id: 'skills', label: 'Services', color: '#D7B350' }, // yellow
   { id: 'projects', label: 'Projects', color: '#1C2830' }, // brand color
   { id: 'contact', label: 'Contact', color: '#F3ECE3' }, // cream
 ]
@@ -75,7 +75,7 @@ const getPageTitle = (tab: Tab, selectedClient?: Client | null): string => {
     case 'about':
       return 'about'
     case 'skills':
-      return 'technology'
+      return 'services'
     case 'projects':
       return selectedClient?.companyName || 'projects'
     case 'contact':
@@ -105,7 +105,7 @@ const getPageTagline = (tab: Tab, selectedClient?: Client | null): React.ReactNo
     case 'skills':
       return (
         <>
-          we specialize in modern web technologies that power scalable, self-hosted solutions. our current stack includes <span className="tagline-highlight">next.js</span> for production-ready react applications, <span className="tagline-highlight">payload</span> for flexible content management, and <span className="tagline-highlight">postgres</span> for robust data storage.
+          we offer comprehensive web services that power scalable, self-hosted solutions. our services include <span className="tagline-highlight">custom web development</span> with modern frameworks, <span className="tagline-highlight">content management systems</span> tailored to your needs, and <span className="tagline-highlight">self-hosted infrastructure</span> solutions that give you complete control over your digital presence.
         </>
       )
     case 'projects':
@@ -727,7 +727,7 @@ export default function HomePage() {
                     ))}
                   </div>
                   <div className="projects-tagline-col-2">
-                    {wrapWords("our portfolio showcases modern web applications built with cutting-edge technology. each project represents our commitment to self-hosted solutions, custom integrations, and beautiful user experiences that help businesses thrive online.")}
+                    {wrapWords("our portfolio showcases modern web applications built with comprehensive services. each project represents our commitment to self-hosted solutions, custom integrations, and beautiful user experiences that help businesses thrive online.")}
                   </div>
                   <div className="projects-tagline-col-3"></div>
                   <div className="projects-tagline-col-4"></div>
