@@ -430,7 +430,7 @@ export default function HomePage() {
       {/* Logo */}
       <div className="logo-container">
         <Image 
-          src="/logo1.svg" 
+          src={activeTab === 'about' || activeTab === 'projects' ? "/logo.svg" : "/logo1.svg"} 
           alt="sidewalk" 
           width={120} 
           height={40} 

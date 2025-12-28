@@ -379,6 +379,19 @@ body {
   position: relative;
   z-index: 2;
   background-color: var(--bg-color, #F3ECE3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Scale down font size for long project names to keep on one line */
+.swiss-title-middle.project-name-title {
+  white-space: nowrap;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
 }
 
 .swiss-title-middle.projects-title {
