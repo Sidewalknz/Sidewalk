@@ -1551,6 +1551,7 @@ body {
 
   .contact-tagline-columns,
   .projects-tagline-columns {
+    grid-template-columns: 1fr 1fr;
     gap: clamp(0.5rem, 1vw, 1rem);
     max-width: min(100%, calc(100vw - 1.5rem));
   }
@@ -1611,6 +1612,7 @@ body {
 
   .contact-tagline-columns,
   .projects-tagline-columns {
+    grid-template-columns: 1fr 1fr;
     gap: 0.5rem;
     max-width: calc(100vw - 1.5rem);
   }
