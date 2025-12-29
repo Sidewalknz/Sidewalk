@@ -473,7 +473,7 @@ export default function HomePage() {
                     <>
                       {wrapWords(
                         <>
-                          custom front end<br />
+                          custom frontend<br />
                           custom backend<br />
                           workflow integration<br />
                           automation<br />
@@ -483,7 +483,8 @@ export default function HomePage() {
                           analytics<br />
                           templated emails<br />
                           SEO<br />
-                          Website Optimisation
+                          Website Optimisation<br />
+                          ticketing & booking systems
                         </>
                       )}
                     </>
