@@ -80,7 +80,7 @@ body {
 .swiss-title-top,
 .swiss-title-bottom {
   font-family: var(--font-title);
-  font-size: clamp(80px, 15vw, 210px);
+  font-size: clamp(96px, 18vw, 250px);
   font-weight: 800;
   color: var(--color-dark);
   text-transform: uppercase;
@@ -368,7 +368,7 @@ body {
 
 .swiss-title-middle {
   font-family: var(--font-title);
-  font-size: clamp(54px, 10vw, 145px);
+  font-size: clamp(64px, 12vw, 170px);
   font-weight: 800;
   color: var(--color-accent-red);
   text-transform: lowercase;
@@ -1555,6 +1555,19 @@ body {
     max-width: min(100%, calc(100vw - 1.5rem));
   }
 
+  .swiss-title-top,
+  .swiss-title-bottom {
+    font-size: clamp(80px, 15vw, 210px);
+  }
+
+  .swiss-title-middle {
+    font-size: clamp(54px, 10vw, 145px);
+  }
+
+  .swiss-title-bottom-container {
+    margin-top: -0.8em;
+  }
+
   .logo-container {
     top: 16px;
     left: 16px;
@@ -1600,6 +1613,19 @@ body {
   .projects-tagline-columns {
     gap: 0.5rem;
     max-width: calc(100vw - 1.5rem);
+  }
+
+  .swiss-title-top,
+  .swiss-title-bottom {
+    font-size: clamp(70px, 13vw, 180px);
+  }
+
+  .swiss-title-middle {
+    font-size: clamp(48px, 9vw, 130px);
+  }
+
+  .swiss-title-bottom-container {
+    margin-top: -0.3em;
   }
 
   .logo-container {
