@@ -1039,6 +1039,12 @@ body {
   gap: 0;
 }
 
+.project-item-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
 .project-name-btn {
   background: transparent;
   border: none;
@@ -1063,6 +1069,27 @@ body {
 
 .project-name-btn.active {
   color: var(--color-accent-red);
+}
+
+.project-website-link {
+  display: block;
+  margin-left: 1.5rem;
+  font-family: var(--font-title);
+  font-size: clamp(10px, 1.5vw, 20px);
+  font-weight: 700;
+  color: inherit;
+  line-height: 1.4;
+  letter-spacing: 0.5px;
+  text-transform: lowercase;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  pointer-events: auto;
+  opacity: 0.8;
+}
+
+.project-website-link:hover {
+  color: var(--color-accent-red);
+  opacity: 1;
 }
 
 .project-description {

@@ -40,6 +40,7 @@ export async function GET() {
         description: client.description || '',
         features: features,
         gallery: gallery,
+        website: client.website || undefined,
       }
     })
 

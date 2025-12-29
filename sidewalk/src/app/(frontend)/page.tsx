@@ -13,6 +13,7 @@ type Project = {
   description: string
   features: string[]
   gallery: string[] // Image URLs or paths
+  website?: string // Website URL
 }
 
 const projects: Project[] = [
@@ -493,13 +494,24 @@ export default function HomePage() {
                   {activeTab === 'projects' ? (
                     <div className="project-list">
                       {projectsList.map((project) => (
-                        <button
-                          key={project.id}
-                          className={`project-name-btn ${selectedProject?.id === project.id ? 'active' : ''}`}
-                          onClick={() => setSelectedProject(project)}
-                        >
-                          {project.name}
-                        </button>
+                        <div key={project.id} className="project-item-wrapper">
+                          <button
+                            className={`project-name-btn ${selectedProject?.id === project.id ? 'active' : ''}`}
+                            onClick={() => setSelectedProject(project)}
+                          >
+                            {project.name}
+                          </button>
+                          {selectedProject?.id === project.id && selectedProject.website && (
+                            <a
+                              href={selectedProject.website}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="project-website-link"
+                            >
+                              visit website
+                            </a>
+                          )}
+                        </div>
                       ))}
                     </div>
                   ) : (
