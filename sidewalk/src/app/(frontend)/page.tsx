@@ -522,7 +522,8 @@ export default function HomePage() {
                           templated emails<br />
                           SEO<br />
                           Website Optimisation<br />
-                          ticketing & booking systems
+                          ticketing & booking systems<br />
+                          and much more!
                         </>
                       )}
                     </>
