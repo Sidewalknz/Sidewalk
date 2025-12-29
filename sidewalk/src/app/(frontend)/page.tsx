@@ -597,8 +597,8 @@ export default function HomePage() {
                               <Image
                                 src={image}
                                 alt={`${selectedProject.name} gallery image ${index + 1}`}
-                                width={400}
-                                height={300}
+                                width={300}
+                                height={200}
                                 className="gallery-image"
                               />
                             </div>

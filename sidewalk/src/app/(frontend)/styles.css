@@ -828,10 +828,12 @@ body {
 
 .gallery-image {
   width: 100%;
+  max-width: 100%;
   height: auto;
   object-fit: cover;
   border-radius: 8px;
   border: 2px solid rgba(28, 40, 48, 0.1);
+  display: block;
 }
 
 .gallery-caption {
@@ -1016,6 +1018,8 @@ body {
   text-align: left;
   min-width: 0;
   overflow-wrap: break-word;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .contact-tagline-col-4 .contact-form-fields {
@@ -1113,13 +1117,21 @@ body {
 
 .project-gallery .gallery-item {
   width: 100%;
+  max-width: 300px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.project-gallery .gallery-item:last-child {
+  margin-bottom: 0;
 }
 
 .project-gallery .gallery-image {
-  width: 100%;
-  height: auto;
+  width: 300px;
+  height: 200px;
   object-fit: cover;
   border-radius: 4px;
+  display: block;
 }
 
 .social-links {
