@@ -1556,6 +1556,23 @@ body {
     max-width: min(100%, calc(100vw - 1.5rem));
   }
 
+  /* Reorder contact columns on mobile - only when contact form is present */
+  .contact-tagline-columns:has(.contact-form-fields) .contact-tagline-col-1 {
+    order: 1; /* Description - top left */
+  }
+
+  .contact-tagline-columns:has(.contact-form-fields) .contact-tagline-col-4 {
+    order: 2; /* Form - top right */
+  }
+
+  .contact-tagline-columns:has(.contact-form-fields) .contact-tagline-col-2 {
+    order: 3; /* Social links - bottom left */
+  }
+
+  .contact-tagline-columns:has(.contact-form-fields) .contact-tagline-col-3 {
+    order: 4; /* Info/details - bottom right */
+  }
+
   .swiss-title-top,
   .swiss-title-bottom {
     font-size: clamp(85px, 16vw, 220px);
@@ -1615,6 +1632,23 @@ body {
     grid-template-columns: 1fr 1fr;
     gap: 0.5rem;
     max-width: calc(100vw - 1.5rem);
+  }
+
+  /* Reorder contact columns on mobile - only when contact form is present */
+  .contact-tagline-columns:has(.contact-form-fields) .contact-tagline-col-1 {
+    order: 1; /* Description - top left */
+  }
+
+  .contact-tagline-columns:has(.contact-form-fields) .contact-tagline-col-4 {
+    order: 2; /* Form - top right */
+  }
+
+  .contact-tagline-columns:has(.contact-form-fields) .contact-tagline-col-2 {
+    order: 3; /* Social links - bottom left */
+  }
+
+  .contact-tagline-columns:has(.contact-form-fields) .contact-tagline-col-3 {
+    order: 4; /* Info/details - bottom right */
   }
 
   .swiss-title-top,
