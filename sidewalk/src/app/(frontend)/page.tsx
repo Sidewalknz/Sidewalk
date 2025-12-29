@@ -469,6 +469,25 @@ export default function HomePage() {
                   )}
                 </div>
                 <div className="contact-tagline-col-2">
+                  {activeTab === 'skills' && (
+                    <>
+                      {wrapWords(
+                        <>
+                          custom front end<br />
+                          custom backend<br />
+                          workflow integration<br />
+                          automation<br />
+                          brand matching<br />
+                          content management<br />
+                          self-hosted solutions<br />
+                          analytics<br />
+                          templated emails<br />
+                          SEO<br />
+                          Website Optimisation
+                        </>
+                      )}
+                    </>
+                  )}
                   {activeTab === 'projects' && selectedProject && (
                     <div className="project-description">
                       {selectedProject.description || 'No description available.'}
