@@ -1,9 +1,13 @@
 'use client'
 
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import Image from 'next/image'
 import { gsap } from 'gsap'
 import './styles.css'
+
+// Constants for swipe detection
+const MIN_SWIPE_DISTANCE = 50 // Minimum distance in pixels to trigger a swipe
+const MAX_SWIPE_TIME = 300 // Maximum time in ms for a swipe gesture
 
 type Tab = 'home' | 'about' | 'skills' | 'projects' | 'contact'
 
@@ -93,7 +97,7 @@ const wrapWords = (node: React.ReactNode): React.ReactNode => {
   return node
 }
 
-const getPageTitle = (tab: Tab, selectedProject?: Project | null): string => {
+const getPageTitle = (tab: Tab): string => {
   switch (tab) {
     case 'home':
       return 'web solutions'
@@ -102,7 +106,7 @@ const getPageTitle = (tab: Tab, selectedProject?: Project | null): string => {
     case 'skills':
       return 'services'
     case 'projects':
-      return selectedProject ? selectedProject.name : 'projects'
+      return 'projects'
     case 'contact':
       return 'contact'
     default:
@@ -435,6 +439,54 @@ export default function HomePage() {
     }
   }, [activeTab, selectedProject])
 
+  // Touch/swipe handling for mobile
+  const touchStartRef = useRef<{ x: number; y: number; time: number } | null>(null)
+
+  const navigateToNextTab = useCallback((direction: 'up' | 'down') => {
+    if (isScrollingRef.current) return false
+
+    isScrollingRef.current = true
+
+    setActiveTab((currentTab) => {
+      const currentIndex = tabs.findIndex(tab => tab.id === currentTab)
+      let newIndex: number
+
+      if (direction === 'down') {
+        // Swiping down - go to next tab (or loop to home if at contact)
+        if (currentIndex === tabs.length - 1) {
+          // At contact, loop to home
+          newIndex = 0
+        } else {
+          newIndex = currentIndex + 1
+        }
+      } else {
+        // Swiping up - go to previous tab (or loop to contact if at home)
+        if (currentIndex === 0) {
+          // At home, loop to contact
+          newIndex = tabs.length - 1
+        } else {
+          newIndex = currentIndex - 1
+        }
+      }
+
+      if (newIndex !== currentIndex) {
+        return tabs[newIndex].id
+      }
+      
+      return currentTab
+    })
+
+    if (scrollTimeoutRef.current) {
+      clearTimeout(scrollTimeoutRef.current)
+    }
+
+    scrollTimeoutRef.current = setTimeout(() => {
+      isScrollingRef.current = false
+    }, 800)
+
+    return true
+  }, [])
+
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
       if (isScrollingRef.current) return
@@ -472,15 +524,60 @@ export default function HomePage() {
       }, 800)
     }
 
+    const handleTouchStart = (e: TouchEvent) => {
+      const touch = e.touches[0]
+      touchStartRef.current = {
+        x: touch.clientX,
+        y: touch.clientY,
+        time: Date.now()
+      }
+    }
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (!touchStartRef.current) return
+
+      const touch = e.changedTouches[0]
+      const deltaX = touch.clientX - touchStartRef.current.x
+      const deltaY = touch.clientY - touchStartRef.current.y
+      const deltaTime = Date.now() - touchStartRef.current.time
+
+      // Check if it's a valid swipe (not too slow, not too short)
+      if (deltaTime > MAX_SWIPE_TIME) {
+        touchStartRef.current = null
+        return
+      }
+
+      // Determine if it's primarily a vertical swipe
+      const absDeltaX = Math.abs(deltaX)
+      const absDeltaY = Math.abs(deltaY)
+
+      if (absDeltaY > MIN_SWIPE_DISTANCE && absDeltaY > absDeltaX) {
+        // It's a vertical swipe
+        if (deltaY > 0) {
+          // Swiping down
+          navigateToNextTab('down')
+        } else {
+          // Swiping up
+          navigateToNextTab('up')
+        }
+      }
+
+      touchStartRef.current = null
+    }
+
     window.addEventListener('wheel', handleWheel, { passive: false })
+    window.addEventListener('touchstart', handleTouchStart, { passive: true })
+    window.addEventListener('touchend', handleTouchEnd, { passive: true })
 
     return () => {
       window.removeEventListener('wheel', handleWheel)
+      window.removeEventListener('touchstart', handleTouchStart)
+      window.removeEventListener('touchend', handleTouchEnd)
       if (scrollTimeoutRef.current) {
         clearTimeout(scrollTimeoutRef.current)
       }
     }
-  }, [])
+  }, [navigateToNextTab])
 
   return (
     <div ref={containerRef} className="website" style={{ backgroundColor: activeTabData.color }}>
@@ -492,6 +589,22 @@ export default function HomePage() {
           width={120} 
           height={40} 
         />
+        {/* Mobile Navigation Buttons */}
+        <div className="mobile-nav-buttons">
+          <button 
+            className="mobile-nav-btn mobile-nav-prev"
+            onClick={() => navigateToNextTab('up')}
+            aria-label="Previous tab"
+          ><svg id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 65.76 56.84"><path d="M3.43,46.69l57.84,10.1c2.35.41,4.5-1.46,4.49-3.9l-.24-38.89c-.01-1.9-1.36-3.53-3.2-3.85L4.49.06C2.13-.35-.02,1.51,0,3.96l.24,38.89c.01,1.9,1.36,3.53,3.2,3.85h0Z" fill="#cd5037"/></svg>
+          </button>
+          <button 
+            className="mobile-nav-btn mobile-nav-next"
+            onClick={() => navigateToNextTab('down')}
+            aria-label="Next tab"
+          >
+<svg id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 65.76 56.84"><path d="M62.33,46.69L4.49,56.79C2.14,57.2,0,55.33,0,52.89L.24,14c.01-1.9,1.36-3.53,3.2-3.85L61.27.06c2.36-.41,4.51,1.45,4.49,3.9l-.24,38.89c-.01,1.9-1.36,3.53-3.2,3.85h0Z" fill="#cd5037"/></svg>
+          </button>
+        </div>
       </div>
 
       {/* Swiss Typography Title */}
@@ -500,8 +613,8 @@ export default function HomePage() {
         style={{ '--bg-color': activeTabData.color } as React.CSSProperties}
       >
         <div ref={sidewalkTopRef} className="swiss-title-top">SIDEWALK</div>
-        <div className="swiss-title-middle">
-          {getPageTitle(activeTab, selectedProject)}
+        <div className={`swiss-title-middle ${activeTab === 'projects' ? 'projects-title' : ''}`}>
+          {getPageTitle(activeTab)}
         </div>
         <div className="swiss-title-bottom-container">
           <div ref={sidewalkBottomRef} className="swiss-title-bottom">SIDEWALK</div>

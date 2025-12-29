@@ -63,6 +63,38 @@ body {
   display: block;
 }
 
+/* Mobile Navigation Buttons */
+.mobile-nav-buttons {
+  display: none;
+}
+
+.mobile-nav-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: auto;
+  transition: opacity 0.2s ease;
+}
+
+.mobile-nav-btn:hover {
+  opacity: 0.8;
+}
+
+.mobile-nav-btn:active {
+  opacity: 0.6;
+}
+
+.nav-shape {
+  height: 100%;
+  width: auto;
+  display: block;
+}
+
 /* Swiss Typography Title */
 .swiss-title {
   position: fixed;
@@ -1589,7 +1621,33 @@ body {
   .logo-container {
     top: 16px;
     left: 16px;
+    right: 16px;
     height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo-container img {
+    height: 100%;
+    width: auto;
+  }
+
+  .mobile-nav-buttons {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 100%;
+  }
+
+  .mobile-nav-btn {
+    height: 100%;
+    width: 32px;
+  }
+
+  .nav-shape {
+    height: 100%;
+    width: 100%;
   }
 
   .main-content {
@@ -1605,20 +1663,7 @@ body {
   }
 
   .tab-navigation {
-    gap: 4px;
-    padding: 12px;
-    bottom: -45px;
-  }
-
-  .tab-button {
-    width: 90px;
-    height: 85px;
-    padding-top: 16px;
-  }
-
-  .tab-label {
-    font-size: 10px;
-    margin-bottom: 0;
+    display: none;
   }
 }
 
@@ -1667,7 +1712,33 @@ body {
   .logo-container {
     top: 12px;
     left: 12px;
+    right: 12px;
     height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo-container img {
+    height: 100%;
+    width: auto;
+  }
+
+  .mobile-nav-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 100%;
+  }
+
+  .mobile-nav-btn {
+    height: 100%;
+    width: 28px;
+  }
+
+  .nav-shape {
+    height: 100%;
+    width: 100%;
   }
 
   .main-content {
@@ -1692,18 +1763,6 @@ body {
   }
 
   .tab-navigation {
-    gap: 2px;
-    padding: 8px;
-  }
-
-  .tab-button {
-    width: 80px;
-    height: 75px;
-    padding-top: 14px;
-  }
-
-  .tab-label {
-    font-size: 9px;
-    margin-bottom: 0;
+    display: none;
   }
 }
