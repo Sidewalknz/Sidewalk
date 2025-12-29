@@ -265,8 +265,44 @@ export default function HomePage() {
         })
       }
 
-      // Animate columns 2, 3, and 4 (empty columns)
-      const emptyCols = [col2, col3, col4].filter(Boolean)
+      // Animate column 2 (check if it has words to animate)
+      if (col2) {
+        const words2 = col2.querySelectorAll('.tagline-word')
+        if (words2.length > 0) {
+          // If it has words, animate them individually
+          // Set column visible but keep words hidden
+          gsap.set(col2, { opacity: 1, y: 0 })
+          gsap.set(words2, { opacity: 0, y: 20 })
+          
+          // Calculate when column 1 finishes to start column 2
+          const col1Words = col1 ? col1.querySelectorAll('.tagline-word') : []
+          const col1EndTime = col1Words.length > 0 
+            ? 0.5 + 0.1 + (col1Words.length - 1) * 0.05 + 0.4  // column anim + first word start + stagger + duration
+            : 0.5  // just column animation
+          
+          // Start column 2 words after column 1, using same stagger pattern
+          words2.forEach((word, index) => {
+            tl.to(word, {
+              opacity: 1,
+              y: 0,
+              duration: 0.4,
+              ease: 'power3.out',
+            }, col1EndTime + 0.1 + index * 0.05)
+          })
+        } else {
+          // If no words, animate the column as a whole
+          gsap.set(col2, { opacity: 0, y: 30 })
+          tl.to(col2, {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            ease: 'power3.out',
+          }, `+=0.1`)
+        }
+      }
+
+      // Animate columns 3 and 4 (empty columns)
+      const emptyCols = [col3, col4].filter(Boolean)
       emptyCols.forEach((col, colIndex) => {
         if (col) {
           gsap.set(col, { opacity: 0, y: 30 })
@@ -355,13 +391,15 @@ export default function HomePage() {
 
   // Animate tab changes
   useEffect(() => {
-    // Use requestAnimationFrame to ensure DOM is ready after React render
+    // Use double requestAnimationFrame to ensure DOM is ready after React render
     const rafId = requestAnimationFrame(() => {
-      if (contentRef.current) {
-        animateContentIn(activeTab)
-      }
-      // Animate tagline words
-      animateTaglineWords()
+      requestAnimationFrame(() => {
+        if (contentRef.current) {
+          animateContentIn(activeTab)
+        }
+        // Animate tagline words
+        animateTaglineWords()
+      })
     })
 
     // Cleanup on unmount or before next animation
