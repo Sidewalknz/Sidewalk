@@ -186,43 +186,61 @@ export default function HomePage() {
       sidewalkTimelineRef.current.kill()
     }
 
-    // Calculate the distance between top and bottom texts
-    // Both texts should start overlapping at the middle position
-    // Top text starts from below (positive y) and moves up to its position
-    // Bottom text starts from above (negative y) and moves down to its position
-    // Use a larger offset to ensure proper overlap (scales with viewport)
-    const offset = Math.max(100, window.innerHeight * 0.12) // Responsive offset
+    // Reset positions first to get accurate measurements
+    gsap.set([sidewalkTopRef.current, sidewalkBottomRef.current], { clearProps: 'y' })
 
-    // Set initial positions - both texts overlapping at the middle
-    // Top text starts below its final position
-    gsap.set(sidewalkTopRef.current, {
-      y: offset, // Start below, will move up to 0
-      opacity: 1,
+    // Use double requestAnimationFrame to ensure layout is complete
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (!sidewalkTopRef.current || !sidewalkBottomRef.current) return
+
+        // Calculate the actual distance between top and bottom texts
+        // Get the bounding boxes of both elements
+        const topRect = sidewalkTopRef.current.getBoundingClientRect()
+        const bottomRect = sidewalkBottomRef.current.getBoundingClientRect()
+        
+        // Calculate the center point between the two texts
+        const topCenter = topRect.top + topRect.height / 2
+        const bottomCenter = bottomRect.top + bottomRect.height / 2
+        const centerPoint = (topCenter + bottomCenter) / 2
+        
+        // Calculate offset: distance from each element's center to the middle point
+        // This ensures they start overlapping and move apart
+        const topOffset = centerPoint - topCenter
+        const bottomOffset = centerPoint - bottomCenter
+
+        // Set initial positions - both texts overlapping at the middle
+        // Top text starts below its final position
+        gsap.set(sidewalkTopRef.current, {
+          y: topOffset, // Start at center, will move up to 0
+          opacity: 1,
+        })
+        
+        // Bottom text starts above its final position
+        gsap.set(sidewalkBottomRef.current, {
+          y: bottomOffset, // Start at center, will move down to 0
+          opacity: 1,
+        })
+
+        // Create new timeline
+        const tl = gsap.timeline()
+
+        // Animate both texts to their final positions simultaneously
+        tl.to(sidewalkTopRef.current, {
+          y: 0,
+          duration: 0.8,
+          ease: 'power3.out',
+        }, 0)
+        
+        tl.to(sidewalkBottomRef.current, {
+          y: 0,
+          duration: 0.8,
+          ease: 'power3.out',
+        }, 0) // Start both animations at the same time
+
+        sidewalkTimelineRef.current = tl
+      })
     })
-    
-    // Bottom text starts above its final position
-    gsap.set(sidewalkBottomRef.current, {
-      y: -offset, // Start above, will move down to 0
-      opacity: 1,
-    })
-
-    // Create new timeline
-    const tl = gsap.timeline()
-
-    // Animate both texts to their final positions simultaneously
-    tl.to(sidewalkTopRef.current, {
-      y: 0,
-      duration: 0.8,
-      ease: 'power3.out',
-    }, 0)
-    
-    tl.to(sidewalkBottomRef.current, {
-      y: 0,
-      duration: 0.8,
-      ease: 'power3.out',
-    }, 0) // Start both animations at the same time
-
-    sidewalkTimelineRef.current = tl
   }
 
   // Animation function for tagline words - animates columns first, then words within each column

@@ -1557,11 +1557,11 @@ body {
 
   .swiss-title-top,
   .swiss-title-bottom {
-    font-size: clamp(80px, 15vw, 210px);
+    font-size: clamp(85px, 16vw, 220px);
   }
 
   .swiss-title-middle {
-    font-size: clamp(54px, 10vw, 145px);
+    font-size: clamp(58px, 10.5vw, 155px);
   }
 
   .swiss-title-bottom-container {
@@ -1617,15 +1617,15 @@ body {
 
   .swiss-title-top,
   .swiss-title-bottom {
-    font-size: clamp(70px, 13vw, 180px);
+    font-size: clamp(80px, 15vw, 190px);
   }
 
   .swiss-title-middle {
-    font-size: clamp(48px, 9vw, 130px);
+    font-size: clamp(52px, 9.5vw, 140px);
   }
 
   .swiss-title-bottom-container {
-    margin-top: -0.3em;
+    margin-top: -0.4em;
   }
 
   .logo-container {
