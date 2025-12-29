@@ -120,7 +120,7 @@ body {
   line-height: 1.4;
   margin-top: 0.5em;
   width: 100%;
-  padding: 0;
+  padding: 0 clamp(1rem, 4vw, 2rem);
   text-align: center;
   white-space: normal;
   display: flex;
@@ -183,9 +183,9 @@ body {
 .projects-tagline-columns {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  gap: clamp(2rem, 4vw, 4rem);
+  gap: clamp(1rem, 2vw, 2rem);
   align-items: start;
-  max-width: 100%;
+  max-width: min(100%, calc(100vw - 4rem));
   width: 100%;
   box-sizing: border-box;
   padding: 0;
@@ -934,9 +934,9 @@ body {
 .contact-tagline-columns {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  gap: clamp(2rem, 4vw, 4rem);
+  gap: clamp(1rem, 2vw, 2rem);
   align-items: start;
-  max-width: 100%;
+  max-width: min(100%, calc(100vw - 4rem));
   width: 100%;
   box-sizing: border-box;
   padding: 0;
@@ -1449,6 +1449,16 @@ body {
 
 /* Responsive Design */
 @media (max-width: 968px) {
+  .swiss-title-tagline {
+    padding: 0 clamp(1rem, 3vw, 1.5rem);
+  }
+
+  .contact-tagline-columns,
+  .projects-tagline-columns {
+    gap: clamp(0.75rem, 1.5vw, 1.5rem);
+    max-width: min(100%, calc(100vw - 2rem));
+  }
+
   .contact-wrapper {
     grid-template-columns: 1fr;
     gap: 40px;
@@ -1475,6 +1485,16 @@ body {
 }
 
 @media (max-width: 768px) {
+  .swiss-title-tagline {
+    padding: 0 clamp(0.75rem, 2vw, 1rem);
+  }
+
+  .contact-tagline-columns,
+  .projects-tagline-columns {
+    gap: clamp(0.5rem, 1vw, 1rem);
+    max-width: min(100%, calc(100vw - 1.5rem));
+  }
+
   .logo-container {
     top: 16px;
     left: 16px;
@@ -1512,6 +1532,16 @@ body {
 }
 
 @media (max-width: 480px) {
+  .swiss-title-tagline {
+    padding: 0 0.75rem;
+  }
+
+  .contact-tagline-columns,
+  .projects-tagline-columns {
+    gap: 0.5rem;
+    max-width: calc(100vw - 1.5rem);
+  }
+
   .logo-container {
     top: 12px;
     left: 12px;
