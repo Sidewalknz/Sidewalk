@@ -1,11 +1,18 @@
 'use client'
 
-import type { CellComponent } from 'payload'
+interface TotalCostCellProps {
+  cellData?: unknown
+  rowData?: {
+    products?: Array<{
+      price?: number
+    }>
+  }
+}
 
-const TotalCostCell: CellComponent = ({ cellData, rowData }) => {
+const TotalCostCell = ({ cellData: _cellData, rowData }: TotalCostCellProps) => {
   const products = rowData?.products || []
   
-  const totalCost = products.reduce((sum: number, product: any) => {
+  const totalCost = products.reduce((sum: number, product) => {
     const price = product?.price || 0
     return sum + (typeof price === 'number' ? price : 0)
   }, 0)

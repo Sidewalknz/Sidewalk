@@ -32,7 +32,7 @@ export const Clients: CollectionConfig = {
               name: 'website',
               type: 'text',
               label: 'Website',
-              validate: (val) => {
+              validate: (val: string | null | undefined) => {
                 if (val && val.length > 0 && !val.match(/^https?:\/\/.+/)) {
                   return 'Website must start with http:// or https://'
                 }
