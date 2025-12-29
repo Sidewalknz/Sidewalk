@@ -93,6 +93,7 @@ body {
   height: 100%;
   width: auto;
   display: block;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 /* Swiss Typography Title */

@@ -181,6 +181,22 @@ export default function HomePage() {
 
   const activeTabData = tabs.find(tab => tab.id === activeTab) || tabs[0]
 
+  // Calculate next and previous tab colors for navigation buttons
+  const getNextTabColor = () => {
+    const currentIndex = tabs.findIndex(tab => tab.id === activeTab)
+    const nextIndex = currentIndex === tabs.length - 1 ? 0 : currentIndex + 1
+    return tabs[nextIndex].color
+  }
+
+  const getPrevTabColor = () => {
+    const currentIndex = tabs.findIndex(tab => tab.id === activeTab)
+    const prevIndex = currentIndex === 0 ? tabs.length - 1 : currentIndex - 1
+    return tabs[prevIndex].color
+  }
+
+  const nextTabColor = getNextTabColor()
+  const prevTabColor = getPrevTabColor()
+
   // Animation function for sidewalk texts
   const animateSidewalkTexts = () => {
     if (!sidewalkTopRef.current || !sidewalkBottomRef.current) return
@@ -595,14 +611,19 @@ export default function HomePage() {
             className="mobile-nav-btn mobile-nav-prev"
             onClick={() => navigateToNextTab('up')}
             aria-label="Previous tab"
-          ><svg id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 65.76 56.84"><path d="M3.43,46.69l57.84,10.1c2.35.41,4.5-1.46,4.49-3.9l-.24-38.89c-.01-1.9-1.36-3.53-3.2-3.85L4.49.06C2.13-.35-.02,1.51,0,3.96l.24,38.89c.01,1.9,1.36,3.53,3.2,3.85h0Z" fill="#cd5037"/></svg>
+          >
+            <svg id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 65.76 56.84" className="nav-shape">
+              <path d="M3.43,46.69l57.84,10.1c2.35.41,4.5-1.46,4.49-3.9l-.24-38.89c-.01-1.9-1.36-3.53-3.2-3.85L4.49.06C2.13-.35-.02,1.51,0,3.96l.24,38.89c.01,1.9,1.36,3.53,3.2,3.85h0Z" fill={prevTabColor}/>
+            </svg>
           </button>
           <button 
             className="mobile-nav-btn mobile-nav-next"
             onClick={() => navigateToNextTab('down')}
             aria-label="Next tab"
           >
-<svg id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 65.76 56.84"><path d="M62.33,46.69L4.49,56.79C2.14,57.2,0,55.33,0,52.89L.24,14c.01-1.9,1.36-3.53,3.2-3.85L61.27.06c2.36-.41,4.51,1.45,4.49,3.9l-.24,38.89c-.01,1.9-1.36,3.53-3.2,3.85h0Z" fill="#cd5037"/></svg>
+            <svg id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 65.76 56.84" className="nav-shape">
+              <path d="M62.33,46.69L4.49,56.79C2.14,57.2,0,55.33,0,52.89L.24,14c.01-1.9,1.36-3.53,3.2-3.85L61.27.06c2.36-.41,4.51,1.45,4.49,3.9l-.24,38.89c-.01,1.9-1.36,3.53-3.2,3.85h0Z" fill={nextTabColor}/>
+            </svg>
           </button>
         </div>
       </div>
