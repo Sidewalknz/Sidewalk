@@ -95,6 +95,52 @@ export const Clients: CollectionConfig = {
               },
               fields: [
                 {
+                  name: 'category',
+                  type: 'select',
+                  label: 'Category',
+                  options: [
+                    {
+                      label: 'Website',
+                      value: 'website',
+                    },
+                    {
+                      label: 'Posters',
+                      value: 'posters',
+                    },
+                    {
+                      label: 'Logos',
+                      value: 'logos',
+                    },
+                    {
+                      label: 'Branding',
+                      value: 'branding',
+                    },
+                    {
+                      label: 'Social Media',
+                      value: 'social-media',
+                    },
+                    {
+                      label: 'Print Design',
+                      value: 'print-design',
+                    },
+                    {
+                      label: 'Web Development',
+                      value: 'web-development',
+                    },
+                    {
+                      label: 'Consulting',
+                      value: 'consulting',
+                    },
+                    {
+                      label: 'Other',
+                      value: 'other',
+                    },
+                  ],
+                  admin: {
+                    description: 'Category of this product',
+                  },
+                },
+                {
                   name: 'productName',
                   type: 'text',
                   required: true,

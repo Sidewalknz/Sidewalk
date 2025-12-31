@@ -179,6 +179,22 @@ export interface Client {
    * What the client paid for (can add multiple products)
    */
   products: {
+    /**
+     * Category of this product
+     */
+    category?:
+      | (
+          | 'website'
+          | 'posters'
+          | 'logos'
+          | 'branding'
+          | 'social-media'
+          | 'print-design'
+          | 'web-development'
+          | 'consulting'
+          | 'other'
+        )
+      | null;
     productName: string;
     productDescription?: string | null;
     /**
@@ -408,6 +424,7 @@ export interface ClientsSelect<T extends boolean = true> {
   products?:
     | T
     | {
+        category?: T;
         productName?: T;
         productDescription?: T;
         price?: T;

@@ -25,8 +25,10 @@ export default buildConfig({
         Icon: '/components/admin/Icon',
       },
       beforeDashboard: [
+        '/components/admin/ClientsSummaryWidget',
         '/components/admin/ExpensesSummaryWidget',
         '/components/admin/UpcomingExpensesWidget',
+        '/components/admin/ProductsByCategoryWidget',
         '/components/admin/ExpensesByCategoryWidget',
       ],
     },
