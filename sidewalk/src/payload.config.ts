@@ -30,6 +30,7 @@ export default buildConfig({
         '/components/admin/UpcomingExpensesWidget',
         '/components/admin/ProductsByCategoryWidget',
         '/components/admin/ExpensesByCategoryWidget',
+        '/components/admin/JobCalculatorWidget',
       ],
     },
   },
