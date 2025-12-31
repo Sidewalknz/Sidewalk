@@ -152,6 +152,28 @@ export const Clients: CollectionConfig = {
                   label: 'Product Description',
                 },
                 {
+                  name: 'startDate',
+                  type: 'date',
+                  label: 'Project Start Date',
+                  admin: {
+                    description: 'When did this project start?',
+                    date: {
+                      pickerAppearance: 'dayOnly',
+                    },
+                  },
+                },
+                {
+                  name: 'endDate',
+                  type: 'date',
+                  label: 'Project End Date',
+                  admin: {
+                    description: 'When did this project end?',
+                    date: {
+                      pickerAppearance: 'dayOnly',
+                    },
+                  },
+                },
+                {
                   name: 'price',
                   type: 'number',
                   label: 'Price',

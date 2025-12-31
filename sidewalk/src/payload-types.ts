@@ -198,6 +198,14 @@ export interface Client {
     productName: string;
     productDescription?: string | null;
     /**
+     * When did this project start?
+     */
+    startDate?: string | null;
+    /**
+     * When did this project end?
+     */
+    endDate?: string | null;
+    /**
      * The price paid for this product
      */
     price?: number | null;
@@ -427,6 +435,8 @@ export interface ClientsSelect<T extends boolean = true> {
         category?: T;
         productName?: T;
         productDescription?: T;
+        startDate?: T;
+        endDate?: T;
         price?: T;
         monthlyFee?: T;
         dueDate?: T;
