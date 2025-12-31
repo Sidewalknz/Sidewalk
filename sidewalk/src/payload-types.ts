@@ -70,6 +70,7 @@ export interface Config {
     users: User;
     media: Media;
     clients: Client;
+    'ongoing-expenses': OngoingExpense;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -80,6 +81,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     clients: ClientsSelect<false> | ClientsSelect<true>;
+    'ongoing-expenses': OngoingExpensesSelect<false> | OngoingExpensesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -234,6 +236,44 @@ export interface Client {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ongoing-expenses".
+ */
+export interface OngoingExpense {
+  id: number;
+  /**
+   * Name or description of the ongoing expense
+   */
+  name: string;
+  /**
+   * The cost amount for this expense
+   */
+  amount: number;
+  frequency: 'weekly' | 'monthly' | 'yearly';
+  /**
+   * When did this expense start? The next due date will be calculated automatically based on this date and frequency.
+   */
+  startDate: string;
+  /**
+   * Automatically calculated based on start date and frequency
+   */
+  nextDueDate?: string | null;
+  /**
+   * Optional category for organizing expenses (e.g., Software, Hosting, Services)
+   */
+  category?: string | null;
+  /**
+   * Additional notes about this expense
+   */
+  notes?: string | null;
+  /**
+   * Whether this expense is currently active
+   */
+  isActive?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -267,6 +307,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'clients';
         value: number | Client;
+      } | null)
+    | ({
+        relationTo: 'ongoing-expenses';
+        value: number | OngoingExpense;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -389,6 +433,22 @@ export interface ClientsSelect<T extends boolean = true> {
         id?: T;
       };
   notes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ongoing-expenses_select".
+ */
+export interface OngoingExpensesSelect<T extends boolean = true> {
+  name?: T;
+  amount?: T;
+  frequency?: T;
+  startDate?: T;
+  nextDueDate?: T;
+  category?: T;
+  notes?: T;
+  isActive?: T;
   updatedAt?: T;
   createdAt?: T;
 }

@@ -8,6 +8,7 @@ import sharp from 'sharp'
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Clients } from './collections/Clients'
+import { OngoingExpenses } from './collections/OngoingExpenses'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -25,7 +26,7 @@ export default buildConfig({
       },
     },
   },
-  collections: [Users, Media, Clients],
+  collections: [Users, Media, Clients, OngoingExpenses],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
