@@ -35,16 +35,8 @@ export default function JobCalculatorWidget() {
   const totalCalculated = allocations.reduce((sum, a) => sum + calculateAmount(a.percentage), 0)
 
   return (
-    <div style={{ 
-      background: 'white', 
-      padding: '1.5rem', 
-      borderRadius: '8px', 
-      boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-      marginBottom: '1rem'
-    }}>
-      <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.25rem', fontWeight: '600' }}>
-        Job Calculator
-      </h3>
+    <div className="dashboard-widget">
+      <h3>Job Calculator</h3>
       
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 150px', gap: '1rem', marginBottom: '1rem' }}>
         <div>
@@ -58,9 +50,11 @@ export default function JobCalculatorWidget() {
             style={{
               width: '100%',
               padding: '0.5rem',
-              border: '1px solid #d1d5db',
+              border: '1px solid var(--theme-elevation-200)',
               borderRadius: '4px',
               fontSize: '1rem',
+              background: 'var(--theme-input-bg)',
+              color: 'var(--theme-text)'
             }}
           />
         </div>
@@ -76,9 +70,11 @@ export default function JobCalculatorWidget() {
             style={{
               width: '100%',
               padding: '0.5rem',
-              border: '1px solid #d1d5db',
+              border: '1px solid var(--theme-elevation-200)',
               borderRadius: '4px',
               fontSize: '1rem',
+              background: 'var(--theme-input-bg)',
+              color: 'var(--theme-text)'
             }}
           />
         </div>
@@ -87,7 +83,7 @@ export default function JobCalculatorWidget() {
       <div style={{ overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
-            <tr style={{ borderBottom: '2px solid #e5e7eb' }}>
+            <tr style={{ borderBottom: '2px solid var(--theme-elevation-200)' }}>
               <th style={{ textAlign: 'left', padding: '0.75rem', fontWeight: '600' }}>Category</th>
               <th style={{ textAlign: 'center', padding: '0.75rem', fontWeight: '600', width: '100px' }}>%</th>
               <th style={{ textAlign: 'right', padding: '0.75rem', fontWeight: '600', width: '120px' }}>$ Amount</th>
@@ -113,7 +109,7 @@ export default function JobCalculatorWidget() {
                 : formatCurrency(amount)
               
               return (
-                <tr key={index} style={{ borderBottom: '1px solid #f3f4f6' }}>
+                <tr key={index} style={{ borderBottom: '1px solid var(--theme-elevation-100)' }}>
                   <td style={{ padding: '0.75rem' }}>{allocation.category}</td>
                   <td style={{ padding: '0.75rem', textAlign: 'center' }}>
                     <input
@@ -126,9 +122,11 @@ export default function JobCalculatorWidget() {
                       style={{
                         width: '70px',
                         padding: '0.25rem',
-                        border: '1px solid #d1d5db',
+                        border: '1px solid var(--theme-elevation-200)',
                         borderRadius: '4px',
                         textAlign: 'center',
+                        background: 'var(--theme-input-bg)',
+                        color: 'var(--theme-text)'
                       }}
                     />
                   </td>
@@ -145,12 +143,13 @@ export default function JobCalculatorWidget() {
       <div style={{ 
         marginTop: '1rem', 
         padding: '0.75rem', 
-        background: totalPercentage === 100 ? '#f0fdf4' : '#fef2f2',
+        background: totalPercentage === 100 ? 'var(--theme-success-100)' : 'var(--theme-error-100)',
         borderRadius: '4px',
-        border: `1px solid ${totalPercentage === 100 ? '#bbf7d0' : '#fecaca'}`,
+        border: `1px solid ${totalPercentage === 100 ? 'var(--theme-success-200)' : 'var(--theme-error-200)'}`,
         display: 'flex',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
+        color: totalPercentage === 100 ? 'var(--theme-success-700)' : 'var(--theme-error-700)'
       }}>
         <div>
           <span style={{ fontWeight: '600' }}>
@@ -159,7 +158,7 @@ export default function JobCalculatorWidget() {
           <span style={{ 
             fontWeight: 'bold', 
             marginLeft: '0.5rem',
-            color: totalPercentage === 100 ? '#166534' : '#dc2626'
+            color: 'inherit'
           }}>
             {new Intl.NumberFormat('en-US', {
               style: 'currency',
@@ -169,12 +168,12 @@ export default function JobCalculatorWidget() {
             }).format(totalCalculated)}
           </span>
           {totalPercentage !== 100 && (
-            <span style={{ marginLeft: '0.5rem', color: '#dc2626', fontSize: '0.875rem' }}>
+            <span style={{ marginLeft: '0.5rem', color: 'inherit', fontSize: '0.875rem' }}>
               ({totalPercentage}% - should be 100%)
             </span>
           )}
         </div>
-        <div style={{ fontSize: '0.875rem', color: '#6b7280' }}>
+        <div style={{ fontSize: '0.875rem', opacity: 0.8 }}>
           Total: {totalPercentage.toFixed(1)}%
         </div>
       </div>

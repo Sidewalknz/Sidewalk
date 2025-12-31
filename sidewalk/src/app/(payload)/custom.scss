@@ -51,3 +51,174 @@ nav [data-payload-component="graphics.Icon"] > div {
   }
 }
 
+// Dashboard Widgets
+.dashboard-widget {
+  background: var(--theme-elevation-50);
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1rem;
+  border: 1px solid var(--theme-elevation-100);
+
+  h3 {
+    margin: 0 0 1rem 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--theme-text);
+  }
+
+  p {
+    color: var(--theme-elevation-400); 
+    margin: 0;
+  }
+}
+
+.dashboard-stat-card {
+  padding: 1rem;
+  background: var(--theme-elevation-100);
+  border-radius: 6px;
+  border: 1px solid var(--theme-elevation-200);
+
+  &__label {
+    font-size: 0.875rem;
+    color: var(--theme-elevation-450);
+    margin-bottom: 0.5rem;
+  }
+
+  &__value {
+    font-size: 2rem; 
+    font-weight: bold;
+    color: var(--theme-text);
+  }
+  
+  &__subtext {
+     font-size: 0.75rem;
+     color: var(--theme-elevation-450);
+     margin-top: 0.25rem;
+  }
+
+  // Modifiers
+  &--blue {
+     background: #eff6ff;
+     border-color: #dbeafe;
+     .dashboard-stat-card__value { color: #1e40af; }
+  }
+
+  &--green {
+     background: #f0fdf4;
+     border-color: #bbf7d0;
+     .dashboard-stat-card__value { color: #166534; }
+  }
+
+  &--yellow {
+     background: #fef3c7;
+     border-color: #fde68a;
+     .dashboard-stat-card__value { color: #92400e; }
+  }
+  
+  &--pink {
+     background: #fce7f3;
+     border-color: #fbcfe8;
+     .dashboard-stat-card__value { color: #9f1239; }
+  }
+  
+  &--gray {
+     background: #f9fafb;
+     border-color: #e5e7eb;
+     .dashboard-stat-card__value { color: #111827; }
+  }
+}
+
+// Dark Mode Overrides
+html[data-theme="dark"] {
+  .dashboard-widget {
+    background: var(--theme-elevation-50);
+    border-color: var(--theme-elevation-100);
+    box-shadow: none;
+  }
+  
+  .dashboard-stat-card {
+    background: var(--theme-elevation-100);
+    border-color: var(--theme-elevation-200);
+    
+    &__value { 
+       color: var(--theme-text); 
+    }
+    
+    &--blue {
+      background: rgba(30, 64, 175, 0.2); 
+      border-color: rgba(30, 64, 175, 0.4);
+      .dashboard-stat-card__value { color: #93c5fd; }
+    }
+
+    &--green {
+       background: rgba(22, 101, 52, 0.2);
+       border-color: rgba(22, 101, 52, 0.4);
+       .dashboard-stat-card__value { color: #86efac; }
+    }
+
+    &--yellow {
+       background: rgba(146, 64, 14, 0.2);
+       border-color: rgba(146, 64, 14, 0.4);
+       .dashboard-stat-card__value { color: #fcd34d; }
+    }
+    
+    &--pink {
+       background: rgba(159, 18, 57, 0.2);
+       border-color: rgba(159, 18, 57, 0.4);
+       .dashboard-stat-card__value { color: #f9a8d4; }
+    }
+
+      &--gray {
+       background: var(--theme-elevation-150);
+       border-color: var(--theme-elevation-250);
+       .dashboard-stat-card__value { color: var(--theme-text); }
+    }
+  }
+}
+
+// List Items (for Products/Expenses by Category & Upcoming)
+.dashboard-list-item {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     padding: 0.75rem;
+     background: #f9fafb;
+     border-radius: 4px;
+     
+     &__content {
+        // flex item
+     }
+     
+     &__title {
+        font-weight: 600;
+        color: #111827; // explicit dark for light mode
+     }
+     
+     &__subtitle {
+         font-size: 0.875rem;
+         color: #6b7280;
+     }
+
+     &__value {
+        font-weight: 600;
+        font-size: 1.125rem;
+        color: #111827;
+     }
+}
+
+html[data-theme="dark"] .dashboard-list-item {
+    background: var(--theme-elevation-100);
+    
+     &__title {
+        color: var(--theme-text);
+     }
+     
+     &__subtitle {
+         color: var(--theme-elevation-450);
+     }
+
+     &__value {
+        color: var(--theme-text);
+     }
+}

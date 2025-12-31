@@ -73,79 +73,56 @@ export default async function ExpensesSummaryWidget({ payload }: { payload: Payl
   }, 0)
 
   return (
-    <div style={{ 
-      background: 'white', 
-      padding: '1.5rem', 
-      borderRadius: '8px', 
-      boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-      marginBottom: '1rem'
-    }}>
-      <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.25rem', fontWeight: '600' }}>
-        Ongoing Expenses Summary
-      </h3>
+    <div className="dashboard-widget">
+      <h3>Ongoing Expenses Summary</h3>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
-        <div>
-          <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#2563eb' }}>
-            {totalActive}
-          </div>
-          <div style={{ color: '#6b7280', fontSize: '0.875rem' }}>Active Expenses</div>
+        <div className="dashboard-stat-card dashboard-stat-card--blue" style={{background: 'transparent', border: 'none', padding: 0}}>
+           <div style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--theme-success-500)' }}> 
+             <span className="dashboard-stat-card__value" style={{color: '#2563eb'}}>{totalActive}</span>
+           </div>
+           <div className="dashboard-stat-card__label">Active Expenses</div>
         </div>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
-        <div style={{ 
-          padding: '1rem', 
-          background: '#eff6ff', 
-          borderRadius: '6px',
-          border: '1px solid #dbeafe'
-        }}>
-          <div style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.5rem' }}>
+        <div className="dashboard-stat-card dashboard-stat-card--blue">
+          <div className="dashboard-stat-card__label">
             Weekly Total
           </div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#1e40af', marginBottom: '0.25rem' }}>
+          <div className="dashboard-stat-card__value" style={{marginBottom: '0.25rem'}}>
             {new Intl.NumberFormat('en-US', {
               style: 'currency',
               currency: 'USD',
             }).format(weeklyTotal)}
           </div>
-          <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>
+          <div className="dashboard-stat-card__subtext">
             All expenses converted to weekly
           </div>
         </div>
-        <div style={{ 
-          padding: '1rem', 
-          background: '#f0fdf4', 
-          borderRadius: '6px',
-          border: '1px solid #bbf7d0'
-        }}>
-          <div style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.5rem' }}>
+        <div className="dashboard-stat-card dashboard-stat-card--green">
+          <div className="dashboard-stat-card__label">
             Monthly Total
           </div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#166534', marginBottom: '0.25rem' }}>
+          <div className="dashboard-stat-card__value" style={{marginBottom: '0.25rem'}}>
             {new Intl.NumberFormat('en-US', {
               style: 'currency',
               currency: 'USD',
             }).format(monthlyTotal)}
           </div>
-          <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>
+           <div className="dashboard-stat-card__subtext">
             All expenses converted to monthly
           </div>
         </div>
-        <div style={{ 
-          padding: '1rem', 
-          background: '#fef3c7', 
-          borderRadius: '6px',
-          border: '1px solid #fde68a'
-        }}>
-          <div style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.5rem' }}>
+        <div className="dashboard-stat-card dashboard-stat-card--yellow">
+          <div className="dashboard-stat-card__label">
             Yearly Total
           </div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#92400e', marginBottom: '0.25rem' }}>
+          <div className="dashboard-stat-card__value" style={{marginBottom: '0.25rem'}}>
             {new Intl.NumberFormat('en-US', {
               style: 'currency',
               currency: 'USD',
             }).format(yearlyTotal)}
           </div>
-          <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>
+           <div className="dashboard-stat-card__subtext">
             All expenses converted to yearly
           </div>
         </div>
@@ -153,4 +130,3 @@ export default async function ExpensesSummaryWidget({ payload }: { payload: Payl
     </div>
   )
 }
-
