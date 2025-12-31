@@ -24,6 +24,11 @@ export default buildConfig({
         Logo: '/components/admin/Logo',
         Icon: '/components/admin/Icon',
       },
+      beforeDashboard: [
+        '/components/admin/ExpensesSummaryWidget',
+        '/components/admin/UpcomingExpensesWidget',
+        '/components/admin/ExpensesByCategoryWidget',
+      ],
     },
   },
   collections: [Users, Media, Clients, OngoingExpenses],
