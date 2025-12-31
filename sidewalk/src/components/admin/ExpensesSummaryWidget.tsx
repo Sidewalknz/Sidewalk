@@ -30,11 +30,25 @@ export default async function ExpensesSummaryWidget({ payload }: { payload: Payl
     },
   })
 
+  const { docs: clients } = await payload.find({
+    collection: 'clients',
+  })
+
+  // Calculate total monthly income from all products
+  const totalMonthlyIncome = clients.reduce((sum, client) => {
+    const products = client.products || []
+    const clientMonthlyIncome = products.reduce((pSum: number, product: any) => {
+      const fee = product.monthlyFee || 0
+      return pSum + (typeof fee === 'number' ? fee : 0)
+    }, 0)
+    return sum + clientMonthlyIncome
+  }, 0)
+
   const totalActive = expenses.length
   
   // Calculate totals converted to each frequency
   // Weekly total: weekly expenses + monthly/52 + yearly/52
-  const weeklyTotal = expenses.reduce((sum, expense) => {
+  const weeklyExpenses = expenses.reduce((sum, expense) => {
     const amount = expense.amount || 0
     if (expense.frequency === 'weekly') {
       return sum + amount
@@ -46,8 +60,10 @@ export default async function ExpensesSummaryWidget({ payload }: { payload: Payl
     return sum
   }, 0)
 
+  const weeklyIncome = totalMonthlyIncome * 12 / 52
+
   // Monthly total: weekly*4.33 + monthly + yearly/12
-  const monthlyTotal = expenses.reduce((sum, expense) => {
+  const monthlyExpenses = expenses.reduce((sum, expense) => {
     const amount = expense.amount || 0
     if (expense.frequency === 'weekly') {
       return sum + amount * 4.33 // Convert weekly to monthly
@@ -60,7 +76,7 @@ export default async function ExpensesSummaryWidget({ payload }: { payload: Payl
   }, 0)
 
   // Yearly total: weekly*52 + monthly*12 + yearly
-  const yearlyTotal = expenses.reduce((sum, expense) => {
+  const yearlyExpenses = expenses.reduce((sum, expense) => {
     const amount = expense.amount || 0
     if (expense.frequency === 'weekly') {
       return sum + amount * 52 // Convert weekly to yearly
@@ -71,6 +87,16 @@ export default async function ExpensesSummaryWidget({ payload }: { payload: Payl
     }
     return sum
   }, 0)
+
+  const yearlyIncome = totalMonthlyIncome * 12
+
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      maximumFractionDigits: 0,
+    }).format(value)
+  }
 
   return (
     <div className="dashboard-widget">
@@ -86,44 +112,26 @@ export default async function ExpensesSummaryWidget({ payload }: { payload: Payl
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
         <div className="dashboard-stat-card dashboard-stat-card--blue">
           <div className="dashboard-stat-card__label">
-            Weekly Total
+            Weekly (Exp / Inc)
           </div>
           <div className="dashboard-stat-card__value" style={{marginBottom: '0.25rem'}}>
-            {new Intl.NumberFormat('en-US', {
-              style: 'currency',
-              currency: 'USD',
-            }).format(weeklyTotal)}
-          </div>
-          <div className="dashboard-stat-card__subtext">
-            All expenses converted to weekly
+            {formatCurrency(weeklyExpenses)} / {formatCurrency(weeklyIncome)}
           </div>
         </div>
         <div className="dashboard-stat-card dashboard-stat-card--green">
           <div className="dashboard-stat-card__label">
-            Monthly Total
+            Monthly (Exp / Inc)
           </div>
           <div className="dashboard-stat-card__value" style={{marginBottom: '0.25rem'}}>
-            {new Intl.NumberFormat('en-US', {
-              style: 'currency',
-              currency: 'USD',
-            }).format(monthlyTotal)}
-          </div>
-           <div className="dashboard-stat-card__subtext">
-            All expenses converted to monthly
+            {formatCurrency(monthlyExpenses)} / {formatCurrency(totalMonthlyIncome)}
           </div>
         </div>
         <div className="dashboard-stat-card dashboard-stat-card--yellow">
           <div className="dashboard-stat-card__label">
-            Yearly Total
+            Yearly (Exp / Inc)
           </div>
           <div className="dashboard-stat-card__value" style={{marginBottom: '0.25rem'}}>
-            {new Intl.NumberFormat('en-US', {
-              style: 'currency',
-              currency: 'USD',
-            }).format(yearlyTotal)}
-          </div>
-           <div className="dashboard-stat-card__subtext">
-            All expenses converted to yearly
+            {formatCurrency(yearlyExpenses)} / {formatCurrency(yearlyIncome)}
           </div>
         </div>
       </div>
