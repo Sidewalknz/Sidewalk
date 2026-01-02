@@ -145,7 +145,7 @@ body {
 
 .swiss-title-tagline {
   font-family: var(--font-title);
-  font-size: clamp(10px, 1.5vw, 20px);
+  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
   font-weight: 700;
   color: var(--color-dark);
   text-transform: lowercase;
@@ -238,7 +238,7 @@ body {
 
 .projects-tagline-single-col {
   font-family: var(--font-title);
-  font-size: clamp(10px, 1.5vw, 20px);
+  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
   font-weight: 700;
   color: #F3ECE3;
   line-height: 1.4;
@@ -251,7 +251,7 @@ body {
 .projects-tagline-col-3,
 .projects-tagline-col-4 {
   font-family: var(--font-title);
-  font-size: clamp(10px, 1.5vw, 20px);
+  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
   font-weight: 700;
   color: #F3ECE3;
   line-height: 1.4;
@@ -279,7 +279,7 @@ body {
 .projects-tagline-col-3,
 .projects-tagline-col-4 {
   font-family: var(--font-title);
-  font-size: clamp(10px, 1.5vw, 20px);
+  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
   font-weight: 700;
   color: #F3ECE3;
   line-height: 1.4;
@@ -303,7 +303,7 @@ body {
   text-align: left;
   cursor: pointer;
   font-family: var(--font-title);
-  font-size: clamp(10px, 1.5vw, 20px);
+  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
   font-weight: 700;
   color: #F3ECE3;
   line-height: 1.4;
@@ -330,7 +330,7 @@ body {
   text-align: left;
   cursor: pointer;
   font-family: var(--font-title);
-  font-size: clamp(10px, 1.5vw, 20px);
+  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
   font-weight: 700;
   color: #F3ECE3;
   line-height: 1.4;
@@ -385,7 +385,7 @@ body {
 
 .project-gallery-caption {
   margin-top: 0.5em;
-  font-size: clamp(10px, 1.5vw, 20px);
+  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
   color: #F3ECE3;
   font-family: var(--font-title);
   font-weight: 700;
@@ -689,7 +689,7 @@ body {
 
 .projects-col-1 {
   font-family: var(--font-title);
-  font-size: clamp(10px, 1.5vw, 20px);
+  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
   font-weight: 700;
   color: #F3ECE3;
   line-height: 1.4;
@@ -715,7 +715,7 @@ body {
   text-align: left;
   cursor: pointer;
   font-family: var(--font-title);
-  font-size: clamp(10px, 1.5vw, 20px);
+  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
   font-weight: 700;
   color: #F3ECE3;
   line-height: 1.4;
@@ -751,7 +751,7 @@ body {
 
 .projects-col-title {
   font-family: var(--font-title);
-  font-size: clamp(10px, 1.5vw, 20px);
+  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
   font-weight: 700;
   text-transform: lowercase;
   letter-spacing: 0.5px;
@@ -764,7 +764,7 @@ body {
 .projects-col-content {
   color: #F3ECE3;
   line-height: 1.4;
-  font-size: clamp(10px, 1.5vw, 20px);
+  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
   font-family: var(--font-title);
   font-weight: 700;
 }
@@ -800,7 +800,7 @@ body {
   text-align: left;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-size: clamp(10px, 1.5vw, 20px);
+  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
   font-family: var(--font-title);
   font-weight: 700;
   text-transform: lowercase;
@@ -871,7 +871,7 @@ body {
 
 .gallery-caption {
   margin-top: 0.5rem;
-  font-size: clamp(10px, 1.5vw, 20px);
+  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
   color: #F3ECE3;
   font-family: var(--font-title);
   font-weight: 700;
@@ -982,7 +982,7 @@ body {
 .contact-tagline-col-3,
 .contact-tagline-col-4 {
   font-family: var(--font-title);
-  font-size: clamp(10px, 1.5vw, 20px);
+  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
   font-weight: 700;
   color: inherit;
   line-height: 1.4;
@@ -1020,7 +1020,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: var(--font-title);
-  font-size: clamp(10px, 1.5vw, 20px);
+  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
   font-weight: 700;
   color: inherit;
   line-height: 1.4;
@@ -1095,7 +1095,7 @@ body {
   text-align: left;
   cursor: pointer;
   font-family: var(--font-title);
-  font-size: clamp(10px, 1.5vw, 20px);
+  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
   font-weight: 700;
   color: inherit;
   line-height: 1.4;
@@ -1117,7 +1117,7 @@ body {
   display: block;
   margin-left: 1.5rem;
   font-family: var(--font-title);
-  font-size: clamp(10px, 1.5vw, 20px);
+  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
   font-weight: 700;
   color: inherit;
   line-height: 1.4;
@@ -1136,7 +1136,7 @@ body {
 
 .project-description {
   font-family: var(--font-title);
-  font-size: clamp(10px, 1.5vw, 20px);
+  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
   font-weight: 700;
   color: inherit;
   line-height: 1.4;
@@ -1146,7 +1146,7 @@ body {
 
 .project-features {
   font-family: var(--font-title);
-  font-size: clamp(10px, 1.5vw, 20px);
+  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
   font-weight: 700;
   color: inherit;
   line-height: 1.4;
@@ -1170,7 +1170,7 @@ body {
 
 .project-gallery {
   font-family: var(--font-title);
-  font-size: clamp(10px, 1.5vw, 20px);
+  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
   font-weight: 700;
   color: inherit;
   line-height: 1.4;
@@ -1259,7 +1259,7 @@ body {
   border-bottom: 2px solid rgba(28, 40, 48, 0.3);
   border-radius: 0;
   font-family: var(--font-title);
-  font-size: clamp(10px, 1.5vw, 20px);
+  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
   font-weight: 700;
   color: inherit;
   background: transparent;
@@ -1302,7 +1302,7 @@ body {
   color: var(--color-accent-red);
   border: none;
   font-family: var(--font-title);
-  font-size: clamp(10px, 1.5vw, 20px);
+  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
   font-weight: 700;
   text-transform: lowercase;
   letter-spacing: 0.5px;
