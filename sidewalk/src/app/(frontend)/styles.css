@@ -11,6 +11,7 @@
   --font-mono: 'Roboto Mono', 'Courier New', monospace;
   --font-title: 'Montserrat', sans-serif;
   --transition-duration: 0.6s;
+  --tagline-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
 }
 
 * {
@@ -145,7 +146,7 @@ body {
 
 .swiss-title-tagline {
   font-family: var(--font-title);
-  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
+  font-size: var(--tagline-size);
   font-weight: 700;
   color: var(--color-dark);
   text-transform: lowercase;
@@ -238,7 +239,7 @@ body {
 
 .projects-tagline-single-col {
   font-family: var(--font-title);
-  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
+  font-size: var(--tagline-size);
   font-weight: 700;
   color: #F3ECE3;
   line-height: 1.4;
@@ -251,7 +252,7 @@ body {
 .projects-tagline-col-3,
 .projects-tagline-col-4 {
   font-family: var(--font-title);
-  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
+  font-size: var(--tagline-size);
   font-weight: 700;
   color: #F3ECE3;
   line-height: 1.4;
@@ -279,7 +280,7 @@ body {
 .projects-tagline-col-3,
 .projects-tagline-col-4 {
   font-family: var(--font-title);
-  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
+  font-size: var(--tagline-size);
   font-weight: 700;
   color: #F3ECE3;
   line-height: 1.4;
@@ -303,7 +304,7 @@ body {
   text-align: left;
   cursor: pointer;
   font-family: var(--font-title);
-  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
+  font-size: var(--tagline-size);
   font-weight: 700;
   color: #F3ECE3;
   line-height: 1.4;
@@ -330,7 +331,7 @@ body {
   text-align: left;
   cursor: pointer;
   font-family: var(--font-title);
-  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
+  font-size: var(--tagline-size);
   font-weight: 700;
   color: #F3ECE3;
   line-height: 1.4;
@@ -385,7 +386,7 @@ body {
 
 .project-gallery-caption {
   margin-top: 0.5em;
-  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
+  font-size: var(--tagline-size);
   color: #F3ECE3;
   font-family: var(--font-title);
   font-weight: 700;
@@ -689,7 +690,7 @@ body {
 
 .projects-col-1 {
   font-family: var(--font-title);
-  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
+  font-size: var(--tagline-size);
   font-weight: 700;
   color: #F3ECE3;
   line-height: 1.4;
@@ -715,7 +716,7 @@ body {
   text-align: left;
   cursor: pointer;
   font-family: var(--font-title);
-  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
+  font-size: var(--tagline-size);
   font-weight: 700;
   color: #F3ECE3;
   line-height: 1.4;
@@ -751,7 +752,7 @@ body {
 
 .projects-col-title {
   font-family: var(--font-title);
-  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
+  font-size: var(--tagline-size);
   font-weight: 700;
   text-transform: lowercase;
   letter-spacing: 0.5px;
@@ -764,7 +765,7 @@ body {
 .projects-col-content {
   color: #F3ECE3;
   line-height: 1.4;
-  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
+  font-size: var(--tagline-size);
   font-family: var(--font-title);
   font-weight: 700;
 }
@@ -800,7 +801,7 @@ body {
   text-align: left;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
+  font-size: var(--tagline-size);
   font-family: var(--font-title);
   font-weight: 700;
   text-transform: lowercase;
@@ -871,7 +872,7 @@ body {
 
 .gallery-caption {
   margin-top: 0.5rem;
-  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
+  font-size: var(--tagline-size);
   color: #F3ECE3;
   font-family: var(--font-title);
   font-weight: 700;
@@ -982,7 +983,7 @@ body {
 .contact-tagline-col-3,
 .contact-tagline-col-4 {
   font-family: var(--font-title);
-  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
+  font-size: var(--tagline-size);
   font-weight: 700;
   color: inherit;
   line-height: 1.4;
@@ -1020,7 +1021,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: var(--font-title);
-  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
+  font-size: var(--tagline-size);
   font-weight: 700;
   color: inherit;
   line-height: 1.4;
@@ -1095,7 +1096,7 @@ body {
   text-align: left;
   cursor: pointer;
   font-family: var(--font-title);
-  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
+  font-size: var(--tagline-size);
   font-weight: 700;
   color: inherit;
   line-height: 1.4;
@@ -1117,7 +1118,7 @@ body {
   display: block;
   margin-left: 1.5rem;
   font-family: var(--font-title);
-  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
+  font-size: var(--tagline-size);
   font-weight: 700;
   color: inherit;
   line-height: 1.4;
@@ -1136,7 +1137,7 @@ body {
 
 .project-description {
   font-family: var(--font-title);
-  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
+  font-size: var(--tagline-size);
   font-weight: 700;
   color: inherit;
   line-height: 1.4;
@@ -1146,7 +1147,7 @@ body {
 
 .project-features {
   font-family: var(--font-title);
-  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
+  font-size: var(--tagline-size);
   font-weight: 700;
   color: inherit;
   line-height: 1.4;
@@ -1170,7 +1171,7 @@ body {
 
 .project-gallery {
   font-family: var(--font-title);
-  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
+  font-size: var(--tagline-size);
   font-weight: 700;
   color: inherit;
   line-height: 1.4;
@@ -1259,7 +1260,7 @@ body {
   border-bottom: 2px solid rgba(28, 40, 48, 0.3);
   border-radius: 0;
   font-family: var(--font-title);
-  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
+  font-size: var(--tagline-size);
   font-weight: 700;
   color: inherit;
   background: transparent;
@@ -1302,7 +1303,7 @@ body {
   color: var(--color-accent-red);
   border: none;
   font-family: var(--font-title);
-  font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
+  font-size: var(--tagline-size);
   font-weight: 700;
   text-transform: lowercase;
   letter-spacing: 0.5px;
@@ -1772,6 +1773,42 @@ body {
   .skill-card,
   .contact-form {
     padding: 24px;
+  }
+
+  .tab-navigation {
+    display: none;
+  }
+}
+@media (max-height: 900px) {
+  :root {
+    --tagline-size: clamp(10px, 1.8vh, 16px);
+  }
+
+  .logo-container {
+    top: 16px;
+    left: 16px;
+    right: 16px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .mobile-nav-buttons {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 100%;
+  }
+
+  .mobile-nav-btn {
+    height: 100%;
+    width: 32px;
+  }
+
+  .nav-shape {
+    height: 100%;
+    width: 100%;
   }
 
   .tab-navigation {
