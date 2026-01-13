@@ -23,19 +23,21 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Create transporter using Gmail
+    // Create transporter using SMTP
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: process.env.SMTP_HOST,
+      port: Number(process.env.SMTP_PORT),
+      secure: false, // true for 465, false for other ports
       auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_APP_PASSWORD,
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASSWORD,
       },
     })
 
     // Email content
     const mailOptions = {
-      from: process.env.GMAIL_USER,
-      to: process.env.GMAIL_USER, // Send to yourself
+      from: process.env.SMTP_USER,
+      to: process.env.SMTP_USER, // Send to yourself
       replyTo: email,
       subject: `Contact Form from ${name}`,
       html: `
