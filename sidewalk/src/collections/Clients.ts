@@ -7,7 +7,10 @@ export const Clients: CollectionConfig = {
     defaultColumns: ['companyName', 'ownerName', 'type', 'email', 'totalCost'],
   },
   access: {
-    read: () => true, // Allow public read access
+    read: () => true,
+    create: ({ req: { user } }) => Boolean(user),
+    update: ({ req: { user } }) => Boolean(user),
+    delete: ({ req: { user } }) => Boolean(user),
   },
   fields: [
     {
