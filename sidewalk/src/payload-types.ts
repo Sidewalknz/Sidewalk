@@ -263,7 +263,7 @@ export interface Client {
  * via the `definition` "ongoing-expenses".
  */
 export interface OngoingExpense {
-  id: number;
+  id: string;
   /**
    * Name or description of the ongoing expense
    */
@@ -334,7 +334,7 @@ export interface PayloadLockedDocument {
       } | null)
     | ({
         relationTo: 'ongoing-expenses';
-        value: number | OngoingExpense;
+        value: string | OngoingExpense;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -468,6 +468,7 @@ export interface ClientsSelect<T extends boolean = true> {
  * via the `definition` "ongoing-expenses_select".
  */
 export interface OngoingExpensesSelect<T extends boolean = true> {
+  id?: T;
   name?: T;
   amount?: T;
   frequency?: T;

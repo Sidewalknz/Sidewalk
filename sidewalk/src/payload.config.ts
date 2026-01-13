@@ -37,6 +37,7 @@ export default buildConfig({
   collections: [Users, Media, Clients, OngoingExpenses],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
+  serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },

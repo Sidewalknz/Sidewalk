@@ -49,6 +49,10 @@ export const OngoingExpenses: CollectionConfig = {
   },
   fields: [
     {
+      name: 'id',
+      type: 'text',
+    },
+    {
       name: 'name',
       type: 'text',
       required: true,
