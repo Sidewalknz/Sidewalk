@@ -1,0 +1,118 @@
+/* AdminStyles.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+:root {
+  /* Premium Dark Palette */
+  --theme-bg-base: #09090b; /* Zinc 950 */
+  --theme-bg-subtle: #18181b; /* Zinc 900 */
+  --theme-bg-surface: #27272a; /* Zinc 800 */
+  --theme-bg-highlight: #3f3f46; /* Zinc 700 */
+
+  --theme-text-primary: #f4f4f5; /* Zinc 100 */
+  --theme-text-secondary: #a1a1aa; /* Zinc 400 */
+  --theme-text-muted: #71717a; /* Zinc 500 */
+
+  --theme-border-subtle: #27272a; /* Zinc 800 */
+  --theme-border-focus: #52525b; /* Zinc 600 */
+
+  --theme-primary: #fafafa; /* White (for stark contrast) */
+  --theme-primary-hover: #e4e4e7; /* Zinc 200 */
+  
+  --theme-accent: #3b82f6; /* Blue 500 (Subtle accent) */
+
+  /* Overrides for Payload Variables */
+  --font-body: 'Inter', sans-serif;
+  --font-header: 'Inter', sans-serif;
+}
+
+/* Global Body Override */
+body {
+  background-color: var(--theme-bg-base) !important;
+  color: var(--theme-text-primary) !important;
+  font-family: var(--font-body) !important;
+}
+
+/* Sidebar Styling */
+aside, .nav {
+  background-color: var(--theme-bg-subtle) !important;
+  border-right: 1px solid var(--theme-border-subtle) !important;
+}
+
+.nav__link {
+  color: var(--theme-text-secondary) !important;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.nav__link:hover, .nav__link--active {
+  background-color: var(--theme-bg-surface) !important;
+  color: var(--theme-text-primary) !important;
+}
+
+/* Card / Dashboard Widgets */
+.card, .dashboard__widget, .dashboard-widget {
+  background-color: var(--theme-bg-subtle) !important;
+  border: 1px solid var(--theme-border-subtle) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Inputs */
+input, select, textarea, .react-select__control {
+  background-color: var(--theme-bg-subtle) !important;
+  border: 1px solid var(--theme-border-subtle) !important;
+  color: var(--theme-text-primary) !important;
+  border-radius: 6px !important;
+}
+
+input:focus, select:focus, textarea:focus, .react-select__control--is-focused {
+  border-color: var(--theme-border-focus) !important;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Buttons */
+.btn--primary {
+  background-color: var(--theme-primary) !important;
+  color: var(--theme-bg-base) !important;
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+}
+
+.btn--secondary {
+  background-color: transparent !important;
+  border: 1px solid var(--theme-border-subtle) !important;
+  color: var(--theme-text-primary) !important;
+}
+
+/* Tables */
+.table {
+  background-color: transparent !important;
+}
+
+.table tr {
+  border-bottom: 1px solid var(--theme-border-subtle) !important;
+}
+
+.table th {
+  color: var(--theme-text-muted) !important;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+.table td {
+  color: var(--theme-text-secondary) !important;
+}
+
+/* Header */
+header {
+  background-color: rgba(9, 9, 11, 0.8) !important;
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--theme-border-subtle) !important;
+}
+
+/* Utility to hide Payload Branding if desired (optional) */
+/* .brand {
+  display: none; 
+} */
+

@@ -1,4 +1,5 @@
 import type { Payload } from 'payload'
+import { CategoryPieChart } from './AdminCharts'
 
 export default async function ProductsByCategoryWidget({ payload }: { payload: Payload }) {
   const { docs: clients } = await payload.find({
@@ -7,14 +8,14 @@ export default async function ProductsByCategoryWidget({ payload }: { payload: P
 
   // Group products by category
   const categoryMap = new Map<string, { count: number; total: number }>()
-  
+
   clients.forEach((client) => {
     const products = client.products || []
-    
+
     products.forEach((product: any) => {
       const category = product?.category || 'Uncategorized'
       const price = product?.price || 0
-      
+
       const existing = categoryMap.get(category) || { count: 0, total: 0 }
       categoryMap.set(category, {
         count: existing.count + 1,
@@ -25,10 +26,17 @@ export default async function ProductsByCategoryWidget({ payload }: { payload: P
 
   const categories = Array.from(categoryMap.entries())
     .map(([category, data]) => ({
-      category: category.charAt(0).toUpperCase() + category.slice(1).replace(/-/g, ' '),
+      category:
+        category.charAt(0).toUpperCase() + category.slice(1).replace(/-/g, ' '),
       ...data,
     }))
     .sort((a, b) => b.total - a.total)
+
+  // Format data for chart
+  const chartData = categories.map((item) => ({
+    name: item.category,
+    value: item.total,
+  }))
 
   if (categories.length === 0) {
     return (
@@ -44,12 +52,12 @@ export default async function ProductsByCategoryWidget({ payload }: { payload: P
       <h3>
         Products by Category
       </h3>
+      <div style={{ marginBottom: '1rem' }}>
+        <CategoryPieChart data={chartData} />
+      </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
         {categories.map((item) => (
-          <div 
-            key={item.category}
-            className="dashboard-list-item"
-          >
+          <div key={item.category} className="dashboard-list-item">
             <div>
               <div className="dashboard-list-item__title">{item.category}</div>
               <div className="dashboard-list-item__subtitle">

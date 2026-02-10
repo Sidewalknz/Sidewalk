@@ -4,7 +4,7 @@ export const Clients: CollectionConfig = {
   slug: 'clients',
   admin: {
     useAsTitle: 'companyName',
-    defaultColumns: ['companyName', 'ownerName', 'type', 'email', 'totalCost'],
+    defaultColumns: ['icon', 'companyName', 'ownerName', 'type', 'email', 'totalCost'],
   },
   access: {
     read: () => true,
@@ -218,14 +218,7 @@ export const Clients: CollectionConfig = {
                 description: 'Description of the client/project',
               },
             },
-            {
-              name: 'challenges',
-              type: 'textarea',
-              label: 'Challenges',
-              admin: {
-                description: 'Challenges faced during the project',
-              },
-            },
+
             {
               name: 'features',
               type: 'array',
@@ -257,11 +250,13 @@ export const Clients: CollectionConfig = {
           fields: [
             {
               name: 'icon',
-              type: 'upload',
-              relationTo: 'media',
-              label: 'Icon',
+              type: 'text',
+              label: 'Icon URL',
               admin: {
-                description: 'Single image icon for the client',
+                description: 'URL to the client icon (e.g., /assets/logos/client.svg)',
+                components: {
+                  Cell: '/components/admin/LogoCell#LogoCell',
+                },
               },
             },
             {

@@ -1,43 +1,17 @@
-'use client'
+import React from 'react'
+import { LayoutDashboard } from 'lucide-react'
 
 export default function Icon() {
   return (
     <div style={{ 
-      display: 'inline-flex',
+      display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      marginRight: '24px',
-      paddingRight: '8px',
-      width: 'auto',
-      height: '100%',
-      verticalAlign: 'middle',
-      position: 'relative',
-      zIndex: 1
+      width: '30px',
+      height: '30px',
     }}>
-      <img
-        src="/logo3.svg"
-        alt=""
-        style={{ 
-          height: '20px', 
-          width: 'auto', 
-          maxHeight: '20px',
-          maxWidth: '50px',
-          display: 'block',
-          objectFit: 'contain',
-          margin: 0,
-          padding: 0,
-          verticalAlign: 'middle',
-          position: 'relative',
-          zIndex: 1
-        }}
-        onError={(e) => {
-          // Fallback to logo3.svg if image fails to load
-          const target = e.target as HTMLImageElement
-          if (!target.src.endsWith('/logo3.svg')) {
-            target.src = '/logo3.svg'
-          }
-        }}
-      />
+      <LayoutDashboard size={24} color="#f4f4f5" />
     </div>
   )
 }
+

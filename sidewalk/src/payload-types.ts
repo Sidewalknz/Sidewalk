@@ -224,10 +224,6 @@ export interface Client {
    */
   description?: string | null;
   /**
-   * Challenges faced during the project
-   */
-  challenges?: string | null;
-  /**
    * List of features for this project
    */
   features?:
@@ -241,9 +237,9 @@ export interface Client {
       }[]
     | null;
   /**
-   * Single image icon for the client
+   * URL to the client icon (e.g., /assets/logos/client.svg)
    */
-  icon?: (number | null) | Media;
+  icon?: string | null;
   /**
    * Multiple images for the client gallery
    */
@@ -443,7 +439,6 @@ export interface ClientsSelect<T extends boolean = true> {
         id?: T;
       };
   description?: T;
-  challenges?: T;
   features?:
     | T
     | {
