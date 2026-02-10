@@ -100,6 +100,7 @@ export async function createClient(prevState: any, formData: FormData): Promise<
         features,
         icon,
         gallery: gallery.length > 0 ? gallery : undefined,
+        status: status || 'in_progress',
       },
       overrideAccess: true, 
     })
