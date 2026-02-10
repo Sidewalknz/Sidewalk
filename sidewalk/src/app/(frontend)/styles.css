@@ -1601,6 +1601,62 @@ body {
     max-width: min(100%, calc(100vw - 1.5rem));
   }
 
+  /* Projects tab: single column scrollable layout when a project is selected */
+  .swiss-title.projects-scrollable .contact-tagline-columns {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .swiss-title.projects-scrollable .contact-tagline-col-1 {
+    order: 1;
+  }
+
+  .swiss-title.projects-scrollable .contact-tagline-col-2 {
+    order: 2;
+  }
+
+  .swiss-title.projects-scrollable .contact-tagline-col-3 {
+    order: 3;
+  }
+
+  .swiss-title.projects-scrollable .contact-tagline-col-4 {
+    order: 4;
+    justify-self: center;
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .swiss-title.projects-scrollable .gallery-image {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+  }
+
+  .swiss-title.projects-scrollable .gallery-item {
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Make the swiss-title scrollable when project is selected on mobile */
+  .swiss-title.projects-scrollable {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transform: none;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding-top: 15vh;
+    padding-bottom: 2rem;
+    align-items: center;
+  }
+
   /* Reorder contact columns on mobile - only when contact form is present */
   .contact-tagline-columns:has(.contact-form-fields) .contact-tagline-col-1 {
     order: 1; /* Description - top left */
@@ -1690,6 +1746,16 @@ body {
     grid-template-columns: 1fr 1fr;
     gap: 0.5rem;
     max-width: calc(100vw - 1.5rem);
+  }
+
+  /* Projects tab: single column scrollable layout when a project is selected */
+  .swiss-title.projects-scrollable .contact-tagline-columns {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .swiss-title.projects-scrollable {
+    padding-top: 12vh;
   }
 
   /* Reorder contact columns on mobile - only when contact form is present */

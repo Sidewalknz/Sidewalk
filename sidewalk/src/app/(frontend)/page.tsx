@@ -163,6 +163,7 @@ export default function HomePage() {
   const [activeTab, setActiveTab] = useState<Tab>('home')
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [projectsList, setProjectsList] = useState<Project[]>(projects)
+  const [isMobile, setIsMobile] = useState(false)
   const [formData, setFormData] = useState({ name: '', email: '', message: '' })
   const [formStatus, setFormStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [formError, setFormError] = useState<string>('')
@@ -432,6 +433,14 @@ export default function HomePage() {
     }
   }, [activeTab])
 
+  // Track mobile viewport
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
   // Fetch projects from API
   useEffect(() => {
     const fetchProjects = async () => {
@@ -538,6 +547,8 @@ export default function HomePage() {
 
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
+      // Allow native scrolling when project is selected on mobile
+      if (isMobile && activeTab === 'projects' && selectedProject) return
       if (isScrollingRef.current) return
 
       e.preventDefault()
@@ -585,6 +596,12 @@ export default function HomePage() {
     const handleTouchEnd = (e: TouchEvent) => {
       if (!touchStartRef.current) return
 
+      // Allow native scrolling when project is selected on mobile
+      if (isMobile && activeTab === 'projects' && selectedProject) {
+        touchStartRef.current = null
+        return
+      }
+
       const touch = e.changedTouches[0]
       const deltaX = touch.clientX - touchStartRef.current.x
       const deltaY = touch.clientY - touchStartRef.current.y
@@ -614,7 +631,8 @@ export default function HomePage() {
       touchStartRef.current = null
     }
 
-    window.addEventListener('wheel', handleWheel, { passive: false })
+    const wheelPassive = !!(isMobile && activeTab === 'projects' && selectedProject)
+    window.addEventListener('wheel', handleWheel, { passive: wheelPassive })
     window.addEventListener('touchstart', handleTouchStart, { passive: true })
     window.addEventListener('touchend', handleTouchEnd, { passive: true })
 
@@ -624,9 +642,10 @@ export default function HomePage() {
       window.removeEventListener('touchend', handleTouchEnd)
       if (scrollTimeoutRef.current) {
         clearTimeout(scrollTimeoutRef.current)
+        isScrollingRef.current = false
       }
     }
-  }, [navigateToNextTab])
+  }, [navigateToNextTab, isMobile, activeTab, selectedProject])
 
   return (
     <div ref={containerRef} className="website" style={{ backgroundColor: activeTabData.color }}>
@@ -663,7 +682,7 @@ export default function HomePage() {
 
       {/* Swiss Typography Title */}
       <div 
-        className={`swiss-title ${activeTab === 'about' || activeTab === 'projects' ? 'swiss-title-light' : 'swiss-title-dark'}`}
+        className={`swiss-title ${activeTab === 'about' || activeTab === 'projects' ? 'swiss-title-light' : 'swiss-title-dark'}${isMobile && activeTab === 'projects' && selectedProject ? ' projects-scrollable' : ''}`}
         style={{ '--bg-color': activeTabData.color } as React.CSSProperties}
       >
         <div ref={sidewalkTopRef} className="swiss-title-top">SIDEWALK</div>
