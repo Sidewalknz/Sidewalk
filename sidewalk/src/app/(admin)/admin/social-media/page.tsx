@@ -17,7 +17,6 @@ export default async function SocialMediaPage() {
         <div className="space-y-6">
             <div>
                 <h2 className="text-3xl font-bold tracking-tight">Social Media Generator</h2>
-                <p className="text-zinc-400 mt-2">Create Instagram and Facebook slides from client information.</p>
             </div>
 
             <SocialMediaImageGenerator clients={clientsData.docs} />

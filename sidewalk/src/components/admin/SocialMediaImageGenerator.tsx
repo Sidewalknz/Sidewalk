@@ -23,7 +23,7 @@ const SIZES: Size[] = [
   { width: 1200, height: 630, label: 'Facebook / Twitter (1200x630)', aspect: 'fb' },
 ]
 
-type ContentType = 'home' | 'features' | 'description' | 'products'
+type ContentType = 'home' | 'features' | 'description'
 type LogoPosition = 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right'
 type LogoVariant = 'logo.svg' | 'logo1.svg' | 'logo2.svg' | 'logo3.svg' | 'logo-b-r.svg' | 'logo-b-y.svg' | 'logo-w-r.svg' | 'logo-w-y.svg'
 
@@ -35,7 +35,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
   const [logoVariant, setLogoVariant] = useState<LogoVariant>('logo.svg')
   const [customLogoUrl, setCustomLogoUrl] = useState<string>('')
   const [homeVariation, setHomeVariation] = useState<'horizontal' | 'vertical'>('horizontal')
-  const [editableTitle, setEditableTitle] = useState('')
+  const [editableFeatures, setEditableFeatures] = useState<{ title: string, description: string }[]>([])
   const [editableDescription, setEditableDescription] = useState('')
   
   // Theme-based initial colors
@@ -57,7 +57,6 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
   const [bgOverlayOpacity, setBgOverlayOpacity] = useState(0.4)
   const [size, setSize] = useState<Size>(SIZES[0])
   const [featureIndex, setFeatureIndex] = useState(0)
-  const [productIndex, setProductIndex] = useState(0)
   
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const selectedClient = clients.find(c => c.id == selectedClientId)
@@ -65,28 +64,25 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
   // Draw the canvas whenever any option changes
   useEffect(() => {
     drawCanvas()
-  }, [selectedClientId, contentType, logoPosition, logoVariant, customLogoUrl, customBgUrl, bgOverlayOpacity, homeVariation, bgColor, textColor, highlightColor, size, featureIndex, productIndex, editableTitle, editableDescription])
+  }, [selectedClientId, contentType, logoPosition, logoVariant, customLogoUrl, customBgUrl, bgOverlayOpacity, homeVariation, bgColor, textColor, highlightColor, size, featureIndex, editableFeatures, editableDescription])
 
   // Update editable text when content selection changes
   useEffect(() => {
     if (selectedClient) {
       if (contentType === 'features') {
-        const feature = selectedClient.features?.[featureIndex]
-        setEditableTitle(feature?.feature || '')
-        setEditableDescription(feature?.description || '')
-      } else if (contentType === 'products') {
-        const product = selectedClient.products?.[productIndex]
-        setEditableTitle(product?.productName || '')
-        setEditableDescription(product?.productDescription || '')
+        const features = (selectedClient.features || []).map(f => ({
+          title: f.feature || '',
+          description: f.description || ''
+        }))
+        setEditableFeatures(features)
       } else if (contentType === 'description') {
-        setEditableTitle('')
         setEditableDescription(selectedClient.description || '')
       } else {
-        setEditableTitle('')
+        setEditableFeatures([])
         setEditableDescription('')
       }
     }
-  }, [selectedClientId, contentType, featureIndex, productIndex])
+  }, [selectedClientId, contentType])
 
   const getProxiedUrl = (url: string) => {
     if (!url) return ''
@@ -170,8 +166,6 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
         drawFeaturesTemplate(ctx, canvas, logoImg, margin)
     } else if (contentType === 'description') {
         drawDescriptionTemplate(ctx, canvas, logoImg, margin)
-    } else if (contentType === 'products') {
-        drawProductsTemplate(ctx, canvas, logoImg, margin)
     }
 
     // Draw Sidewalk Logo watermark
@@ -288,11 +282,9 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
   }
 
   const drawFeaturesTemplate = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, logoImg: HTMLImageElement, margin: number) => {
-    const features = selectedClient?.features || []
-    const feature = features[featureIndex]
     const contentY = logoPosition.startsWith('top') ? margin * 3 : margin * 1.5
 
-    if (!feature) {
+    if (editableFeatures.length === 0) {
         ctx.fillStyle = textColor
         ctx.font = `${canvas.width * 0.04}px sans-serif`
         ctx.textAlign = 'center'
@@ -300,38 +292,75 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
         return
     }
 
+    // Determine max available height
+    let maxContentHeight = canvas.height - contentY - margin
+    if (logoPosition.startsWith('bottom')) {
+        maxContentHeight -= margin * 1.5
+    }
+
+    let titleFontSize = canvas.width * 0.06
+    let descFontSize = canvas.width * 0.035
+    let scaleFactor = 1.0
+
+    // Scaling loop
+    while (scaleFactor > 0.5) {
+        let testY = 0
+        const currentTitleSize = titleFontSize * scaleFactor
+        const currentDescSize = descFontSize * scaleFactor
+        const currentTitleLH = currentTitleSize * 1.2
+        const currentDescLH = currentDescSize * 1.3
+
+        editableFeatures.forEach((feature) => {
+            ctx.font = `bold ${currentTitleSize}px sans-serif`
+            testY += wrapText(ctx, feature.title.toLowerCase(), margin, 0, canvas.width - margin * 2, currentTitleLH, false)
+            
+            if (feature.description) {
+                ctx.font = `${currentDescSize}px sans-serif`
+                testY += wrapText(ctx, feature.description.toLowerCase(), margin, 0, canvas.width - margin * 2, currentDescLH, false)
+                testY += margin * 0.3 * scaleFactor
+            } else {
+                testY += margin * 0.3 * scaleFactor
+            }
+        })
+
+        if (testY <= maxContentHeight) break
+        scaleFactor -= 0.05
+    }
+
+    const currentTitleSize = titleFontSize * scaleFactor
+    const currentDescSize = descFontSize * scaleFactor
+    const currentTitleLH = currentTitleSize * 1.2
+    const currentDescLH = currentDescSize * 1.3
+
     ctx.font = `bold ${canvas.width * 0.04}px sans-serif`
     ctx.textAlign = 'left'
     ctx.textBaseline = 'top'
-    ctx.fillText('feature', margin, contentY)
-
     ctx.fillStyle = textColor
-    ctx.font = `bold ${canvas.width * 0.09}px sans-serif`
-    const titleHeight = wrapText(ctx, editableTitle.toLowerCase(), margin, contentY + margin, canvas.width - margin * 2, canvas.width * 0.11, true, highlightColor)
+    ctx.globalAlpha = 0.6
+    ctx.fillText('features', margin, contentY)
+    ctx.globalAlpha = 1.0
 
-    if (editableDescription) {
-        const availableWidth = canvas.width - margin * 2
-        let maxDescHeight = canvas.height - (contentY + margin + titleHeight + margin)
-        if (logoPosition.startsWith('bottom')) {
-            maxDescHeight -= margin * 1.5
+    let currentY = contentY + margin
+
+    editableFeatures.forEach((feature) => {
+        // Title
+        ctx.fillStyle = textColor
+        ctx.font = `bold ${currentTitleSize}px sans-serif`
+        const titleHeight = wrapText(ctx, feature.title.toLowerCase(), margin, currentY, canvas.width - margin * 2, currentTitleLH, true, highlightColor)
+        
+        currentY += titleHeight
+
+        // Description
+        if (feature.description) {
+            ctx.font = `${currentDescSize}px sans-serif`
+            ctx.globalAlpha = 0.7
+            const descHeight = wrapText(ctx, feature.description.toLowerCase(), margin, currentY, canvas.width - margin * 2, currentDescLH, true, highlightColor)
+            ctx.globalAlpha = 1.0
+            currentY += descHeight + margin * 0.3 * scaleFactor
+        } else {
+            currentY += margin * 0.3 * scaleFactor
         }
-        
-        let fontSize = canvas.width * 0.05
-        let lineHeight = fontSize * 1.3
-        
-        while (fontSize > canvas.width * 0.025) {
-            ctx.font = `${fontSize}px sans-serif`
-            const totalHeight = wrapText(ctx, editableDescription.toLowerCase(), margin, 0, availableWidth, lineHeight, false, highlightColor)
-            if (totalHeight <= maxDescHeight) break
-            fontSize -= 1
-            lineHeight = fontSize * 1.3
-        }
-        
-        ctx.font = `${fontSize}px sans-serif`
-        ctx.globalAlpha = 0.7
-        wrapText(ctx, editableDescription.toLowerCase(), margin, contentY + margin + titleHeight + margin/2, availableWidth, lineHeight, true, highlightColor)
-        ctx.globalAlpha = 1.0
-    }
+    })
   }
 
   const drawDescriptionTemplate = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, logoImg: HTMLImageElement, margin: number) => {
@@ -372,90 +401,53 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
     wrapText(ctx, description.toLowerCase(), margin, finalY, availableWidth, lineHeight, true, highlightColor)
   }
 
-  const drawProductsTemplate = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, logoImg: HTMLImageElement, margin: number) => {
-    const products = selectedClient?.products || []
-    const product = products[productIndex]
-    const contentY = logoPosition.startsWith('top') ? margin * 3 : margin * 1.5
-
-    if (!product) {
-        ctx.fillStyle = textColor
-        ctx.font = `${canvas.width * 0.04}px sans-serif`
-        ctx.textAlign = 'center'
-        ctx.fillText('No products found', canvas.width/2, canvas.height/2)
-        return
-    }
-
-    ctx.font = `bold ${canvas.width * 0.04}px sans-serif`
-    ctx.textAlign = 'left'
-    ctx.textBaseline = 'top'
-    ctx.fillText((product.category || 'product').toLowerCase(), margin, contentY)
-
-    ctx.fillStyle = textColor
-    ctx.font = `bold ${canvas.width * 0.09}px sans-serif`
-    const titleHeight = wrapText(ctx, editableTitle.toLowerCase(), margin, contentY + margin, canvas.width - margin * 2, canvas.width * 0.11, true, highlightColor)
-
-    if (editableDescription) {
-        const availableWidth = canvas.width - margin * 2
-        let maxDescHeight = canvas.height - (contentY + margin + titleHeight + margin)
-        if (logoPosition.startsWith('bottom')) {
-            maxDescHeight -= margin * 1.5
-        }
-        
-        let fontSize = canvas.width * 0.05
-        let lineHeight = fontSize * 1.3
-        
-        while (fontSize > canvas.width * 0.025) {
-            ctx.font = `${fontSize}px sans-serif`
-            const totalHeight = wrapText(ctx, editableDescription.toLowerCase(), margin, 0, availableWidth, lineHeight, false, highlightColor)
-            if (totalHeight <= maxDescHeight) break
-            fontSize -= 1
-            lineHeight = fontSize * 1.3
-        }
-        
-        ctx.font = `${fontSize}px sans-serif`
-        ctx.globalAlpha = 0.7
-        wrapText(ctx, editableDescription.toLowerCase(), margin, contentY + margin + titleHeight + margin/2, availableWidth, lineHeight, true, highlightColor)
-        ctx.globalAlpha = 1.0
-    }
-  }
-
   const wrapText = (ctx: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number, draw: boolean = true, hColor?: string) => {
-    const words = text.split(' ')
-    let currentX = x
+    const lines = text.split('\n')
     let currentY = y
-    let isHighlighted = false
-    const defaultColor = ctx.fillStyle as string
     let initialY = y
+    let totalHeight = 0
 
-    for (let n = 0; n < words.length; n++) {
-      let word = words[n]
-      
-      let startsHighlight = word.startsWith('**')
-      let endsHighlight = word.endsWith('**')
-      
-      let cleanWord = word.replace(/\*\*/g, '')
-      
-      const spaceWidth = ctx.measureText(' ').width
-      const wordWidth = ctx.measureText(cleanWord).width
-      
-      if (currentX + wordWidth > x + maxWidth && n > 0) {
-        currentY += lineHeight
-        currentX = x
-      }
-      
-      if (startsHighlight) isHighlighted = true
+    for (let i = 0; i < lines.length; i++) {
+        const words = lines[i].split(' ')
+        let currentX = x
+        let isHighlighted = false
+        const defaultColor = ctx.fillStyle as string
 
-      if (draw) {
-        ctx.fillStyle = isHighlighted ? (hColor || defaultColor) : defaultColor
-        ctx.fillText(cleanWord, currentX, currentY)
-      }
-      
-      currentX += wordWidth + spaceWidth
-      
-      if (endsHighlight) isHighlighted = false
+        for (let n = 0; n < words.length; n++) {
+            let word = words[n]
+            if (word === '') continue // Handle multiple spaces
+            
+            let startsHighlight = word.startsWith('**')
+            let endsHighlight = word.endsWith('**')
+            
+            let cleanWord = word.replace(/\*\*/g, '')
+            
+            const spaceWidth = ctx.measureText(' ').width
+            const wordWidth = ctx.measureText(cleanWord).width
+            
+            if (currentX + wordWidth > x + maxWidth && n > 0) {
+                currentY += lineHeight
+                currentX = x
+            }
+            
+            if (startsHighlight) isHighlighted = true
+
+            if (draw) {
+                ctx.fillStyle = isHighlighted ? (hColor || defaultColor) : defaultColor
+                ctx.fillText(cleanWord, currentX, currentY)
+            }
+            
+            currentX += wordWidth + spaceWidth
+            
+            if (endsHighlight) isHighlighted = false
+        }
+        
+        if (i < lines.length - 1 || words.length > 0) {
+            currentY += lineHeight
+        }
     }
     
-    return (currentY - initialY) + lineHeight
+    return currentY - initialY
   }
 
   const downloadImage = () => {
@@ -489,7 +481,6 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
               onChange={(e) => {
                 setSelectedClientId(e.target.value)
                 setFeatureIndex(0)
-                setProductIndex(0)
               }}
             >
               {clients.map(client => (
@@ -528,7 +519,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
               <Type className="w-4 h-4" /> Content Type
             </label>
             <div className="grid grid-cols-2 gap-2">
-              {(['home', 'features', 'description', 'products'] as ContentType[]).map((type) => (
+              {(['home', 'features', 'description'] as ContentType[]).map((type) => (
                 <button
                   key={type}
                   onClick={() => setContentType(type)}
@@ -572,7 +563,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
           )}
 
           {/* Real-time Content Editor */}
-          {contentType !== 'home' && (
+          {contentType === 'description' && (
             <div className="space-y-4 p-4 rounded-xl border bg-zinc-900/5" style={{ borderColor: 'var(--admin-sidebar-border)' }}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--admin-text-muted)' }}>
@@ -583,19 +574,6 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
                 </div>
               </div>
               
-              {contentType !== 'description' && (
-                <div className="space-y-1">
-                  <label className="text-[10px] uppercase font-bold" style={{ color: 'var(--admin-text-muted)' }}>Title</label>
-                  <input 
-                    type="text"
-                    className="w-full bg-transparent border-b outline-none text-sm py-1"
-                    style={{ borderColor: 'var(--admin-sidebar-border)', color: 'var(--admin-text)' }}
-                    value={editableTitle}
-                    onChange={(e) => setEditableTitle(e.target.value)}
-                  />
-                </div>
-              )}
-              
               <div className="space-y-1">
                 <label className="text-[10px] uppercase font-bold" style={{ color: 'var(--admin-text-muted)' }}>Description</label>
                 <textarea 
@@ -604,6 +582,62 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
                   value={editableDescription}
                   onChange={(e) => setEditableDescription(e.target.value)}
                 />
+              </div>
+            </div>
+          )}
+
+          {contentType === 'features' && (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--admin-text-muted)' }}>
+                  <RefreshCw className="w-4 h-4" /> Edit Features
+                </label>
+                <button 
+                  onClick={() => setEditableFeatures([...editableFeatures, { title: 'New Feature', description: '' }])}
+                  className="text-[10px] px-2 py-1 bg-blue-500/10 text-blue-500 rounded border border-blue-500/20 hover:bg-blue-500/20 transition-colors uppercase font-bold"
+                >
+                  + Add Feature
+                </button>
+              </div>
+
+              <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                {editableFeatures.map((f, i) => (
+                  <div key={i} className="space-y-2 p-3 rounded-lg border bg-zinc-900/5 relative group" style={{ borderColor: 'var(--admin-sidebar-border)' }}>
+                    <button 
+                      onClick={() => setEditableFeatures(editableFeatures.filter((_, idx) => idx !== i))}
+                      className="absolute top-2 right-2 p-1 text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      ×
+                    </button>
+                    <div className="space-y-1">
+                      <label className="text-[9px] uppercase font-bold opacity-50" style={{ color: 'var(--admin-text-muted)' }}>Feature {i + 1} Title</label>
+                      <input 
+                        type="text"
+                        className="w-full bg-transparent border-b outline-none text-sm py-1"
+                        style={{ borderColor: 'var(--admin-sidebar-border)', color: 'var(--admin-text)' }}
+                        value={f.title}
+                        onChange={(e) => {
+                          const newFeatures = [...editableFeatures]
+                          newFeatures[i].title = e.target.value
+                          setEditableFeatures(newFeatures)
+                        }}
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[9px] uppercase font-bold opacity-50" style={{ color: 'var(--admin-text-muted)' }}>Description</label>
+                      <textarea 
+                        className="w-full bg-transparent border rounded-lg p-2 outline-none text-xs min-h-[60px]"
+                        style={{ borderColor: 'var(--admin-sidebar-border)', color: 'var(--admin-text)' }}
+                        value={f.description}
+                        onChange={(e) => {
+                          const newFeatures = [...editableFeatures]
+                          newFeatures[i].description = e.target.value
+                          setEditableFeatures(newFeatures)
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           )}
@@ -748,7 +782,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
           {contentType === 'features' && (selectedClient?.features?.length || 0) > 1 && (
             <div className="space-y-2">
                <label className="text-sm font-medium flex items-center justify-between" style={{ color: 'var(--admin-text-muted)' }}>
-                <span>Select Feature</span>
+                <span>Jump to Feature</span>
                 <span>{featureIndex + 1} / {selectedClient?.features?.length}</span>
               </label>
               <div className="flex gap-2">
@@ -768,36 +802,6 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
                   className="p-2 rounded-lg transition-colors disabled:opacity-50"
                   style={{ backgroundColor: 'var(--admin-bg)', color: 'var(--admin-text)', border: '1px solid var(--admin-sidebar-border)' }}
                   disabled={featureIndex === (selectedClient?.features?.length || 1) - 1}
-                >
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          )}
-
-          {contentType === 'products' && (selectedClient?.products?.length || 0) > 1 && (
-            <div className="space-y-2">
-               <label className="text-sm font-medium flex items-center justify-between" style={{ color: 'var(--admin-text-muted)' }}>
-                <span>Select Product</span>
-                <span>{productIndex + 1} / {selectedClient?.products?.length}</span>
-              </label>
-              <div className="flex gap-2">
-                <button 
-                  onClick={() => setProductIndex(prev => Math.max(0, prev - 1))}
-                  className="p-2 rounded-lg transition-colors disabled:opacity-50"
-                  style={{ backgroundColor: 'var(--admin-bg)', color: 'var(--admin-text)', border: '1px solid var(--admin-sidebar-border)' }}
-                  disabled={productIndex === 0}
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                </button>
-                <div className="flex-1 border rounded-lg px-3 py-2 text-sm truncate" style={{ backgroundColor: 'var(--admin-bg)', color: 'var(--admin-text)', borderColor: 'var(--admin-sidebar-border)' }}>
-                    {selectedClient?.products?.[productIndex]?.productName}
-                </div>
-                <button 
-                  onClick={() => setProductIndex(prev => Math.min((selectedClient?.products?.length || 1) - 1, prev + 1))}
-                  className="p-2 rounded-lg transition-colors disabled:opacity-50"
-                  style={{ backgroundColor: 'var(--admin-bg)', color: 'var(--admin-text)', border: '1px solid var(--admin-sidebar-border)' }}
-                  disabled={productIndex === (selectedClient?.products?.length || 1) - 1}
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>
