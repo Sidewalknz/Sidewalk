@@ -25,12 +25,20 @@ export async function createMedia(formData: FormData): Promise<{ message: string
     }
 
     try {
+        const arrayBuffer = await file.arrayBuffer()
+        const buffer = Buffer.from(arrayBuffer)
+
         await payload.create({
             collection: 'media',
             data: {
                 alt: file.name, // Default alt text to filename
             },
-            file: file, // Payload handles file upload from the File object
+            file: {
+                data: buffer,
+                mimetype: file.type,
+                name: file.name,
+                size: file.size,
+            },
         })
     } catch (error) {
         console.error('Error uploading media:', error)
