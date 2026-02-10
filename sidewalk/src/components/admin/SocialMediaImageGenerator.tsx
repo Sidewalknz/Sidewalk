@@ -70,7 +70,6 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
   const [bgOverlayOpacity, setBgOverlayOpacity] = useState(0.4)
   const [size, setSize] = useState<Size>(SIZES[0])
   const [bgZoom, setBgZoom] = useState(1.0)
-  const [featureIndex, setFeatureIndex] = useState(0)
   const [svgOriginalContent, setSvgOriginalContent] = useState<string>('')
   const [svgColors, setSvgColors] = useState<string[]>([])
   const [svgColorMap, setSvgColorMap] = useState<Record<string, string>>({})
@@ -121,7 +120,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
   // Draw the canvas whenever any option changes
   useEffect(() => {
     drawCanvas()
-  }, [selectedClientId, contentType, logoPosition, logoVariant, homeLogoVariant, customLogoUrl, customBgUrl, bgOverlayOpacity, bgZoom, homeVariation, bgColor, textColor, highlightColor, svgColorMap, sidewalkLogoColorMap, size, featureIndex, editableFeatures, editableDescription])
+  }, [selectedClientId, contentType, logoPosition, logoVariant, homeLogoVariant, customLogoUrl, customBgUrl, bgOverlayOpacity, bgZoom, homeVariation, bgColor, textColor, highlightColor, svgColorMap, sidewalkLogoColorMap, size, editableFeatures, editableDescription])
 
   // Update editable text when content selection changes
   useEffect(() => {
@@ -597,7 +596,6 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
               value={selectedClientId}
               onChange={(e) => {
                 setSelectedClientId(e.target.value)
-                setFeatureIndex(0)
               }}
             >
               {clients.map(client => (
@@ -1102,35 +1100,6 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
             </div>
           </div>
 
-          {contentType === 'features' && (selectedClient?.features?.length || 0) > 1 && (
-            <div className="space-y-2">
-               <label className="text-sm font-medium flex items-center justify-between" style={{ color: 'var(--admin-text-muted)' }}>
-                <span>Jump to Feature</span>
-                <span>{featureIndex + 1} / {selectedClient?.features?.length}</span>
-              </label>
-              <div className="flex gap-2">
-                <button 
-                  onClick={() => setFeatureIndex(prev => Math.max(0, prev - 1))}
-                  className="p-2 rounded-lg transition-colors disabled:opacity-50"
-                  style={{ backgroundColor: 'var(--admin-bg)', color: 'var(--admin-text)', border: '1px solid var(--admin-sidebar-border)' }}
-                  disabled={featureIndex === 0}
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                </button>
-                <div className="flex-1 border rounded-lg px-3 py-2 text-sm truncate" style={{ backgroundColor: 'var(--admin-bg)', color: 'var(--admin-text)', borderColor: 'var(--admin-sidebar-border)' }}>
-                    {selectedClient?.features?.[featureIndex]?.feature}
-                </div>
-                <button 
-                  onClick={() => setFeatureIndex(prev => Math.min((selectedClient?.features?.length || 1) - 1, prev + 1))}
-                  className="p-2 rounded-lg transition-colors disabled:opacity-50"
-                  style={{ backgroundColor: 'var(--admin-bg)', color: 'var(--admin-text)', border: '1px solid var(--admin-sidebar-border)' }}
-                  disabled={featureIndex === (selectedClient?.features?.length || 1) - 1}
-                >
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          )}
 
           {/* Background Colour */}
           <div className="space-y-2">
