@@ -142,17 +142,17 @@ const getPageTagline = (tab: Tab): React.ReactNode => {
       return null
     case 'contact':
       return (
-        <>
-          ready to start your next<br />
-          project? we'd love to <span className="tagline-highlight">hear</span><br />
-          <span className="tagline-highlight">from you</span>. whether you<br />
-          need a new <span className="tagline-highlight">website</span>, a<br />
-          <span className="tagline-highlight">custom web application</span>, or<br />
-          help with your <span className="tagline-highlight">existing</span><br />
-          <span className="tagline-highlight">platform</span>, we're here to<br />
-          help. <span className="tagline-highlight">reach out</span> and let's<br />
+        <div className="text-flow-mobile">
+          ready to start your next <br />
+          project? we'd love to <span className="tagline-highlight">hear</span> <br />
+          <span className="tagline-highlight">from you</span>. whether you <br />
+          need a new <span className="tagline-highlight">website</span>, a <br />
+          <span className="tagline-highlight">custom web application</span>, or <br />
+          help with your <span className="tagline-highlight">existing</span> <br />
+          <span className="tagline-highlight">platform</span>, we're here to <br />
+          help. <span className="tagline-highlight">reach out</span> and let's <br />
           build something together.
-        </>
+        </div>
       )
     default:
       return null
@@ -750,22 +750,22 @@ export default function HomePage() {
                     </div>
                   )}
                   {activeTab === 'projects' && !selectedProject && (
-                    <>
+                    <div className="text-flow-mobile">
                       {wrapWords(
                         <>
-                          our portfolio showcases<br />
-                          <span className="tagline-highlight">modern web applications</span><br />
-                          built with comprehensive<br />
-                          <span className="tagline-highlight">services</span>. each project<br />
-                          represents our<br />
-                          commitment to <span className="tagline-highlight">self-hosted</span><br />
-                          solutions, <span className="tagline-highlight">custom</span><br />
-                          <span className="tagline-highlight">integrations</span>, and <span className="tagline-highlight">beautiful</span><br />
-                          <span className="tagline-highlight">user experiences</span> that help<br />
+                          our portfolio showcases <br />
+                          <span className="tagline-highlight">modern web applications</span> <br />
+                          built with comprehensive <br />
+                          <span className="tagline-highlight">services</span>. each project <br />
+                          represents our <br />
+                          commitment to <span className="tagline-highlight">self-hosted</span> <br />
+                          solutions, <span className="tagline-highlight">custom</span> <br />
+                          <span className="tagline-highlight">integrations</span>, and <span className="tagline-highlight">beautiful</span> <br />
+                          <span className="tagline-highlight">user experiences</span> that help <br />
                           <span className="tagline-highlight">businesses</span> thrive online.
                         </>
                       )}
-                    </>
+                    </div>
                   )}
                   {activeTab === 'contact' && (
                     <div className="social-links">

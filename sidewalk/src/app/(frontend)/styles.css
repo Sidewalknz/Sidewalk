@@ -1596,9 +1596,18 @@ body {
 
   .contact-tagline-columns,
   .projects-tagline-columns {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: clamp(0.5rem, 1vw, 1rem);
     max-width: min(100%, calc(100vw - 1.5rem));
+  }
+
+  .text-flow-mobile br {
+    display: none;
+  }
+
+  .contact-tagline-col-1,
+  .contact-tagline-col-2 {
+    max-width: 100%;
   }
 
   /* Projects tab: single column scrollable layout when a project is selected */
@@ -1659,19 +1668,22 @@ body {
 
   /* Reorder contact columns on mobile - only when contact form is present */
   .contact-tagline-columns:has(.contact-form-fields) .contact-tagline-col-1 {
-    order: 1; /* Description - top left */
-  }
-
-  .contact-tagline-columns:has(.contact-form-fields) .contact-tagline-col-4 {
-    order: 2; /* Form - top right */
+    order: 1; /* Description - top */
   }
 
   .contact-tagline-columns:has(.contact-form-fields) .contact-tagline-col-2 {
-    order: 3; /* Social links - bottom left */
+    order: 2; /* Social links - middle */
   }
 
   .contact-tagline-columns:has(.contact-form-fields) .contact-tagline-col-3 {
-    order: 4; /* Info/details - bottom right */
+    order: 3; /* Info/details - middle */
+  }
+
+  .contact-tagline-columns:has(.contact-form-fields) .contact-tagline-col-4 {
+    order: 4; /* Form - bottom */
+    text-align: left;
+    justify-self: start;
+    margin-left: 0;
   }
 
   .swiss-title-top,
@@ -1743,7 +1755,7 @@ body {
 
   .contact-tagline-columns,
   .projects-tagline-columns {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 0.5rem;
     max-width: calc(100vw - 1.5rem);
   }
@@ -1760,19 +1772,22 @@ body {
 
   /* Reorder contact columns on mobile - only when contact form is present */
   .contact-tagline-columns:has(.contact-form-fields) .contact-tagline-col-1 {
-    order: 1; /* Description - top left */
-  }
-
-  .contact-tagline-columns:has(.contact-form-fields) .contact-tagline-col-4 {
-    order: 2; /* Form - top right */
+    order: 1; /* Description - top */
   }
 
   .contact-tagline-columns:has(.contact-form-fields) .contact-tagline-col-2 {
-    order: 3; /* Social links - bottom left */
+    order: 2; /* Social links - middle */
   }
 
   .contact-tagline-columns:has(.contact-form-fields) .contact-tagline-col-3 {
-    order: 4; /* Info/details - bottom right */
+    order: 3; /* Info/details - middle */
+  }
+
+  .contact-tagline-columns:has(.contact-form-fields) .contact-tagline-col-4 {
+    order: 4; /* Form - bottom */
+    text-align: left;
+    justify-self: start;
+    margin-left: 0;
   }
 
   .swiss-title-top,
