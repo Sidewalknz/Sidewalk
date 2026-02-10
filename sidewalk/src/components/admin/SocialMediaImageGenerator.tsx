@@ -23,17 +23,29 @@ const SIZES: Size[] = [
   { width: 1200, height: 630, label: 'Facebook (1200x630)', aspect: 'fb' },
 ]
 
+const SIDEWALK_LOGO_LIGHT_PRESETS = [
+  { name: 'Standard', colors: { '#CD5037': '#CD5037', '#E5BF55': '#E5BF55', '#FCF5EB': '#FCF5EB' } },
+  { name: 'Light Red', colors: { '#CD5037': '#CD5037', '#E5BF55': '#212C34', '#FCF5EB': '#FCF5EB' } },
+  { name: 'Light Yellow', colors: { '#CD5037': '#212C34', '#E5BF55': '#E5BF55', '#FCF5EB': '#FCF5EB' } },
+]
+
+const SIDEWALK_LOGO_DARK_PRESETS = [
+  { name: 'Standard Dark', colors: { '#CD5037': '#CD5037', '#E5BF55': '#E5BF55', '#FCF5EB': '#212C34' } },
+  { name: 'Dark Red', colors: { '#CD5037': '#CD5037', '#E5BF55': '#FCF5EB', '#FCF5EB': '#212C34' } },
+  { name: 'Dark Yellow', colors: { '#CD5037': '#FCF5EB', '#E5BF55': '#E5BF55', '#FCF5EB': '#212C34' } },
+]
+
 type ContentType = 'home' | 'features' | 'description'
 type LogoPosition = 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right'
-type LogoVariant = 'logo.svg' | 'logo1.svg' | 'logo2.svg' | 'logo3.svg' | 'logo-b-r.svg' | 'logo-b-y.svg' | 'logo-w-r.svg' | 'logo-w-y.svg' | 'none'
+type SidewalkLogoStyle = 'logo.svg' | 'logo2.svg' | 'none'
 
 export default function SocialMediaImageGenerator({ clients }: Props) {
   const { theme: activeTheme } = useAdminTheme()
   const [selectedClientId, setSelectedClientId] = useState<number | string>(clients[0]?.id || '')
   const [contentType, setContentType] = useState<ContentType>('home')
   const [logoPosition, setLogoPosition] = useState<LogoPosition>('bottom-right')
-  const [logoVariant, setLogoVariant] = useState<LogoVariant>('logo.svg')
-  const [homeLogoVariant, setHomeLogoVariant] = useState<LogoVariant>('logo.svg')
+  const [logoVariant, setLogoVariant] = useState<SidewalkLogoStyle>('logo.svg')
+  const [homeLogoVariant, setHomeLogoVariant] = useState<SidewalkLogoStyle>('logo.svg')
   const [customLogoUrl, setCustomLogoUrl] = useState<string>('')
   const [homeVariation, setHomeVariation] = useState<'horizontal' | 'vertical'>('horizontal')
   const [editableFeatures, setEditableFeatures] = useState<{ title: string, description: string }[]>([])
@@ -62,6 +74,11 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
   const [svgOriginalContent, setSvgOriginalContent] = useState<string>('')
   const [svgColors, setSvgColors] = useState<string[]>([])
   const [svgColorMap, setSvgColorMap] = useState<Record<string, string>>({})
+  const [sidewalkLogoColorMap, setSidewalkLogoColorMap] = useState<Record<string, string>>({
+    '#CD5037': '#CD5037', // Red
+    '#E5BF55': '#E5BF55', // Yellow
+    '#FCF5EB': '#FCF5EB'  // Cream
+  })
   
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const selectedClient = clients.find(c => c.id == selectedClientId)
@@ -104,7 +121,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
   // Draw the canvas whenever any option changes
   useEffect(() => {
     drawCanvas()
-  }, [selectedClientId, contentType, logoPosition, logoVariant, homeLogoVariant, customLogoUrl, customBgUrl, bgOverlayOpacity, bgZoom, homeVariation, bgColor, textColor, highlightColor, svgColorMap, size, featureIndex, editableFeatures, editableDescription])
+  }, [selectedClientId, contentType, logoPosition, logoVariant, homeLogoVariant, customLogoUrl, customBgUrl, bgOverlayOpacity, bgZoom, homeVariation, bgColor, textColor, highlightColor, svgColorMap, sidewalkLogoColorMap, size, featureIndex, editableFeatures, editableDescription])
 
   // Update editable text when content selection changes
   useEffect(() => {
@@ -181,20 +198,8 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
         }
     }
 
-    // Load Sidewalk Logo
-    let logoImg: HTMLImageElement | null = null
-    if (logoVariant !== 'none') {
-        logoImg = new Image()
-        await new Promise(resolve => {
-            if (!logoImg) return resolve(null)
-            logoImg.onload = resolve
-            logoImg.onerror = () => {
-                console.error('Failed to load Sidewalk logo', logoVariant)
-                resolve(null)
-            }
-            logoImg.src = `/${logoVariant}`
-        })
-    }
+    // Load Sidewalk Logo Watermark
+    const logoImg = logoVariant !== 'none' ? await loadSidewalkLogo(logoVariant) : null
 
     // Logo size and margins
     const logoScale = 0.18
@@ -249,12 +254,15 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
       const isSvg = iconUrl.toLowerCase().endsWith('.svg')
       if (isSvg && svgOriginalContent) {
         // Use recolored SVG
+        // Use recolored SVG with single-pass replacement
         let newSvg = svgOriginalContent
-        Object.entries(svgColorMap).forEach(([oldColor, newColor]) => {
-          if (oldColor.toLowerCase() !== newColor.toLowerCase()) {
-            const regex = new RegExp(oldColor, 'gi')
-            newSvg = newSvg.replace(regex, newColor)
-          }
+        const lowerColorMap = Object.entries(svgColorMap).reduce((acc, [k, v]) => {
+          acc[k.toLowerCase()] = v
+          return acc
+        }, {} as Record<string, string>)
+        
+        newSvg = newSvg.replace(/#[0-9a-fA-F]{6}/gi, (match) => {
+          return lowerColorMap[match.toLowerCase()] || match
         })
         const blob = new Blob([newSvg], { type: 'image/svg+xml;charset=utf-8' })
         const url = URL.createObjectURL(blob)
@@ -265,20 +273,45 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
     })
   }
 
+  const loadSidewalkLogo = async (style: SidewalkLogoStyle): Promise<HTMLImageElement | null> => {
+    if (style === 'none') return null
+
+    const logo = new Image()
+    logo.crossOrigin = 'anonymous'
+
+    try {
+      const response = await fetch(`/${style}`)
+      if (!response.ok) return null
+      let svgText = await response.text()
+
+      // Apply recoloring with single-pass replacement to avoid collisions
+      const lowerColorMap = Object.entries(sidewalkLogoColorMap).reduce((acc, [k, v]) => {
+        acc[k.toLowerCase()] = v
+        return acc
+      }, {} as Record<string, string>)
+
+      svgText = svgText.replace(/#[0-9a-fA-F]{6}/gi, (match) => {
+        return lowerColorMap[match.toLowerCase()] || match
+      })
+
+      const blob = new Blob([svgText], { type: 'image/svg+xml;charset=utf-8' })
+      const url = URL.createObjectURL(blob)
+      
+      return new Promise<HTMLImageElement | null>((resolve) => {
+        logo.onload = () => resolve(logo)
+        logo.onerror = () => resolve(null)
+        logo.src = url
+      })
+    } catch (err) {
+      console.error('Error loading Sidewalk logo:', err)
+      return null
+    }
+  }
+
   const drawHomeTemplate = async (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, margin: number) => {
     // Load Home Template Logo
-    const homeLogoImg = new Image()
-    let homeLogoLoaded = false
-    if (homeLogoVariant !== 'none') {
-        homeLogoLoaded = await new Promise(resolve => {
-            homeLogoImg.onload = () => resolve(true)
-            homeLogoImg.onerror = () => {
-                console.error('Failed to load home logo', homeLogoVariant)
-                resolve(false)
-            }
-            homeLogoImg.src = `/${homeLogoVariant}`
-        })
-    }
+    const homeLogoImg = await loadSidewalkLogo(homeLogoVariant)
+    const homeLogoLoaded = !!homeLogoImg
 
     const centerX = canvas.width / 2
     const centerY = canvas.height / 2
@@ -645,15 +678,15 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
                 <button
                   key={type}
                   onClick={() => setContentType(type)}
-                  className="px-3 py-2 rounded-lg text-sm font-medium transition-all"
+                  className="px-3 py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all border"
                   style={{ 
                     backgroundColor: contentType === type ? 'var(--admin-accent)' : 'var(--admin-bg)',
                     color: contentType === type ? 'var(--admin-accent-text)' : 'var(--admin-text)',
-                    border: '1px solid var(--admin-sidebar-border)',
+                    borderColor: contentType === type ? 'var(--admin-accent)' : 'var(--admin-sidebar-border)',
                     boxShadow: contentType === type ? '0 4px 6px -1px rgba(0, 0, 0, 0.1)' : 'none'
                   }}
                 >
-                  {type.charAt(0).toUpperCase() + type.slice(1)}
+                  {type}
                 </button>
               ))}
             </div>
@@ -670,7 +703,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
                   <button
                     key={v.id}
                     onClick={() => setHomeVariation(v.id as any)}
-                    className="px-3 py-2 rounded-lg text-sm font-medium border transition-all"
+                    className="px-3 py-2 rounded-lg text-[10px] font-bold border uppercase tracking-wider transition-all"
                     style={{ 
                       borderColor: homeVariation === v.id ? 'var(--admin-accent)' : 'var(--admin-sidebar-border)',
                       backgroundColor: homeVariation === v.id ? 'rgba(var(--admin-accent), 0.1)' : 'var(--admin-bg)',
@@ -764,78 +797,146 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
             </div>
           )}
 
-          {/* Logo Selection */}
+          {/* Logo Selection Refactored */}
           <div className="space-y-4 pt-4 border-t" style={{ borderColor: 'var(--admin-sidebar-border)' }}>
+            {/* Style Selection for Current Context (Main or Home) */}
             <div className="space-y-2">
               <label className="text-sm font-medium flex items-center justify-between" style={{ color: 'var(--admin-text-muted)' }}>
-                <span>{contentType === 'home' ? 'Home Template Logo' : 'Corner Logo Variant'}</span>
+                <span>{contentType === 'home' ? 'Logo Style' : 'Sidewalk Logo Style'}</span>
               </label>
-              <div className="grid grid-cols-5 gap-2">
-                <button
-                  onClick={() => contentType === 'home' ? setHomeLogoVariant('none') : setLogoVariant('none')}
-                  className="p-1.5 rounded-lg border-2 transition-all aspect-square flex items-center justify-center overflow-hidden hover:scale-105"
-                  style={{ 
-                    borderColor: (contentType === 'home' ? homeLogoVariant === 'none' : logoVariant === 'none') ? 'var(--admin-accent)' : 'var(--admin-sidebar-border)',
-                    backgroundColor: 'var(--admin-bg)',
-                  }}
-                  title="No Logo"
-                >
-                  <span className="text-[10px] font-bold uppercase" style={{ color: 'var(--admin-text-muted)' }}>None</span>
-                </button>
+              <div className="flex gap-2">
                 {[
-                  'logo.svg', 'logo1.svg', 'logo2.svg', 'logo3.svg',
-                  'logo-b-r.svg', 'logo-b-y.svg', 'logo-w-r.svg', 'logo-w-y.svg'
-                ].map((v) => (
+                  { id: 'logo.svg', label: 'Full Logo' },
+                  { id: 'logo2.svg', label: 'Icon Only' },
+                  { id: 'none', label: 'None' }
+                ].map((s) => (
                   <button
-                    key={v}
-                    onClick={() => contentType === 'home' ? setHomeLogoVariant(v as LogoVariant) : setLogoVariant(v as LogoVariant)}
-                    className="p-1.5 rounded-lg border-2 transition-all aspect-square flex items-center justify-center overflow-hidden hover:scale-105"
+                    key={s.id}
+                    onClick={() => contentType === 'home' ? setHomeLogoVariant(s.id as SidewalkLogoStyle) : setLogoVariant(s.id as SidewalkLogoStyle)}
+                    className="flex-1 py-2 rounded-lg border-2 transition-all text-[10px] font-bold uppercase tracking-wider hover:scale-105"
                     style={{ 
-                      borderColor: (contentType === 'home' ? homeLogoVariant === v : logoVariant === v) ? 'var(--admin-accent)' : 'var(--admin-sidebar-border)',
-                      backgroundColor: v.includes('-w-') ? '#212C34' : '#FCF5EB', // Contrast background for white/black logos
+                      borderColor: (contentType === 'home' ? homeLogoVariant === s.id : logoVariant === s.id) ? 'var(--admin-accent)' : 'var(--admin-sidebar-border)',
+                      backgroundColor: 'var(--admin-bg)',
+                      color: (contentType === 'home' ? homeLogoVariant === s.id : logoVariant === s.id) ? 'var(--admin-text)' : 'var(--admin-text-muted)'
                     }}
-                    title={v}
                   >
-                    <img src={`/${v}`} alt={v} className="max-w-full max-h-full object-contain pointer-events-none" />
+                    {s.label}
                   </button>
                 ))}
               </div>
             </div>
 
+            {/* Corner Logo (Watermark) Style - only if in home template but want to change corner logo specifically */}
             {contentType === 'home' && (
               <div className="space-y-2">
                 <label className="text-sm font-medium flex items-center justify-between" style={{ color: 'var(--admin-text-muted)' }}>
-                  <span>Watermark Logo (Corner)</span>
+                  <span>Corner Logo Style</span>
                 </label>
-                <div className="grid grid-cols-5 gap-2">
-                  <button
-                    onClick={() => setLogoVariant('none')}
-                    className="p-1.5 rounded-lg border-2 transition-all aspect-square flex items-center justify-center overflow-hidden hover:scale-105"
-                    style={{ 
-                      borderColor: logoVariant === 'none' ? 'var(--admin-accent)' : 'var(--admin-sidebar-border)',
-                      backgroundColor: 'var(--admin-bg)',
-                    }}
-                    title="No Logo"
-                  >
-                    <span className="text-[10px] font-bold uppercase" style={{ color: 'var(--admin-text-muted)' }}>None</span>
-                  </button>
+                <div className="flex gap-2">
                   {[
-                    'logo.svg', 'logo1.svg', 'logo2.svg', 'logo3.svg',
-                    'logo-b-r.svg', 'logo-b-y.svg', 'logo-w-r.svg', 'logo-w-y.svg'
-                  ].map((v) => (
+                    { id: 'logo.svg', label: 'Full Logo' },
+                    { id: 'logo2.svg', label: 'Icon Only' },
+                    { id: 'none', label: 'None' }
+                  ].map((s) => (
                     <button
-                      key={v}
-                      onClick={() => setLogoVariant(v as LogoVariant)}
-                      className="p-1.5 rounded-lg border-2 transition-all aspect-square flex items-center justify-center overflow-hidden hover:scale-105"
+                      key={s.id}
+                      onClick={() => setLogoVariant(s.id as SidewalkLogoStyle)}
+                      className="flex-1 py-2 rounded-lg border-2 transition-all text-[10px] font-bold uppercase tracking-wider hover:scale-105"
                       style={{ 
-                        borderColor: logoVariant === v ? 'var(--admin-accent)' : 'var(--admin-sidebar-border)',
-                        backgroundColor: v.includes('-w-') ? '#212C34' : '#FCF5EB', // Contrast background for white/black logos
+                        borderColor: logoVariant === s.id ? 'var(--admin-accent)' : 'var(--admin-sidebar-border)',
+                        backgroundColor: 'var(--admin-bg)',
+                        color: logoVariant === s.id ? 'var(--admin-text)' : 'var(--admin-text-muted)'
                       }}
-                      title={v}
                     >
-                      <img src={`/${v}`} alt={v} className="max-w-full max-h-full object-contain pointer-events-none" />
+                      {s.label}
                     </button>
                   ))}
+                </div>
+              </div>
+            )}
+
+            {/* Sidewalk Logo Color Customization */}
+            {(logoVariant !== 'none' || (contentType === 'home' && homeLogoVariant !== 'none')) && (
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <label className="text-xs font-bold uppercase tracking-wider flex items-center gap-2" style={{ color: 'var(--admin-text-muted)' }}>
+                    Light Presets
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {SIDEWALK_LOGO_LIGHT_PRESETS.map((p) => (
+                      <button
+                        key={p.name}
+                        onClick={() => setSidewalkLogoColorMap(p.colors)}
+                        className="px-2 py-1 rounded text-[9px] font-bold border uppercase transition-all whitespace-nowrap"
+                        style={{ 
+                          borderColor: JSON.stringify(sidewalkLogoColorMap) === JSON.stringify(p.colors) ? 'var(--admin-accent)' : 'var(--admin-sidebar-border)',
+                          backgroundColor: JSON.stringify(sidewalkLogoColorMap) === JSON.stringify(p.colors) ? 'rgba(var(--admin-accent), 0.1)' : 'var(--admin-bg)',
+                          color: JSON.stringify(sidewalkLogoColorMap) === JSON.stringify(p.colors) ? 'var(--admin-text)' : 'var(--admin-text-muted)'
+                        }}
+                      >
+                        {p.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-bold uppercase tracking-wider flex items-center gap-2" style={{ color: 'var(--admin-text-muted)' }}>
+                    Dark Presets
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {SIDEWALK_LOGO_DARK_PRESETS.map((p) => (
+                      <button
+                        key={p.name}
+                        onClick={() => setSidewalkLogoColorMap(p.colors)}
+                        className="px-2 py-1 rounded text-[9px] font-bold border uppercase transition-all whitespace-nowrap"
+                        style={{ 
+                          borderColor: JSON.stringify(sidewalkLogoColorMap) === JSON.stringify(p.colors) ? 'var(--admin-accent)' : 'var(--admin-sidebar-border)',
+                          backgroundColor: JSON.stringify(sidewalkLogoColorMap) === JSON.stringify(p.colors) ? 'rgba(var(--admin-accent), 0.1)' : 'var(--admin-bg)',
+                          color: JSON.stringify(sidewalkLogoColorMap) === JSON.stringify(p.colors) ? 'var(--admin-text)' : 'var(--admin-text-muted)'
+                        }}
+                      >
+                        {p.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-3 pt-2">
+                  <label className="text-xs font-bold uppercase tracking-wider flex items-center gap-2" style={{ color: 'var(--admin-text-muted)' }}>
+                    <Palette className="w-3 h-3" /> Custom Colours
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {[
+                      { id: '#CD5037', label: 'Red' },
+                      { id: '#E5BF55', label: 'Yellow' },
+                      { id: '#FCF5EB', label: 'Cream' }
+                    ].map((color) => (
+                      <label 
+                        key={color.id}
+                        className="w-8 h-8 rounded-full border border-zinc-500/20 transition-all hover:scale-110 flex items-center justify-center p-0.5 cursor-pointer relative"
+                        style={{ 
+                            borderColor: sidewalkLogoColorMap[color.id] !== color.id ? 'var(--admin-accent)' : 'transparent',
+                            backgroundColor: 'var(--admin-bg)'
+                        }}
+                        title={color.label}
+                      >
+                        <div className="w-full h-full rounded-full shadow-sm" 
+                             style={{ backgroundColor: sidewalkLogoColorMap[color.id] || color.id }} />
+                        <input 
+                          type="color" 
+                          value={sidewalkLogoColorMap[color.id] || color.id} 
+                          onChange={(e) => {
+                            setSidewalkLogoColorMap(prev => ({
+                              ...prev,
+                              [color.id]: e.target.value
+                            }))
+                          }}
+                          className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                        />
+                      </label>
+                    ))}
+                  </div>
                 </div>
               </div>
             )}
