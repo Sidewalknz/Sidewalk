@@ -25,7 +25,7 @@ const SIZES: Size[] = [
 
 type ContentType = 'home' | 'features' | 'description'
 type LogoPosition = 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right'
-type LogoVariant = 'logo.svg' | 'logo1.svg' | 'logo2.svg' | 'logo3.svg' | 'logo-b-r.svg' | 'logo-b-y.svg' | 'logo-w-r.svg' | 'logo-w-y.svg'
+type LogoVariant = 'logo.svg' | 'logo1.svg' | 'logo2.svg' | 'logo3.svg' | 'logo-b-r.svg' | 'logo-b-y.svg' | 'logo-w-r.svg' | 'logo-w-y.svg' | 'none'
 
 export default function SocialMediaImageGenerator({ clients }: Props) {
   const { theme: activeTheme } = useAdminTheme()
@@ -33,6 +33,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
   const [contentType, setContentType] = useState<ContentType>('home')
   const [logoPosition, setLogoPosition] = useState<LogoPosition>('bottom-right')
   const [logoVariant, setLogoVariant] = useState<LogoVariant>('logo.svg')
+  const [homeLogoVariant, setHomeLogoVariant] = useState<LogoVariant>('logo.svg')
   const [customLogoUrl, setCustomLogoUrl] = useState<string>('')
   const [homeVariation, setHomeVariation] = useState<'horizontal' | 'vertical'>('horizontal')
   const [editableFeatures, setEditableFeatures] = useState<{ title: string, description: string }[]>([])
@@ -64,7 +65,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
   // Draw the canvas whenever any option changes
   useEffect(() => {
     drawCanvas()
-  }, [selectedClientId, contentType, logoPosition, logoVariant, customLogoUrl, customBgUrl, bgOverlayOpacity, homeVariation, bgColor, textColor, highlightColor, size, featureIndex, editableFeatures, editableDescription])
+  }, [selectedClientId, contentType, logoPosition, logoVariant, homeLogoVariant, customLogoUrl, customBgUrl, bgOverlayOpacity, homeVariation, bgColor, textColor, highlightColor, size, featureIndex, editableFeatures, editableDescription])
 
   // Update editable text when content selection changes
   useEffect(() => {
@@ -143,15 +144,19 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
     }
 
     // Load Sidewalk Logo
-    const logoImg = new Image()
-    await new Promise(resolve => {
-        logoImg.onload = resolve
-        logoImg.onerror = () => {
-            console.error('Failed to load Sidewalk logo', logoVariant)
-            resolve(null)
-        }
-        logoImg.src = `/${logoVariant}`
-    })
+    let logoImg: HTMLImageElement | null = null
+    if (logoVariant !== 'none') {
+        logoImg = new Image()
+        await new Promise(resolve => {
+            if (!logoImg) return resolve(null)
+            logoImg.onload = resolve
+            logoImg.onerror = () => {
+                console.error('Failed to load Sidewalk logo', logoVariant)
+                resolve(null)
+            }
+            logoImg.src = `/${logoVariant}`
+        })
+    }
 
     // Logo size and margins
     const logoScale = 0.18
@@ -161,7 +166,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
 
     // Draw Content based on type
     if (contentType === 'home') {
-        await drawHomeTemplate(ctx, canvas, logoImg, margin)
+        await drawHomeTemplate(ctx, canvas, margin)
     } else if (contentType === 'features') {
         drawFeaturesTemplate(ctx, canvas, logoImg, margin)
     } else if (contentType === 'description') {
@@ -169,26 +174,42 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
     }
 
     // Draw Sidewalk Logo watermark
-    ctx.globalAlpha = 1.0
-    
-    let logoX = margin
-    let logoY = margin
+    if (logoImg && logoImg.complete && logoImg.width > 0) {
+        ctx.globalAlpha = 1.0
+        
+        let logoX = margin
+        let logoY = margin
 
-    if (logoPosition.includes('center')) {
-      logoX = (canvas.width - logoW) / 2
-    } else if (logoPosition.includes('right')) {
-      logoX = canvas.width - logoW - margin
+        if (logoPosition.includes('center')) {
+          logoX = (canvas.width - logoW) / 2
+        } else if (logoPosition.includes('right')) {
+          logoX = canvas.width - logoW - margin
+        }
+
+        if (logoPosition.includes('bottom')) {
+          logoY = canvas.height - logoH - margin
+        }
+
+        ctx.drawImage(logoImg, logoX, logoY, logoW, logoH)
+        ctx.globalAlpha = 1.0
     }
-
-    if (logoPosition.includes('bottom')) {
-      logoY = canvas.height - logoH - margin
-    }
-
-    ctx.drawImage(logoImg, logoX, logoY, logoW, logoH)
-    ctx.globalAlpha = 1.0
   }
 
-  const drawHomeTemplate = async (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, logoImg: HTMLImageElement, margin: number) => {
+  const drawHomeTemplate = async (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, margin: number) => {
+    // Load Home Template Logo
+    const homeLogoImg = new Image()
+    let homeLogoLoaded = false
+    if (homeLogoVariant !== 'none') {
+        homeLogoLoaded = await new Promise(resolve => {
+            homeLogoImg.onload = () => resolve(true)
+            homeLogoImg.onerror = () => {
+                console.error('Failed to load home logo', homeLogoVariant)
+                resolve(false)
+            }
+            homeLogoImg.src = `/${homeLogoVariant}`
+        })
+    }
+
     const centerX = canvas.width / 2
     const centerY = canvas.height / 2
     const iconSize = canvas.width * 0.3
@@ -230,7 +251,9 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
 
     if (homeVariation === 'horizontal') {
         // Draw Sidewalk Logo (Left)
-        ctx.drawImage(logoImg, centerX - swIconW - gap, centerY - swIconH/2, swIconW, swIconH)
+        if (homeLogoLoaded) {
+            ctx.drawImage(homeLogoImg, centerX - swIconW - gap, centerY - swIconH/2, swIconW, swIconH)
+        }
 
         if (logoLoaded && clientLogo && clientLogo.complete) {
             const aspect = clientLogo.width / clientLogo.height || 1
@@ -251,7 +274,9 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
         const verticalGap = canvas.height * 0.09
         
         // Draw Sidewalk Logo (Top)
-        ctx.drawImage(logoImg, centerX - swIconW/2, centerY - verticalGap - swIconH, swIconW, swIconH)
+        if (homeLogoLoaded) {
+            ctx.drawImage(homeLogoImg, centerX - swIconW/2, centerY - verticalGap - swIconH, swIconW, swIconH)
+        }
 
         // Draw Client Logo (Bottom)
         if (logoLoaded && clientLogo && clientLogo.complete) {
@@ -281,7 +306,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
     wrapText(ctx, (selectedClient?.companyName || '').toLowerCase(), x, y, maxWidth, canvas.width * 0.06, true, highlightColor)
   }
 
-  const drawFeaturesTemplate = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, logoImg: HTMLImageElement, margin: number) => {
+  const drawFeaturesTemplate = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, logoImg: HTMLImageElement | null, margin: number) => {
     const contentY = logoPosition.startsWith('top') ? margin * 3 : margin * 1.5
 
     if (editableFeatures.length === 0) {
@@ -363,7 +388,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
     })
   }
 
-  const drawDescriptionTemplate = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, logoImg: HTMLImageElement, margin: number) => {
+  const drawDescriptionTemplate = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, logoImg: HTMLImageElement | null, margin: number) => {
     const description = editableDescription || selectedClient?.description || ''
     const availableWidth = canvas.width - margin * 2
     
@@ -643,29 +668,80 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
           )}
 
           {/* Logo Selection */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--admin-text-muted)' }}>
-              Logo Variant
-            </label>
-            <div className="grid grid-cols-4 gap-2">
-              {[
-                'logo.svg', 'logo1.svg', 'logo2.svg', 'logo3.svg',
-                'logo-b-r.svg', 'logo-b-y.svg', 'logo-w-r.svg', 'logo-w-y.svg'
-              ].map((v) => (
+          <div className="space-y-4 pt-4 border-t" style={{ borderColor: 'var(--admin-sidebar-border)' }}>
+            <div className="space-y-2">
+              <label className="text-sm font-medium flex items-center justify-between" style={{ color: 'var(--admin-text-muted)' }}>
+                <span>{contentType === 'home' ? 'Home Template Logo' : 'Corner Logo Variant'}</span>
+              </label>
+              <div className="grid grid-cols-5 gap-2">
                 <button
-                  key={v}
-                  onClick={() => setLogoVariant(v as LogoVariant)}
+                  onClick={() => contentType === 'home' ? setHomeLogoVariant('none') : setLogoVariant('none')}
                   className="p-1.5 rounded-lg border-2 transition-all aspect-square flex items-center justify-center overflow-hidden hover:scale-105"
                   style={{ 
-                    borderColor: logoVariant === v ? 'var(--admin-accent)' : 'var(--admin-sidebar-border)',
-                    backgroundColor: v.includes('-w-') ? '#212C34' : '#FCF5EB', // Contrast background for white/black logos
+                    borderColor: (contentType === 'home' ? homeLogoVariant === 'none' : logoVariant === 'none') ? 'var(--admin-accent)' : 'var(--admin-sidebar-border)',
+                    backgroundColor: 'var(--admin-bg)',
                   }}
-                  title={v}
+                  title="No Logo"
                 >
-                  <img src={`/${v}`} alt={v} className="max-w-full max-h-full object-contain pointer-events-none" />
+                  <span className="text-[10px] font-bold uppercase" style={{ color: 'var(--admin-text-muted)' }}>None</span>
                 </button>
-              ))}
+                {[
+                  'logo.svg', 'logo1.svg', 'logo2.svg', 'logo3.svg',
+                  'logo-b-r.svg', 'logo-b-y.svg', 'logo-w-r.svg', 'logo-w-y.svg'
+                ].map((v) => (
+                  <button
+                    key={v}
+                    onClick={() => contentType === 'home' ? setHomeLogoVariant(v as LogoVariant) : setLogoVariant(v as LogoVariant)}
+                    className="p-1.5 rounded-lg border-2 transition-all aspect-square flex items-center justify-center overflow-hidden hover:scale-105"
+                    style={{ 
+                      borderColor: (contentType === 'home' ? homeLogoVariant === v : logoVariant === v) ? 'var(--admin-accent)' : 'var(--admin-sidebar-border)',
+                      backgroundColor: v.includes('-w-') ? '#212C34' : '#FCF5EB', // Contrast background for white/black logos
+                    }}
+                    title={v}
+                  >
+                    <img src={`/${v}`} alt={v} className="max-w-full max-h-full object-contain pointer-events-none" />
+                  </button>
+                ))}
+              </div>
             </div>
+
+            {contentType === 'home' && (
+              <div className="space-y-2">
+                <label className="text-sm font-medium flex items-center justify-between" style={{ color: 'var(--admin-text-muted)' }}>
+                  <span>Watermark Logo (Corner)</span>
+                </label>
+                <div className="grid grid-cols-5 gap-2">
+                  <button
+                    onClick={() => setLogoVariant('none')}
+                    className="p-1.5 rounded-lg border-2 transition-all aspect-square flex items-center justify-center overflow-hidden hover:scale-105"
+                    style={{ 
+                      borderColor: logoVariant === 'none' ? 'var(--admin-accent)' : 'var(--admin-sidebar-border)',
+                      backgroundColor: 'var(--admin-bg)',
+                    }}
+                    title="No Logo"
+                  >
+                    <span className="text-[10px] font-bold uppercase" style={{ color: 'var(--admin-text-muted)' }}>None</span>
+                  </button>
+                  {[
+                    'logo.svg', 'logo1.svg', 'logo2.svg', 'logo3.svg',
+                    'logo-b-r.svg', 'logo-b-y.svg', 'logo-w-r.svg', 'logo-w-y.svg'
+                  ].map((v) => (
+                    <button
+                      key={v}
+                      onClick={() => setLogoVariant(v as LogoVariant)}
+                      className="p-1.5 rounded-lg border-2 transition-all aspect-square flex items-center justify-center overflow-hidden hover:scale-105"
+                      style={{ 
+                        borderColor: logoVariant === v ? 'var(--admin-accent)' : 'var(--admin-sidebar-border)',
+                        backgroundColor: v.includes('-w-') ? '#212C34' : '#FCF5EB', // Contrast background for white/black logos
+                      }}
+                      title={v}
+                    >
+                      <img src={`/${v}`} alt={v} className="max-w-full max-h-full object-contain pointer-events-none" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Logo Position */}
