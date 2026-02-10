@@ -118,86 +118,86 @@ export default async function DashboardPage() {
 
             {/* Clients Summary */}
             <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-zinc-300">Clients Summary</h3>
+                <h3 className="text-lg font-semibold" style={{ color: 'var(--admin-text-muted)' }}>Clients Summary</h3>
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                    <div className="p-6 rounded-xl bg-blue-500/5 border border-blue-500/10">
+                    <div className="p-6 rounded-xl" style={{ backgroundColor: 'var(--admin-sidebar-bg)', border: '1px solid var(--admin-sidebar-border)' }}>
                         <div className="flex items-center justify-between space-y-0 pb-2">
-                            <p className="text-sm font-medium text-zinc-400">Total Clients</p>
-                            <Users className="h-4 w-4 text-blue-500" />
+                            <p className="text-sm font-medium" style={{ color: 'var(--admin-text-muted)' }}>Total Clients</p>
+                            <Users className="h-4 w-4" style={{ color: 'var(--admin-text)' }} />
                         </div>
-                        <div className="text-3xl font-bold text-blue-500">{stats.clients.total}</div>
+                        <div className="text-3xl font-bold" style={{ color: 'var(--admin-text)' }}>{stats.clients.total}</div>
                     </div>
                     
-                    <div className="p-6 rounded-xl bg-green-500/5 border border-green-500/10">
+                    <div className="p-6 rounded-xl" style={{ backgroundColor: 'var(--admin-sidebar-bg)', border: '1px solid var(--admin-sidebar-border)' }}>
                         <div className="flex items-center justify-between space-y-0 pb-2">
-                            <p className="text-sm font-medium text-zinc-400">Total Revenue (One-off)</p>
-                            <DollarSign className="h-4 w-4 text-green-500" />
+                            <p className="text-sm font-medium" style={{ color: 'var(--admin-text-muted)' }}>Total Revenue (One-off)</p>
+                            <DollarSign className="h-4 w-4" style={{ color: 'var(--admin-text)' }} />
                         </div>
-                        <div className="text-3xl font-bold text-green-500">{formatCurrency(stats.clients.totalCost)}</div>
+                        <div className="text-3xl font-bold" style={{ color: 'var(--admin-text)' }}>{formatCurrency(stats.clients.totalCost)}</div>
                     </div>
 
-                    <div className="p-6 rounded-xl bg-yellow-500/5 border border-yellow-500/10">
+                    <div className="p-6 rounded-xl" style={{ backgroundColor: 'var(--admin-sidebar-bg)', border: '1px solid var(--admin-sidebar-border)' }}>
                         <div className="flex items-center justify-between space-y-0 pb-2">
-                            <p className="text-sm font-medium text-zinc-400">Average per Client</p>
-                            <Users className="h-4 w-4 text-yellow-500" />
+                            <p className="text-sm font-medium" style={{ color: 'var(--admin-text-muted)' }}>Average per Client</p>
+                            <Users className="h-4 w-4" style={{ color: 'var(--admin-text)' }} />
                         </div>
-                        <div className="text-3xl font-bold text-yellow-500">{formatCurrency(stats.clients.averagePerClient)}</div>
+                        <div className="text-3xl font-bold" style={{ color: 'var(--admin-text)' }}>{formatCurrency(stats.clients.averagePerClient)}</div>
                     </div>
 
-                    <div className="p-6 rounded-xl bg-pink-500/5 border border-pink-500/10">
+                    <div className="p-6 rounded-xl" style={{ backgroundColor: 'var(--admin-sidebar-bg)', border: '1px solid var(--admin-sidebar-border)' }}>
                         <div className="flex items-center justify-between space-y-0 pb-2">
-                            <p className="text-sm font-medium text-zinc-400">Average per Job</p>
-                            <Briefcase className="h-4 w-4 text-pink-500" />
+                            <p className="text-sm font-medium" style={{ color: 'var(--admin-text-muted)' }}>Average per Job</p>
+                            <Briefcase className="h-4 w-4" style={{ color: 'var(--admin-text)' }} />
                         </div>
-                        <div className="text-3xl font-bold text-pink-500">{formatCurrency(stats.clients.averagePerJob)}</div>
-                        <p className="text-xs text-zinc-500 mt-1">{stats.clients.totalProducts} total products</p>
+                        <div className="text-3xl font-bold" style={{ color: 'var(--admin-text)' }}>{formatCurrency(stats.clients.averagePerJob)}</div>
+                        <p className="text-xs mt-1" style={{ color: 'var(--admin-text-muted)' }}>{stats.clients.totalProducts} total products</p>
                     </div>
                 </div>
             </div>
 
              {/* Ongoing Expenses Summary */}
              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-zinc-300">Ongoing Expenses Summary</h3>
+                <h3 className="text-lg font-semibold" style={{ color: 'var(--admin-text-muted)' }}>Ongoing Expenses Summary</h3>
                 
                 <div className="mb-4">
-                    <div className="text-3xl font-bold text-blue-500">{stats.expenses.activeCount}</div>
-                    <p className="text-sm text-zinc-400">Active Expenses</p>
+                    <div className="text-3xl font-bold" style={{ color: 'var(--admin-text)' }}>{stats.expenses.activeCount}</div>
+                    <p className="text-sm" style={{ color: 'var(--admin-text-muted)' }}>Active Expenses</p>
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-3">
-                    <div className="p-6 rounded-xl bg-zinc-900/50 border border-zinc-800">
+                    <div className="p-6 rounded-xl" style={{ backgroundColor: 'var(--admin-sidebar-bg)', border: '1px solid var(--admin-sidebar-border)' }}>
                         <div className="flex items-center justify-between space-y-0 pb-2">
-                            <p className="text-sm font-medium text-blue-400">Weekly (Exp / Inc)</p>
-                            <Calendar className="h-4 w-4 text-zinc-500" />
+                            <p className="text-sm font-medium" style={{ color: 'var(--admin-text-muted)' }}>Weekly (Exp / Inc)</p>
+                            <Calendar className="h-4 w-4" style={{ color: 'var(--admin-text)' }} />
                         </div>
                         <div className="flex items-baseline gap-2">
-                            <span className="text-2xl font-bold text-zinc-200">{formatCurrency(stats.expenses.weekly.expense)}</span>
-                            <span className="text-zinc-500">/</span>
-                            <span className="text-2xl font-bold text-blue-500">{formatCurrency(stats.expenses.weekly.income)}</span>
+                            <span className="text-2xl font-bold" style={{ color: 'var(--admin-text)' }}>{formatCurrency(stats.expenses.weekly.expense)}</span>
+                            <span style={{ color: 'var(--admin-text-muted)' }}>/</span>
+                            <span className="text-2xl font-bold" style={{ color: 'var(--admin-text)' }}>{formatCurrency(stats.expenses.weekly.income)}</span>
                         </div>
                     </div>
 
-                    <div className="p-6 rounded-xl bg-zinc-900/50 border border-zinc-800">
+                    <div className="p-6 rounded-xl" style={{ backgroundColor: 'var(--admin-sidebar-bg)', border: '1px solid var(--admin-sidebar-border)' }}>
                          <div className="flex items-center justify-between space-y-0 pb-2">
-                            <p className="text-sm font-medium text-green-400">Monthly (Exp / Inc)</p>
-                            <Calendar className="h-4 w-4 text-zinc-500" />
+                            <p className="text-sm font-medium" style={{ color: 'var(--admin-text-muted)' }}>Monthly (Exp / Inc)</p>
+                            <Calendar className="h-4 w-4" style={{ color: 'var(--admin-text)' }} />
                         </div>
                         <div className="flex items-baseline gap-2">
-                            <span className="text-2xl font-bold text-zinc-200">{formatCurrency(stats.expenses.monthly.expense)}</span>
-                            <span className="text-zinc-500">/</span>
-                            <span className="text-2xl font-bold text-green-500">{formatCurrency(stats.expenses.monthly.income)}</span>
+                            <span className="text-2xl font-bold" style={{ color: 'var(--admin-text)' }}>{formatCurrency(stats.expenses.monthly.expense)}</span>
+                            <span style={{ color: 'var(--admin-text-muted)' }}>/</span>
+                            <span className="text-2xl font-bold" style={{ color: 'var(--admin-text)' }}>{formatCurrency(stats.expenses.monthly.income)}</span>
                         </div>
                     </div>
 
-                    <div className="p-6 rounded-xl bg-zinc-900/50 border border-zinc-800">
+                    <div className="p-6 rounded-xl" style={{ backgroundColor: 'var(--admin-sidebar-bg)', border: '1px solid var(--admin-sidebar-border)' }}>
                          <div className="flex items-center justify-between space-y-0 pb-2">
-                            <p className="text-sm font-medium text-yellow-400">Yearly (Exp / Inc)</p>
-                            <Calendar className="h-4 w-4 text-zinc-500" />
+                            <p className="text-sm font-medium" style={{ color: 'var(--admin-text-muted)' }}>Yearly (Exp / Inc)</p>
+                            <Calendar className="h-4 w-4" style={{ color: 'var(--admin-text)' }} />
                         </div>
                         <div className="flex items-baseline gap-2">
-                            <span className="text-2xl font-bold text-zinc-200">{formatCurrency(stats.expenses.yearly.expense)}</span>
-                            <span className="text-zinc-500">/</span>
-                            <span className="text-2xl font-bold text-yellow-500">{formatCurrency(stats.expenses.yearly.income)}</span>
+                            <span className="text-2xl font-bold" style={{ color: 'var(--admin-text)' }}>{formatCurrency(stats.expenses.yearly.expense)}</span>
+                            <span style={{ color: 'var(--admin-text-muted)' }}>/</span>
+                            <span className="text-2xl font-bold" style={{ color: 'var(--admin-text)' }}>{formatCurrency(stats.expenses.yearly.income)}</span>
                         </div>
                     </div>
                 </div>

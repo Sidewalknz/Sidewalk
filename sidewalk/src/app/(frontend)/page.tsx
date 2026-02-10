@@ -340,19 +340,52 @@ export default function HomePage() {
         }
       }
 
-      // Animate columns 3 and 4 (empty columns)
-      const emptyCols = [col3, col4].filter(Boolean)
-      emptyCols.forEach((col, colIndex) => {
-        if (col) {
-          gsap.set(col, { opacity: 0, y: 30 })
-          tl.to(col, {
+      // Animate column 3 (may have words for project features)
+      if (col3) {
+        const words3 = col3.querySelectorAll('.tagline-word')
+        if (words3.length > 0) {
+          gsap.set(col3, { opacity: 1, y: 0 })
+          gsap.set(words3, { opacity: 0, y: 20 })
+          
+          // Calculate when column 2 finishes
+          const col2Words = col2 ? col2.querySelectorAll('.tagline-word') : []
+          const col1Words = col1 ? col1.querySelectorAll('.tagline-word') : []
+          const col1EndTime = col1Words.length > 0 
+            ? 0.5 + 0.1 + (col1Words.length - 1) * 0.05 + 0.4
+            : 0.5
+          const col2EndTime = col2Words.length > 0
+            ? col1EndTime + 0.1 + (col2Words.length - 1) * 0.05 + 0.4
+            : col1EndTime + 0.5
+          
+          words3.forEach((word, index) => {
+            tl.to(word, {
+              opacity: 1,
+              y: 0,
+              duration: 0.4,
+              ease: 'power3.out',
+            }, col2EndTime + 0.1 + index * 0.05)
+          })
+        } else {
+          gsap.set(col3, { opacity: 0, y: 30 })
+          tl.to(col3, {
             opacity: 1,
             y: 0,
             duration: 0.5,
             ease: 'power3.out',
-          }, `+=${0.1 + colIndex * 0.1}`)
+          }, `+=0.1`)
         }
-      })
+      }
+
+      // Animate column 4
+      if (col4) {
+        gsap.set(col4, { opacity: 0, y: 30 })
+        tl.to(col4, {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+          ease: 'power3.out',
+        }, `+=0.1`)
+      }
 
       taglineTimelineRef.current = tl
     }
@@ -694,7 +727,7 @@ export default function HomePage() {
                   )}
                   {activeTab === 'projects' && selectedProject && (
                     <div className="project-description">
-                      {selectedProject.description || 'No description available.'}
+                      {wrapWords(selectedProject.description || 'No description available.')}
                     </div>
                   )}
                   {activeTab === 'projects' && !selectedProject && (
@@ -736,7 +769,9 @@ export default function HomePage() {
                       {selectedProject.features && selectedProject.features.length > 0 ? (
                         <ul className="features-list">
                           {selectedProject.features.map((feature, index) => (
-                            <li key={index}>{feature}</li>
+                            <li key={index}>
+                              {wrapWords(feature)}
+                            </li>
                           ))}
                         </ul>
                       ) : (

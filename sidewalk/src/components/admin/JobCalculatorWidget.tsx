@@ -41,9 +41,9 @@ export default function JobCalculatorWidget() {
 
   if (!isClient) {
     return (
-        <div className="space-y-4 p-6 rounded-xl bg-zinc-900/50 border border-zinc-800">
-             <h3 className="text-lg font-semibold text-zinc-300">Job Calculator</h3>
-             <div className="h-64 flex items-center justify-center text-zinc-500">Loading calculator...</div>
+        <div className="space-y-4 p-6 rounded-xl" style={{ backgroundColor: 'var(--admin-sidebar-bg)', border: '1px solid var(--admin-sidebar-border)' }}>
+             <h3 className="text-lg font-semibold" style={{ color: 'var(--admin-text)' }}>Job Calculator</h3>
+             <div className="h-64 flex items-center justify-center p-4" style={{ color: 'var(--admin-text-muted)' }}>Loading calculator...</div>
         </div>
     )
   }
@@ -58,23 +58,29 @@ export default function JobCalculatorWidget() {
   }
 
   return (
-    <div className="space-y-6 p-6 rounded-xl bg-zinc-900/50 border border-zinc-800">
-      <h3 className="text-lg font-semibold text-zinc-300">Job Calculator</h3>
+    <div className="space-y-6 p-6 rounded-xl" style={{ backgroundColor: 'var(--admin-sidebar-bg)', border: '1px solid var(--admin-sidebar-border)' }}>
+      <h3 className="text-lg font-semibold" style={{ color: 'var(--admin-text)' }}>Job Calculator</h3>
       
       <div className="grid grid-cols-[1fr_150px] gap-4">
         <div>
-          <label className="block mb-2 text-sm font-medium text-zinc-400">
+          <label className="block mb-2 text-sm font-medium" style={{ color: 'var(--admin-text-muted)' }}>
             Total Amount ($)
           </label>
           <input
             type="number"
             value={totalAmount}
             onChange={(e) => setTotalAmount(Number(e.target.value) || 0)}
-            className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-zinc-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all"
+            className="w-full px-3 py-2 rounded-lg transition-all focus:outline-none focus:ring-2"
+            style={{ 
+                backgroundColor: 'var(--admin-bg)', 
+                borderColor: 'var(--admin-sidebar-border)', 
+                color: 'var(--admin-text)',
+                borderWidth: '1px'
+            }}
           />
         </div>
         <div>
-          <label className="block mb-2 text-sm font-medium text-zinc-400">
+          <label className="block mb-2 text-sm font-medium" style={{ color: 'var(--admin-text-muted)' }}>
             Number of Owners
           </label>
           <input
@@ -82,21 +88,27 @@ export default function JobCalculatorWidget() {
             value={numberOfOwners}
             onChange={(e) => setNumberOfOwners(Math.max(1, Number(e.target.value) || 1))}
             min="1"
-            className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-zinc-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all"
+            className="w-full px-3 py-2 rounded-lg transition-all focus:outline-none focus:ring-2"
+            style={{ 
+                backgroundColor: 'var(--admin-bg)', 
+                borderColor: 'var(--admin-sidebar-border)', 
+                color: 'var(--admin-text)',
+                borderWidth: '1px'
+            }}
           />
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-lg border border-zinc-800 bg-zinc-950/50">
+      <div className="overflow-hidden rounded-lg" style={{ border: '1px solid var(--admin-sidebar-border)', backgroundColor: 'var(--admin-bg)' }}>
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-zinc-800 bg-zinc-900/50">
-              <th className="px-4 py-3 text-left font-medium text-zinc-400">Category</th>
-              <th className="px-4 py-3 text-center font-medium text-zinc-400 w-[100px]">%</th>
-              <th className="px-4 py-3 text-right font-medium text-zinc-400 w-[140px]">$ Amount</th>
+            <tr style={{ borderBottom: '1px solid var(--admin-sidebar-border)', backgroundColor: 'var(--admin-sidebar-bg)' }}>
+              <th className="px-4 py-3 text-left font-medium" style={{ color: 'var(--admin-text-muted)' }}>Category</th>
+              <th className="px-4 py-3 text-center font-medium w-[100px]" style={{ color: 'var(--admin-text-muted)' }}>%</th>
+              <th className="px-4 py-3 text-right font-medium w-[140px]" style={{ color: 'var(--admin-text-muted)' }}>$ Amount</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-zinc-800">
+          <tbody className="divide-y" style={{ borderColor: 'var(--admin-sidebar-border)' }}>
             {allocations.map((allocation, index) => {
               const amount = calculateAmount(allocation.percentage)
               const isOwnerCompensation = allocation.category === 'Owner Compensation'
@@ -107,8 +119,8 @@ export default function JobCalculatorWidget() {
                 : formatCurrency(amount)
               
               return (
-                <tr key={index} className="hover:bg-zinc-900/50 transition-colors">
-                  <td className="px-4 py-3 text-zinc-300">{allocation.category}</td>
+                <tr key={index} className="transition-colors" style={{ borderBottom: '1px solid var(--admin-sidebar-border)' }}>
+                  <td className="px-4 py-3" style={{ color: 'var(--admin-text)' }}>{allocation.category}</td>
                   <td className="px-4 py-3 text-center">
                     <input
                       type="number"
@@ -117,10 +129,15 @@ export default function JobCalculatorWidget() {
                       min="0"
                       max="100"
                       step="0.1"
-                      className="w-16 px-2 py-1 text-center bg-zinc-900 border border-zinc-800 rounded text-zinc-200 text-xs focus:outline-none focus:border-blue-500 transition-colors"
+                      className="w-16 px-2 py-1 text-center rounded text-xs focus:outline-none transition-colors"
+                      style={{ 
+                          backgroundColor: 'var(--admin-sidebar-bg)', 
+                          border: '1px solid var(--admin-sidebar-border)', 
+                          color: 'var(--admin-text)' 
+                      }}
                     />
                   </td>
-                  <td className="px-4 py-3 text-right font-medium text-zinc-300">
+                  <td className="px-4 py-3 text-right font-medium" style={{ color: 'var(--admin-text)' }}>
                     {displayAmount}
                   </td>
                 </tr>
@@ -131,11 +148,12 @@ export default function JobCalculatorWidget() {
       </div>
 
       <div 
-        className={`flex items-center justify-between p-4 rounded-lg border ${
-            totalPercentage === 100 
-            ? 'bg-blue-500/10 border-blue-500/20 text-blue-400' 
-            : 'bg-red-500/10 border-red-500/20 text-red-400'
-        }`}
+        className="flex items-center justify-between p-4 rounded-lg border"
+        style={{
+            backgroundColor: totalPercentage === 100 ? 'rgba(33, 44, 52, 0.05)' : 'rgba(205, 80, 55, 0.1)',
+            borderColor: totalPercentage === 100 ? 'var(--admin-sidebar-border)' : 'var(--brand-red)',
+            color: totalPercentage === 100 ? 'var(--admin-text)' : 'var(--brand-red)'
+        }}
       >
         <div className="flex items-center">
           <span className="font-semibold text-lg mr-2">
