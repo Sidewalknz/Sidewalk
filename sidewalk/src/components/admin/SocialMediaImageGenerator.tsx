@@ -68,7 +68,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
   const [highlightColor, setHighlightColor] = useState('#CD5037') // Default to Red
   const [customBgUrl, setCustomBgUrl] = useState<string>('')
   const [bgOverlayOpacity, setBgOverlayOpacity] = useState(0.4)
-  const [size, setSize] = useState<Size>(SIZES[0])
+  const [size, setSize] = useState<Size>(SIZES[1])
   const [bgZoom, setBgZoom] = useState(1.0)
   const [svgOriginalContent, setSvgOriginalContent] = useState<string>('')
   const [svgColors, setSvgColors] = useState<string[]>([])
@@ -79,6 +79,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
     '#FCF5EB': '#FCF5EB'  // Cream
   })
   
+  const renderCount = useRef(0)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const selectedClient = clients.find(c => c.id == selectedClientId)
 
@@ -156,6 +157,10 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
+    // Track this render cycle to avoid race conditions
+    renderCount.current += 1
+    const thisRender = renderCount.current
+
     // Background
     ctx.fillStyle = bgColor
     ctx.fillRect(0, 0, canvas.width, canvas.height)
@@ -169,6 +174,9 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
             bgImg.onerror = () => resolve(null)
             bgImg.src = getProxiedUrl(customBgUrl)
         })
+        
+        // Abort if a newer render has started
+        if (thisRender !== renderCount.current) return
         
         if (bgImg.complete && bgImg.width > 0) {
             // Draw (object-fit: cover)
@@ -199,6 +207,9 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
 
     // Load Sidewalk Logo Watermark
     const logoImg = logoVariant !== 'none' ? await loadSidewalkLogo(logoVariant) : null
+    
+    // Abort if a newer render has started
+    if (thisRender !== renderCount.current) return
 
     // Logo size and margins
     const logoScale = 0.18
@@ -209,6 +220,8 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
     // Draw Content based on type
     if (contentType === 'home') {
         await drawHomeTemplate(ctx, canvas, margin)
+        // Abort if a newer render has started
+        if (thisRender !== renderCount.current) return
     } else if (contentType === 'features') {
         drawFeaturesTemplate(ctx, canvas, logoImg, margin)
     } else if (contentType === 'description') {
