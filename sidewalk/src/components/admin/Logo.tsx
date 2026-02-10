@@ -11,7 +11,7 @@ export default function Logo() {
         color: '#f4f4f5',
         letterSpacing: '-0.02em'
       }}>
-        Sidewalk<span style={{ color: '#71717a' }}>Admin</span>
+        sidewalk<span style={{ color: '#71717a' }}>admin</span>
       </div>
     </div>
   )

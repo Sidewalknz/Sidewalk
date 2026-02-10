@@ -33,7 +33,7 @@ export function Sidebar() {
       <div className="p-6">
         <h1 className="text-2xl font-bold tracking-tight transition-colors duration-300" 
             style={{ color: 'var(--admin-text)' }}>
-          Sidewalk<span style={{ color: 'var(--admin-text-muted)' }}>Admin</span>
+          sidewalk<span style={{ color: 'var(--admin-text-muted)' }}>admin</span>
         </h1>
       </div>
       
@@ -62,7 +62,7 @@ export function Sidebar() {
                   color: isActive ? 'var(--admin-accent-text)' : 'currentColor'
                 }} 
               />
-              <span className="font-medium">{item.name}</span>
+              <span className="font-medium lowercase">{item.name}</span>
             </Link>
           )
         })}
@@ -72,9 +72,9 @@ export function Sidebar() {
            style={{ borderColor: 'var(--admin-sidebar-border)' }}>
         
         <div className="mb-6">
-            <p className="text-xs font-semibold uppercase mb-3 px-2" 
+            <p className="text-xs font-semibold lowercase mb-3 px-2" 
                style={{ color: 'var(--admin-text-muted)' }}>
-              Theme
+              theme
             </p>
             <div className="flex gap-2 px-2">
                 {Object.values(ADMIN_THEMES).map((t) => (
@@ -101,7 +101,7 @@ export function Sidebar() {
           }}
         >
           <LogOut className="w-5 h-5" />
-          <span className="font-medium">Logout</span>
+          <span className="font-medium lowercase">logout</span>
         </button>
       </div>
     </div>

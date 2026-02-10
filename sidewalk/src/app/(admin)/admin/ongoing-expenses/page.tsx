@@ -1,7 +1,10 @@
 import React from 'react'
 import Link from 'next/link'
+import { Edit } from 'lucide-react'
 import { getPayload } from 'payload'
 import config from '@payload-config'
+import DeleteButton from '@/components/admin/DeleteButton'
+import { deleteExpense } from '@/actions/expenses'
 
 export default async function OngoingExpensesPage() {
     const payload = await getPayload({ config })
@@ -63,7 +66,15 @@ export default async function OngoingExpensesPage() {
                                         <td className="px-6 py-4 capitalize" style={{ color: 'var(--admin-text-muted)' }}>{expense.frequency}</td>
                                         <td className="px-6 py-4" style={{ color: 'var(--admin-text-muted)' }}>{nextDue}</td>
                                         <td className="px-6 py-4 text-right">
-                                            <Link href={`/admin/ongoing-expenses/${expense.id}`} className="hover:underline text-[var(--admin-text-muted)]">Edit</Link>
+                                            <div className="flex justify-end items-center gap-2">
+                                                <Link 
+                                                    href={`/admin/ongoing-expenses/${expense.id}`} 
+                                                    className="p-2 rounded transition-colors text-[var(--admin-text-muted)]"
+                                                >
+                                                    <Edit className="w-4 h-4" />
+                                                </Link>
+                                                <DeleteButton id={expense.id} itemName={expense.name} action={deleteExpense} />
+                                            </div>
                                         </td>
                                     </tr>
                                 )

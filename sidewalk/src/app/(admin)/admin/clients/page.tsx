@@ -1,7 +1,10 @@
 import React from 'react'
 import Link from 'next/link'
+import { Edit } from 'lucide-react'
 import { getPayload } from 'payload'
 import config from '@payload-config'
+import DeleteButton from '@/components/admin/DeleteButton'
+import { deleteClient } from '@/actions/clients'
 
 export default async function ClientsPage() {
     const payload = await getPayload({ config })
@@ -35,21 +38,21 @@ export default async function ClientsPage() {
                             <th className="px-6 py-4 font-medium w-16">Logo</th>
                             <th className="px-6 py-4 font-medium">Company Name</th>
                             <th className="px-6 py-4 font-medium">Owner</th>
-                            <th className="px-6 py-4 font-medium">Type</th>
                             <th className="px-6 py-4 font-medium">Email</th>
+                            <th className="px-6 py-4 font-medium">Type</th>
+                            <th className="px-6 py-4 font-medium">Status</th>
                             <th className="px-6 py-4 font-medium text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-[var(--admin-sidebar-border)]">
                         {clients.docs.length === 0 ? (
                             <tr>
-                                <td colSpan={6} className="px-6 py-8 text-center" style={{ color: 'var(--admin-text-muted)' }}>
+                                <td colSpan={7} className="px-6 py-8 text-center" style={{ color: 'var(--admin-text-muted)' }}>
                                     No clients found. Click "Add Client" to get started.
                                 </td>
                             </tr>
                         ) : (
                             clients.docs.map((client) => {
-                                // Default type styles - keep these as they are semantic badges, but maybe adjust opacity?
                                 const typeStyles = {
                                     ecommerce: 'bg-green-500/10 text-green-500',
                                     portfolio: 'bg-purple-500/10 text-purple-500',
@@ -58,7 +61,15 @@ export default async function ClientsPage() {
                                     other: 'bg-zinc-500/10 text-zinc-500',
                                 }
                                 
-                                const badgeClass = typeStyles[client.type as keyof typeof typeStyles] || typeStyles.other
+                                const statusStyles = {
+                                    in_progress: 'bg-blue-500/10 text-blue-500',
+                                    completed: 'bg-emerald-500/10 text-emerald-500',
+                                    in_talks: 'bg-amber-500/10 text-amber-500',
+                                    completed_hide: 'bg-zinc-500/10 text-zinc-500',
+                                }
+                                
+                                const typeBadgeClass = typeStyles[client.type as keyof typeof typeStyles] || typeStyles.other
+                                const statusBadgeClass = statusStyles[client.status as keyof typeof statusStyles] || statusStyles.completed_hide
 
                                 return (
                                     <tr key={client.id} className="transition-colors hover:bg-white/5">
@@ -79,14 +90,28 @@ export default async function ClientsPage() {
                                         </td>
                                         <td className="px-6 py-4 font-medium" style={{ borderColor: 'var(--admin-sidebar-border)', color: 'var(--admin-text)' }}>{client.companyName}</td>
                                         <td className="px-6 py-4" style={{ borderColor: 'var(--admin-sidebar-border)', color: 'var(--admin-text-muted)' }}>{client.ownerName}</td>
+                                        <td className="px-6 py-4" style={{ borderColor: 'var(--admin-sidebar-border)', color: 'var(--admin-text-muted)' }}>{client.email}</td>
                                         <td className="px-6 py-4" style={{ borderColor: 'var(--admin-sidebar-border)' }}>
-                                            <span className={`px-2 py-1 rounded-full text-xs capitalize ${badgeClass}`}>
+                                            <span className={`px-2 py-1 rounded-full text-xs capitalize ${typeBadgeClass}`}>
                                                 {client.type}
                                             </span>
                                         </td>
-                                        <td className="px-6 py-4" style={{ borderColor: 'var(--admin-sidebar-border)', color: 'var(--admin-text-muted)' }}>{client.email}</td>
+                                        <td className="px-6 py-4" style={{ borderColor: 'var(--admin-sidebar-border)' }}>
+                                            <span className={`px-2 py-1 rounded-full text-xs capitalize ${statusBadgeClass}`}>
+                                                {(client.status || 'unknown').replace('_', ' ')}
+                                            </span>
+                                        </td>
                                         <td className="px-6 py-4 text-right" style={{ borderColor: 'var(--admin-sidebar-border)' }}>
-                                            <Link href={`/admin/clients/${client.id}`} className="hover:underline" style={{ color: 'var(--admin-text-muted)' }}>Edit</Link>
+                                            <div className="flex justify-end items-center gap-2">
+                                                <Link 
+                                                    href={`/admin/clients/${client.id}`} 
+                                                    className="p-2 rounded transition-colors" 
+                                                    style={{ color: 'var(--admin-text-muted)' }}
+                                                >
+                                                    <Edit className="w-4 h-4" />
+                                                </Link>
+                                                <DeleteButton id={client.id} itemName={client.companyName} action={deleteClient} />
+                                            </div>
                                         </td>
                                     </tr>
                                 )

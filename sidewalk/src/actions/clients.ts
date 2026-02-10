@@ -260,3 +260,21 @@ export async function updateClient(id: number, prevState: any, formData: FormDat
   revalidatePath('/admin/clients')
   redirect('/admin/clients')
 }
+
+export async function deleteClient(id: number): Promise<{ message: string }> {
+  const payload = await getPayload({ config })
+
+  try {
+    await payload.delete({
+      collection: 'clients',
+      id,
+      overrideAccess: true,
+    })
+  } catch (error) {
+    console.error('Error deleting client:', error)
+    return { message: 'Failed to delete client.' }
+  }
+
+  revalidatePath('/admin/clients')
+  return { message: 'Client deleted successfully.' }
+}

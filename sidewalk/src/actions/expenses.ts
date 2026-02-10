@@ -73,3 +73,21 @@ export async function updateExpense(id: string, prevState: any, formData: FormDa
   revalidatePath('/admin/ongoing-expenses')
   redirect('/admin/ongoing-expenses')
 }
+
+export async function deleteExpense(id: string): Promise<{ message: string }> {
+  const payload = await getPayload({ config })
+
+  try {
+    await payload.delete({
+      collection: 'ongoing-expenses',
+      id,
+      overrideAccess: true,
+    })
+  } catch (error) {
+    console.error('Error deleting expense:', error)
+    return { message: 'Failed to delete expense.' }
+  }
+
+  revalidatePath('/admin/ongoing-expenses')
+  return { message: 'Expense deleted successfully.' }
+}
