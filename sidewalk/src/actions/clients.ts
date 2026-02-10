@@ -86,6 +86,9 @@ export async function createClient(prevState: any, formData: FormData): Promise<
   }
 
   try {
+    console.log(`[createClient] Creating client: ${companyName}`)
+    console.log(`[createClient] Gallery items to upload: ${gallery.length}`)
+    
     await payload.create({
       collection: 'clients',
       data: {
@@ -104,9 +107,21 @@ export async function createClient(prevState: any, formData: FormData): Promise<
       },
       overrideAccess: true, 
     })
+    
+    console.log(`[createClient] Successfully created client: ${companyName}`)
   } catch (error) {
-    console.error('Error creating client:', error)
-    return { message: 'Failed to create client.' }
+    console.error('[createClient] Error creating client:', error)
+    console.error('[createClient] Error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      companyName
+    })
+    
+    if (error instanceof Error && error.message.includes('Payload size')) {
+      return { message: 'Upload failed: File size too large. Please reduce image sizes.' }
+    }
+    
+    return { message: `Failed to create client: ${error instanceof Error ? error.message : 'Unknown error'}` }
   }
 
   revalidatePath('/admin/clients')
@@ -202,6 +217,9 @@ export async function updateClient(id: number, prevState: any, formData: FormDat
   }
 
   try {
+    console.log(`[updateClient] Updating client ID: ${id}, Company: ${companyName}`)
+    console.log(`[updateClient] Gallery items to upload: ${gallery.length}`)
+    
     await payload.update({
       collection: 'clients',
       id,
@@ -221,9 +239,22 @@ export async function updateClient(id: number, prevState: any, formData: FormDat
       },
       overrideAccess: true, 
     })
+    
+    console.log(`[updateClient] Successfully updated client ID: ${id}`)
   } catch (error) {
-    console.error('Error updating client:', error)
-    return { message: 'Failed to update client.' }
+    console.error('[updateClient] Error updating client:', error)
+    console.error('[updateClient] Error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      clientId: id,
+      companyName
+    })
+    
+    if (error instanceof Error && error.message.includes('Payload size')) {
+      return { message: 'Upload failed: File size too large. Please reduce image sizes.' }
+    }
+    
+    return { message: `Failed to update client: ${error instanceof Error ? error.message : 'Unknown error'}` }
   }
 
   revalidatePath('/admin/clients')
