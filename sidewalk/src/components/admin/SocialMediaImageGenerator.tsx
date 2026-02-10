@@ -862,19 +862,24 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
                   <label className="text-xs font-bold uppercase tracking-wider flex items-center gap-2" style={{ color: 'var(--admin-text-muted)' }}>
                     Light Presets
                   </label>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-3">
                     {SIDEWALK_LOGO_LIGHT_PRESETS.map((p) => (
                       <button
                         key={p.name}
                         onClick={() => setSidewalkLogoColorMap(p.colors)}
-                        className="px-2 py-1 rounded text-[9px] font-bold border uppercase transition-all whitespace-nowrap"
+                        className="w-8 h-8 rounded-full border border-zinc-500/20 transition-all hover:scale-110 flex items-center justify-center p-0.5 cursor-pointer relative"
                         style={{ 
-                          borderColor: JSON.stringify(sidewalkLogoColorMap) === JSON.stringify(p.colors) ? 'var(--admin-accent)' : 'var(--admin-sidebar-border)',
-                          backgroundColor: JSON.stringify(sidewalkLogoColorMap) === JSON.stringify(p.colors) ? 'rgba(var(--admin-accent), 0.1)' : 'var(--admin-bg)',
-                          color: JSON.stringify(sidewalkLogoColorMap) === JSON.stringify(p.colors) ? 'var(--admin-text)' : 'var(--admin-text-muted)'
+                          borderColor: JSON.stringify(sidewalkLogoColorMap) === JSON.stringify(p.colors) ? 'var(--admin-accent)' : 'transparent',
+                          backgroundColor: 'var(--admin-bg)',
                         }}
+                        title={p.name}
                       >
-                        {p.name}
+                        <div 
+                          className="w-full h-full rounded-full shadow-sm" 
+                          style={{ 
+                            background: `conic-gradient(${p.colors['#CD5037']} 0deg 120deg, ${p.colors['#E5BF55']} 120deg 240deg, ${p.colors['#FCF5EB']} 240deg 360deg)` 
+                          }} 
+                        />
                       </button>
                     ))}
                   </div>
@@ -884,19 +889,24 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
                   <label className="text-xs font-bold uppercase tracking-wider flex items-center gap-2" style={{ color: 'var(--admin-text-muted)' }}>
                     Dark Presets
                   </label>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-3">
                     {SIDEWALK_LOGO_DARK_PRESETS.map((p) => (
                       <button
                         key={p.name}
                         onClick={() => setSidewalkLogoColorMap(p.colors)}
-                        className="px-2 py-1 rounded text-[9px] font-bold border uppercase transition-all whitespace-nowrap"
+                        className="w-8 h-8 rounded-full border border-zinc-500/20 transition-all hover:scale-110 flex items-center justify-center p-0.5 cursor-pointer relative"
                         style={{ 
-                          borderColor: JSON.stringify(sidewalkLogoColorMap) === JSON.stringify(p.colors) ? 'var(--admin-accent)' : 'var(--admin-sidebar-border)',
-                          backgroundColor: JSON.stringify(sidewalkLogoColorMap) === JSON.stringify(p.colors) ? 'rgba(var(--admin-accent), 0.1)' : 'var(--admin-bg)',
-                          color: JSON.stringify(sidewalkLogoColorMap) === JSON.stringify(p.colors) ? 'var(--admin-text)' : 'var(--admin-text-muted)'
+                          borderColor: JSON.stringify(sidewalkLogoColorMap) === JSON.stringify(p.colors) ? 'var(--admin-accent)' : 'transparent',
+                          backgroundColor: 'var(--admin-bg)',
                         }}
+                        title={p.name}
                       >
-                        {p.name}
+                        <div 
+                          className="w-full h-full rounded-full shadow-sm" 
+                          style={{ 
+                            background: `conic-gradient(${p.colors['#CD5037']} 0deg 120deg, ${p.colors['#E5BF55']} 120deg 240deg, ${p.colors['#FCF5EB']} 240deg 360deg)` 
+                          }} 
+                        />
                       </button>
                     ))}
                   </div>
