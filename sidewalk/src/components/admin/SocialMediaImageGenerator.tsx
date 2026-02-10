@@ -50,6 +50,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
   const [homeVariation, setHomeVariation] = useState<'horizontal' | 'vertical'>('horizontal')
   const [editableFeatures, setEditableFeatures] = useState<{ title: string, description: string }[]>([])
   const [editableDescription, setEditableDescription] = useState('')
+  const [descriptionFontSize, setDescriptionFontSize] = useState(1.0)
   
   // Theme-based initial colors
   const getThemeColors = (themeName: string) => {
@@ -121,7 +122,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
   // Draw the canvas whenever any option changes
   useEffect(() => {
     drawCanvas()
-  }, [selectedClientId, contentType, logoPosition, logoVariant, homeLogoVariant, customLogoUrl, customBgUrl, bgOverlayOpacity, bgZoom, homeVariation, bgColor, textColor, highlightColor, svgColorMap, sidewalkLogoColorMap, size, editableFeatures, editableDescription])
+  }, [selectedClientId, contentType, logoPosition, logoVariant, homeLogoVariant, customLogoUrl, customBgUrl, bgOverlayOpacity, bgZoom, homeVariation, bgColor, textColor, highlightColor, svgColorMap, sidewalkLogoColorMap, size, editableFeatures, editableDescription, descriptionFontSize])
 
   // Update editable text when content selection changes
   useEffect(() => {
@@ -508,26 +509,26 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
     
     // Scaling loop
     while (fontSize > canvas.width * 0.03) {
-        ctx.font = `bold ${fontSize}px sans-serif`
-        const totalHeight = wrapText(ctx, description.toLowerCase(), margin, 0, availableWidth, lineHeight, false, highlightColor)
+        ctx.font = `bold ${fontSize * descriptionFontSize}px sans-serif`
+        const totalHeight = wrapText(ctx, description.toLowerCase(), margin, 0, availableWidth, lineHeight * descriptionFontSize, false, highlightColor)
         if (totalHeight <= maxContentHeight) break
         fontSize -= 2
         lineHeight = fontSize * 1.3
     }
     
     ctx.fillStyle = textColor
-    ctx.font = `bold ${fontSize}px sans-serif`
+    ctx.font = `bold ${fontSize * descriptionFontSize}px sans-serif`
     ctx.textAlign = 'left'
     ctx.textBaseline = 'top'
     
     // Vertical centering
-    const totalHeight = wrapText(ctx, description.toLowerCase(), margin, 0, availableWidth, lineHeight, false, highlightColor)
+    const totalHeight = wrapText(ctx, description.toLowerCase(), margin, 0, availableWidth, lineHeight * descriptionFontSize, false, highlightColor)
     const startY = (canvas.height - totalHeight) / 2
     
     // Adjust if it pushes against top margin
     const finalY = Math.max(margin, startY)
     
-    wrapText(ctx, description.toLowerCase(), margin, finalY, availableWidth, lineHeight, true, highlightColor)
+    wrapText(ctx, description.toLowerCase(), margin, finalY, availableWidth, lineHeight * descriptionFontSize, true, highlightColor)
   }
 
   const wrapText = (ctx: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number, draw: boolean = true, hColor?: string) => {
@@ -747,6 +748,24 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
                   style={{ borderColor: 'var(--admin-sidebar-border)', color: 'var(--admin-text)' }}
                   value={editableDescription}
                   onChange={(e) => setEditableDescription(e.target.value)}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="text-[9px] uppercase font-bold" style={{ color: 'var(--admin-text-muted)' }}>
+                    Font Size
+                  </label>
+                  <span className="text-[10px] font-mono">{descriptionFontSize.toFixed(2)}x</span>
+                </div>
+                <input 
+                  type="range"
+                  min="0.5"
+                  max="2.0"
+                  step="0.05"
+                  className="w-full h-1 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                  value={descriptionFontSize}
+                  onChange={(e) => setDescriptionFontSize(parseFloat(e.target.value))}
                 />
               </div>
             </div>
