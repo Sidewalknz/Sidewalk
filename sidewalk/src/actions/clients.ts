@@ -13,6 +13,8 @@ export async function createClient(prevState: any, formData: FormData): Promise<
   const email = formData.get('email') as string
   const website = formData.get('website') as string
   const type = formData.get('type') as 'ecommerce' | 'portfolio' | 'business' | 'blog' | 'other'
+  const status = formData.get('status') as 'in_progress' | 'completed' | 'in_talks' | 'completed_hide'
+
 
   const description = formData.get('description') as string
 
@@ -118,6 +120,7 @@ export async function updateClient(id: number, prevState: any, formData: FormDat
   const email = formData.get('email') as string
   const website = formData.get('website') as string
   const type = formData.get('type') as 'ecommerce' | 'portfolio' | 'business' | 'blog' | 'other'
+  const status = formData.get('status') as 'in_progress' | 'completed' | 'in_talks' | 'completed_hide'
 
   const description = formData.get('description') as string
 
@@ -207,6 +210,7 @@ export async function updateClient(id: number, prevState: any, formData: FormDat
         email,
         website,
         type,
+        status,
         products,
         description,
 

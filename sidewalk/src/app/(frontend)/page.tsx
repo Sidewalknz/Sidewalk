@@ -20,22 +20,7 @@ type Project = {
   website?: string // Website URL
 }
 
-const projects: Project[] = [
-  {
-    id: 'student-tours',
-    name: 'the student tours',
-    description: '',
-    features: [],
-    gallery: []
-  },
-  {
-    id: 'under-the-hood-bbq',
-    name: 'under the hood bbq',
-    description: '',
-    features: [],
-    gallery: []
-  }
-]
+
 
 const tabs: { id: Tab; label: string; color: string }[] = [
   { id: 'home', label: 'Home', color: '#F3ECE3' }, // cream
@@ -162,7 +147,7 @@ const getPageTagline = (tab: Tab): React.ReactNode => {
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState<Tab>('home')
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
-  const [projectsList, setProjectsList] = useState<Project[]>(projects)
+  const [projectsList, setProjectsList] = useState<Project[]>([])
   const [isMobile, setIsMobile] = useState(false)
   const [formData, setFormData] = useState({ name: '', email: '', message: '' })
   const [formStatus, setFormStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
@@ -455,6 +440,7 @@ export default function HomePage() {
       } catch (error) {
         console.error('Error fetching projects:', error)
         // Keep the default projects array if API fails
+
       }
     }
 

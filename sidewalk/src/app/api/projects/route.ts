@@ -12,6 +12,11 @@ export async function GET() {
       depth: 2, // Populate relationships (media, gallery images)
       limit: 100,
       sort: 'companyName',
+      where: {
+        status: {
+          equals: 'completed',
+        },
+      },
     })
 
     // Transform Payload clients to Project format

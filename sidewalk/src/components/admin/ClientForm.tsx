@@ -138,6 +138,24 @@ export default function ClientForm({ initialData, action, mode }: ClientFormProp
             </div>
 
             <div className="space-y-2">
+              <label className="text-sm font-medium" style={{ color: 'var(--admin-text-muted)' }}>Status</label>
+              <select name="status" defaultValue={initialData?.status || 'in_progress'} required
+                      className="w-full px-4 py-2 rounded-lg outline-none transition-all focus:ring-2 focus:ring-blue-500/20"
+                      style={{ 
+                         backgroundColor: 'var(--admin-bg)', 
+                         borderColor: 'var(--admin-sidebar-border)',
+                         color: 'var(--admin-text)',
+                         borderWidth: '1px'
+                     }}
+              >
+                <option value="in_progress">In Progress</option>
+                <option value="completed">Completed</option>
+                <option value="in_talks">In Talks</option>
+                <option value="completed_hide">Completed - Hide</option>
+              </select>
+            </div>
+
+            <div className="space-y-2">
               <label className="text-sm font-medium" style={{ color: 'var(--admin-text-muted)' }}>Type</label>
               <select name="type" defaultValue={initialData?.type} required 
                       className="w-full px-4 py-2 rounded-lg outline-none transition-all focus:ring-2 focus:ring-blue-500/20"

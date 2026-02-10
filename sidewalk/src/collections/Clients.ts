@@ -54,6 +54,31 @@ export const Clients: CollectionConfig = {
               label: 'Phone',
             },
             {
+              name: 'status',
+              type: 'select',
+              required: true,
+              label: 'Status',
+              options: [
+                {
+                  label: 'In Progress',
+                  value: 'in_progress',
+                },
+                {
+                  label: 'Completed',
+                  value: 'completed',
+                },
+                {
+                  label: 'In Talks',
+                  value: 'in_talks',
+                },
+                {
+                  label: 'Completed - Hide',
+                  value: 'completed_hide',
+                },
+              ],
+              defaultValue: 'in_progress',
+            },
+            {
               name: 'type',
               type: 'select',
               required: true,

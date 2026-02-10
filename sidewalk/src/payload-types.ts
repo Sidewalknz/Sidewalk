@@ -174,6 +174,7 @@ export interface Client {
   website?: string | null;
   email: string;
   phone?: string | null;
+  status: 'in_progress' | 'completed' | 'in_talks' | 'completed_hide';
   type: 'ecommerce' | 'portfolio' | 'business' | 'blog' | 'other';
   /**
    * What the client paid for (can add multiple products)
@@ -424,6 +425,7 @@ export interface ClientsSelect<T extends boolean = true> {
   website?: T;
   email?: T;
   phone?: T;
+  status?: T;
   type?: T;
   products?:
     | T
