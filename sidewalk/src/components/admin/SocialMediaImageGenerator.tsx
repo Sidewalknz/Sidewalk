@@ -763,7 +763,8 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
                   min="0.5"
                   max="2.0"
                   step="0.05"
-                  className="w-full h-1 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                  className="w-full h-1 rounded-lg appearance-none cursor-pointer"
+                  style={{ backgroundColor: 'var(--admin-sidebar-border)', accentColor: 'var(--admin-accent)' }}
                   value={descriptionFontSize}
                   onChange={(e) => setDescriptionFontSize(parseFloat(e.target.value))}
                 />
@@ -1262,7 +1263,8 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
                     min="1"
                     max="3"
                     step="0.05"
-                    className="w-full h-1 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                    className="w-full h-1 rounded-lg appearance-none cursor-pointer"
+                    style={{ backgroundColor: 'var(--admin-sidebar-border)', accentColor: 'var(--admin-accent)' }}
                     value={bgZoom}
                     onChange={(e) => setBgZoom(parseFloat(e.target.value))}
                   />
@@ -1280,7 +1282,8 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
                     min="0"
                     max="0.9"
                     step="0.05"
-                    className="w-full h-1 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                    className="w-full h-1 rounded-lg appearance-none cursor-pointer"
+                    style={{ backgroundColor: 'var(--admin-sidebar-border)', accentColor: 'var(--admin-accent)' }}
                     value={bgOverlayOpacity}
                     onChange={(e) => setBgOverlayOpacity(parseFloat(e.target.value))}
                   />
