@@ -83,3 +83,131 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Admin Themes */
+/* 
+  Cream: #FCF5EB (Light) -> Text: Dark
+  Red/Orange: #CD5037 (Medium/Dark) -> Text: Light/White
+  Dark Blue: #212C34 (Dark) -> Text: White
+  Yellow/Gold: #E5BF55 (Light/Medium) -> Text: Dark
+*/
+
+[data-admin-theme='cream'] {
+  --admin-bg: #FCF5EB;
+  --admin-sidebar-bg: #F0E8DD; /* Slightly darker than bg */
+  --admin-sidebar-border: #D8D0C5;
+  --admin-text: #212C34; /* Dark contrast */
+  --admin-text-muted: #5A646E;
+  --admin-accent: #CD5037;
+  --admin-hover: rgba(33, 44, 52, 0.05);
+}
+
+[data-admin-theme='red'] {
+  --admin-bg: #CD5037;
+  --admin-sidebar-bg: #B5422B; /* Darker red */
+  --admin-sidebar-border: #9E3624;
+  --admin-text: #FFFFFF;
+  --admin-text-muted: rgba(255, 255, 255, 0.7);
+  --admin-accent: #FCF5EB;
+  --admin-hover: rgba(255, 255, 255, 0.1);
+}
+
+[data-admin-theme='blue'] {
+  --admin-bg: #212C34; /* Existing Zinc 950-ish match */
+  --admin-sidebar-bg: #182026; /* Darker blue */
+  --admin-sidebar-border: #2A3640;
+  --admin-text: #FFFFFF;
+  --admin-text-muted: #9CA3AF;
+  --admin-accent: #3b82f6;
+  --admin-hover: rgba(255, 255, 255, 0.05);
+}
+
+[data-admin-theme='yellow'] {
+  --admin-bg: #E5BF55;
+  --admin-sidebar-bg: #D4AF4A; /* Darker yellow */
+  --admin-sidebar-border: #C39F3F;
+  --admin-text: #212C34; /* Dark contrast */
+  --admin-text-muted: #4A545E;
+  --admin-accent: #CD5037;
+  --admin-hover: rgba(33, 44, 52, 0.05);
+}
+
+/* Admin Components */
+.dashboard-widget, .card {
+  background-color: var(--admin-sidebar-bg);
+  border: 1px solid var(--admin-sidebar-border);
+  border-radius: 0.75rem; /* 12px */
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.dashboard-widget h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--admin-text);
+}
+
+.dashboard-stat-card {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.05); /* Fallback wrapper */
+  border: 1px solid var(--admin-sidebar-border);
+}
+
+/* Specific card colors if needed, or just use theme */
+.dashboard-stat-card--blue,
+.dashboard-stat-card--green,
+.dashboard-stat-card--yellow,
+.dashboard-stat-card--pink {
+   /* Keep generic for now, relying on theme colors */
+   background-color: var(--admin-bg); 
+   color: var(--admin-text);
+}
+
+.dashboard-stat-card__label {
+  font-size: 0.875rem;
+  color: var(--admin-text-muted);
+  margin-bottom: 0.25rem;
+}
+
+.dashboard-stat-card__value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--admin-text);
+}
+
+input, select, textarea, .react-select__control {
+  background-color: var(--admin-bg);
+  border: 1px solid var(--admin-sidebar-border);
+  color: var(--admin-text);
+  border-radius: 0.375rem;
+  padding: 0.5rem;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--admin-accent);
+  box-shadow: 0 0 0 2px var(--admin-accent);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th {
+  text-align: left;
+  padding: 0.75rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--admin-text-muted);
+  border-bottom: 1px solid var(--admin-sidebar-border);
+}
+
+.table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--admin-sidebar-border);
+  color: var(--admin-text);
+}

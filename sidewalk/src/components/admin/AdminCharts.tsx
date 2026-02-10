@@ -15,6 +15,8 @@ import {
   CartesianGrid,
 } from 'recharts'
 
+import { useAdminTheme } from './AdminThemeProvider'
+
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d']
 
 export const CategoryPieChart = ({
@@ -23,6 +25,7 @@ export const CategoryPieChart = ({
   data: { name: string; value: number }[]
 }) => {
   const [mounted, setMounted] = useState(false)
+  const { theme } = useAdminTheme()
 
   useEffect(() => {
     setMounted(true)
@@ -31,6 +34,9 @@ export const CategoryPieChart = ({
   if (!mounted) {
     return <div style={{ width: '100%', height: 300 }} />
   }
+  
+  const isDark = theme === 'blue' || theme === 'red'
+  const textColor = isDark ? '#fff' : '#000'
 
   return (
     <div style={{ width: '100%', height: 300 }}>
@@ -49,8 +55,14 @@ export const CategoryPieChart = ({
               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
             ))}
           </Pie>
-          <Tooltip />
-          <Legend />
+          <Tooltip 
+            contentStyle={{ 
+                backgroundColor: 'var(--admin-sidebar-bg)', 
+                borderColor: 'var(--admin-sidebar-border)',
+                color: 'var(--admin-text)'
+            }}
+          />
+          <Legend wrapperStyle={{ color: textColor }} />
         </PieChart>
       </ResponsiveContainer>
     </div>
@@ -63,6 +75,7 @@ export const FinancialBarChart = ({
   data: { name: string; income: number; expense: number }[]
 }) => {
   const [mounted, setMounted] = useState(false)
+  const { theme } = useAdminTheme()
 
   useEffect(() => {
     setMounted(true)
@@ -71,6 +84,9 @@ export const FinancialBarChart = ({
   if (!mounted) {
     return <div style={{ width: '100%', height: 300 }} />
   }
+
+  const isDark = theme === 'blue' || theme === 'red'
+  const axisColor = isDark ? '#ccc' : '#333'
 
   return (
     <div style={{ width: '100%', height: 300 }}>
@@ -84,11 +100,18 @@ export const FinancialBarChart = ({
             bottom: 5,
           }}
         >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip formatter={(value) => `$${value}`} />
-          <Legend />
+          <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#444' : '#ccc'} />
+          <XAxis dataKey="name" stroke={axisColor} />
+          <YAxis stroke={axisColor} />
+          <Tooltip 
+            formatter={(value) => `$${value}`}
+            contentStyle={{ 
+                backgroundColor: 'var(--admin-sidebar-bg)', 
+                borderColor: 'var(--admin-sidebar-border)',
+                color: 'var(--admin-text)'
+            }}
+          />
+          <Legend wrapperStyle={{ color: axisColor }} />
           <Bar dataKey="income" name="Monthly Revenue" fill="#82ca9d" />
           <Bar dataKey="expense" name="Monthly Expenses" fill="#FF8042" />
         </BarChart>

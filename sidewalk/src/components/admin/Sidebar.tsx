@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { LayoutDashboard, Users, Image as ImageIcon, Briefcase, CreditCard, LogOut } from 'lucide-react'
 import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import { useAdminTheme, ADMIN_THEMES } from './AdminThemeProvider'
 
 export function cn(...inputs: (string | undefined | null | false)[]) {
   return twMerge(clsx(inputs))
@@ -20,12 +21,18 @@ const navItems = [
 
 export function Sidebar() {
   const pathname = usePathname()
+  const { theme, setTheme } = useAdminTheme()
 
   return (
-    <div className="flex flex-col h-full bg-zinc-950 border-r border-zinc-800 w-64">
+    <div className="flex flex-col h-full w-64 border-r transition-colors duration-300"
+         style={{ 
+           backgroundColor: 'var(--admin-sidebar-bg)', 
+           borderColor: 'var(--admin-sidebar-border)' 
+         }}>
       <div className="p-6">
-        <h1 className="text-2xl font-bold text-white tracking-tight">
-          Sidewalk<span className="text-zinc-500">Admin</span>
+        <h1 className="text-2xl font-bold tracking-tight transition-colors duration-300" 
+            style={{ color: 'var(--admin-text)' }}>
+          Sidewalk<span style={{ color: 'var(--admin-text-muted)' }}>Admin</span>
         </h1>
       </div>
       
@@ -40,26 +47,59 @@ export function Sidebar() {
               className={cn(
                 "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group",
                 isActive 
-                  ? "bg-zinc-800 text-white" 
-                  : "text-zinc-400 hover:bg-zinc-900 hover:text-white"
+                  ? "bg-opacity-10" 
+                  : "hover:bg-opacity-5"
               )}
+              style={{
+                backgroundColor: isActive ? 'var(--admin-accent)' : undefined,
+                color: isActive ? 'var(--admin-text)' : 'var(--admin-text-muted)'
+              }}
             >
-              <item.icon className={cn("w-5 h-5", isActive ? "text-blue-500" : "text-zinc-500 group-hover:text-zinc-300")} />
+              <item.icon 
+                className="w-5 h-5 transition-colors duration-300"
+                style={{
+                  color: isActive ? 'var(--admin-text)' : 'currentColor'
+                }} 
+              />
               <span className="font-medium">{item.name}</span>
             </Link>
           )
         })}
       </nav>
 
-      <div className="p-4 border-t border-zinc-800">
+      <div className="p-4 border-t transition-colors duration-300"
+           style={{ borderColor: 'var(--admin-sidebar-border)' }}>
+        
+        <div className="mb-6">
+            <p className="text-xs font-semibold uppercase mb-3 px-2" 
+               style={{ color: 'var(--admin-text-muted)' }}>
+              Theme
+            </p>
+            <div className="flex gap-2 px-2">
+                {Object.values(ADMIN_THEMES).map((t) => (
+                    <button
+                        key={t.name}
+                        onClick={() => setTheme(t.name as any)}
+                        title={t.label}
+                        className={cn(
+                            "w-6 h-6 rounded-full border border-zinc-500/20 transition-all hover:scale-110",
+                            theme === t.name ? "ring-2 ring-offset-2 ring-offset-transparent ring-zinc-500" : ""
+                        )}
+                        style={{ backgroundColor: t.color }}
+                    />
+                ))}
+            </div>
+        </div>
+
         <button 
-          className="flex items-center gap-3 px-4 py-3 w-full text-zinc-400 hover:text-white hover:bg-zinc-900 rounded-lg transition-colors"
+          className="flex items-center gap-3 px-4 py-3 w-full rounded-lg transition-colors hover:bg-opacity-5"
+          style={{ color: 'var(--admin-text-muted)' }}
           onClick={() => {
             // TODO: Implement logout logic
             window.location.href = '/admin/logout'
           }}
         >
-          <LogOut className="w-5 h-5 text-zinc-500" />
+          <LogOut className="w-5 h-5" />
           <span className="font-medium">Logout</span>
         </button>
       </div>

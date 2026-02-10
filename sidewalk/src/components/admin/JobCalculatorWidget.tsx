@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 interface Allocation {
   category: string
@@ -20,6 +20,11 @@ export default function JobCalculatorWidget() {
   const [totalAmount, setTotalAmount] = useState(3200)
   const [allocations, setAllocations] = useState<Allocation[]>(defaultAllocations)
   const [numberOfOwners, setNumberOfOwners] = useState(2)
+  const [isClient, setIsClient] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   const updatePercentage = (index: number, newPercentage: number) => {
     const updated = [...allocations]
@@ -34,32 +39,42 @@ export default function JobCalculatorWidget() {
   const totalPercentage = allocations.reduce((sum, a) => sum + a.percentage, 0)
   const totalCalculated = allocations.reduce((sum, a) => sum + calculateAmount(a.percentage), 0)
 
+  if (!isClient) {
+    return (
+        <div className="space-y-4 p-6 rounded-xl bg-zinc-900/50 border border-zinc-800">
+             <h3 className="text-lg font-semibold text-zinc-300">Job Calculator</h3>
+             <div className="h-64 flex items-center justify-center text-zinc-500">Loading calculator...</div>
+        </div>
+    )
+  }
+
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(value)
+  }
+
   return (
-    <div className="dashboard-widget">
-      <h3>Job Calculator</h3>
+    <div className="space-y-6 p-6 rounded-xl bg-zinc-900/50 border border-zinc-800">
+      <h3 className="text-lg font-semibold text-zinc-300">Job Calculator</h3>
       
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 150px', gap: '1rem', marginBottom: '1rem' }}>
+      <div className="grid grid-cols-[1fr_150px] gap-4">
         <div>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+          <label className="block mb-2 text-sm font-medium text-zinc-400">
             Total Amount ($)
           </label>
           <input
             type="number"
             value={totalAmount}
             onChange={(e) => setTotalAmount(Number(e.target.value) || 0)}
-            style={{
-              width: '100%',
-              padding: '0.5rem',
-              border: '1px solid var(--theme-elevation-200)',
-              borderRadius: '4px',
-              fontSize: '1rem',
-              background: 'var(--theme-input-bg)',
-              color: 'var(--theme-text)'
-            }}
+            className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-zinc-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all"
           />
         </div>
         <div>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+          <label className="block mb-2 text-sm font-medium text-zinc-400">
             Number of Owners
           </label>
           <input
@@ -67,51 +82,34 @@ export default function JobCalculatorWidget() {
             value={numberOfOwners}
             onChange={(e) => setNumberOfOwners(Math.max(1, Number(e.target.value) || 1))}
             min="1"
-            style={{
-              width: '100%',
-              padding: '0.5rem',
-              border: '1px solid var(--theme-elevation-200)',
-              borderRadius: '4px',
-              fontSize: '1rem',
-              background: 'var(--theme-input-bg)',
-              color: 'var(--theme-text)'
-            }}
+            className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-zinc-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all"
           />
         </div>
       </div>
 
-      <div style={{ overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+      <div className="overflow-hidden rounded-lg border border-zinc-800 bg-zinc-950/50">
+        <table className="w-full text-sm">
           <thead>
-            <tr style={{ borderBottom: '2px solid var(--theme-elevation-200)' }}>
-              <th style={{ textAlign: 'left', padding: '0.75rem', fontWeight: '600' }}>Category</th>
-              <th style={{ textAlign: 'center', padding: '0.75rem', fontWeight: '600', width: '100px' }}>%</th>
-              <th style={{ textAlign: 'right', padding: '0.75rem', fontWeight: '600', width: '120px' }}>$ Amount</th>
+            <tr className="border-b border-zinc-800 bg-zinc-900/50">
+              <th className="px-4 py-3 text-left font-medium text-zinc-400">Category</th>
+              <th className="px-4 py-3 text-center font-medium text-zinc-400 w-[100px]">%</th>
+              <th className="px-4 py-3 text-right font-medium text-zinc-400 w-[140px]">$ Amount</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-zinc-800">
             {allocations.map((allocation, index) => {
               const amount = calculateAmount(allocation.percentage)
               const isOwnerCompensation = allocation.category === 'Owner Compensation'
               const perPersonAmount = isOwnerCompensation ? amount / numberOfOwners : amount
-              
-              const formatCurrency = (value: number) => {
-                return new Intl.NumberFormat('en-US', {
-                  style: 'currency',
-                  currency: 'USD',
-                  minimumFractionDigits: 0,
-                  maximumFractionDigits: 0,
-                }).format(value)
-              }
               
               const displayAmount = isOwnerCompensation 
                 ? `${formatCurrency(perPersonAmount)} / ${formatCurrency(amount)}`
                 : formatCurrency(amount)
               
               return (
-                <tr key={index} style={{ borderBottom: '1px solid var(--theme-elevation-100)' }}>
-                  <td style={{ padding: '0.75rem' }}>{allocation.category}</td>
-                  <td style={{ padding: '0.75rem', textAlign: 'center' }}>
+                <tr key={index} className="hover:bg-zinc-900/50 transition-colors">
+                  <td className="px-4 py-3 text-zinc-300">{allocation.category}</td>
+                  <td className="px-4 py-3 text-center">
                     <input
                       type="number"
                       value={allocation.percentage}
@@ -119,18 +117,10 @@ export default function JobCalculatorWidget() {
                       min="0"
                       max="100"
                       step="0.1"
-                      style={{
-                        width: '70px',
-                        padding: '0.25rem',
-                        border: '1px solid var(--theme-elevation-200)',
-                        borderRadius: '4px',
-                        textAlign: 'center',
-                        background: 'var(--theme-input-bg)',
-                        color: 'var(--theme-text)'
-                      }}
+                      className="w-16 px-2 py-1 text-center bg-zinc-900 border border-zinc-800 rounded text-zinc-200 text-xs focus:outline-none focus:border-blue-500 transition-colors"
                     />
                   </td>
-                  <td style={{ padding: '0.75rem', textAlign: 'right', fontWeight: '500' }}>
+                  <td className="px-4 py-3 text-right font-medium text-zinc-300">
                     {displayAmount}
                   </td>
                 </tr>
@@ -140,44 +130,30 @@ export default function JobCalculatorWidget() {
         </table>
       </div>
 
-      <div style={{ 
-        marginTop: '1rem', 
-        padding: '0.75rem', 
-        background: totalPercentage === 100 ? 'var(--theme-success-100)' : 'var(--theme-error-100)',
-        borderRadius: '4px',
-        border: `1px solid ${totalPercentage === 100 ? 'var(--theme-success-200)' : 'var(--theme-error-200)'}`,
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        color: totalPercentage === 100 ? 'var(--theme-success-700)' : 'var(--theme-error-700)'
-      }}>
-        <div>
-          <span style={{ fontWeight: '600' }}>
+      <div 
+        className={`flex items-center justify-between p-4 rounded-lg border ${
+            totalPercentage === 100 
+            ? 'bg-blue-500/10 border-blue-500/20 text-blue-400' 
+            : 'bg-red-500/10 border-red-500/20 text-red-400'
+        }`}
+      >
+        <div className="flex items-center">
+          <span className="font-semibold text-lg mr-2">
             {totalPercentage === 100 ? '✓' : '⚠'} Totals = 
           </span>
-          <span style={{ 
-            fontWeight: 'bold', 
-            marginLeft: '0.5rem',
-            color: 'inherit'
-          }}>
-            {new Intl.NumberFormat('en-US', {
-              style: 'currency',
-              currency: 'USD',
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0,
-            }).format(totalCalculated)}
+          <span className="text-xl font-bold">
+            {formatCurrency(totalCalculated)}
           </span>
           {totalPercentage !== 100 && (
-            <span style={{ marginLeft: '0.5rem', color: 'inherit', fontSize: '0.875rem' }}>
+            <span className="ml-2 text-sm opacity-90">
               ({totalPercentage}% - should be 100%)
             </span>
           )}
         </div>
-        <div style={{ fontSize: '0.875rem', opacity: 0.8 }}>
+        <div className="text-sm font-medium opacity-80">
           Total: {totalPercentage.toFixed(1)}%
         </div>
       </div>
     </div>
   )
 }
-

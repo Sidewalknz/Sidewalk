@@ -1,5 +1,6 @@
 import React from 'react'
 import { Card } from '@/components/ui/Card'
+import JobCalculatorWidget from '@/components/admin/JobCalculatorWidget'
 import { DollarSign, Briefcase, Users, CreditCard, Activity, Calendar } from 'lucide-react'
 import { getPayload } from 'payload'
 import config from '@payload-config'
@@ -201,6 +202,9 @@ export default async function DashboardPage() {
                     </div>
                 </div>
             </div>
+
+            {/* Job Calculator */}
+            <JobCalculatorWidget />
             
         </div>
     )
