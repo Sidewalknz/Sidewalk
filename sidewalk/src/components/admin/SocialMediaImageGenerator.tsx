@@ -88,6 +88,15 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
     }
   }, [selectedClientId, contentType, featureIndex, productIndex])
 
+  const getProxiedUrl = (url: string) => {
+    if (!url) return ''
+    if (url.startsWith('data:')) return url
+    if (url.startsWith('http')) {
+      return `/api/proxy?url=${encodeURIComponent(url)}`
+    }
+    return url
+  }
+
   const drawCanvas = async () => {
     const canvas = canvasRef.current
     if (!canvas || !selectedClient) return
@@ -106,7 +115,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
         await new Promise(resolve => {
             bgImg.onload = resolve
             bgImg.onerror = () => resolve(null)
-            bgImg.src = customBgUrl
+            bgImg.src = getProxiedUrl(customBgUrl)
         })
         
         if (bgImg.complete && bgImg.width > 0) {
@@ -211,20 +220,13 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
 
     if (iconUrl) {
         clientLogo = new Image()
-        const tryLoad = (useCors: boolean) => new Promise<boolean>((resolve) => {
+        clientLogo.crossOrigin = 'anonymous'
+        logoLoaded = await new Promise<boolean>((resolve) => {
             if (!clientLogo) return resolve(false)
-            if (useCors) clientLogo.crossOrigin = 'anonymous'
-            else clientLogo.removeAttribute('crossOrigin')
-            
             clientLogo.onload = () => resolve(true)
             clientLogo.onerror = () => resolve(false)
-            clientLogo.src = iconUrl.startsWith('http') || iconUrl.startsWith('/') ? iconUrl : `/${iconUrl}`
+            clientLogo.src = getProxiedUrl(iconUrl)
         })
-
-        logoLoaded = await tryLoad(true)
-        if (!logoLoaded) {
-            logoLoaded = await tryLoad(false)
-        }
     }
 
     const swLogoAspect = 0.5
@@ -467,7 +469,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
         link.click()
     } catch (err) {
         console.error('Download failed:', err)
-        alert('Download blocked by browser security (CORS). This happens when using an external Client Logo URL that doesn\'t allow cross-origin access. To fix this, upload the logo to your media collection or use an image from a CORS-friendly host.')
+        alert('Download failed. This can still happen with certain protected websites. Try uploading the image to your media collection instead.')
     }
   }
 
