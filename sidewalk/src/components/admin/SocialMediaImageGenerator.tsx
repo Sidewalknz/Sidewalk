@@ -88,6 +88,10 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
   useEffect(() => {
     const fetchSvg = async () => {
       const iconUrl = customLogoUrl || selectedClient?.icon
+      
+      // Clear current SVG content immediately to prevent stale logos during new fetch
+      setSvgOriginalContent('')
+
       if (!iconUrl || !iconUrl.toLowerCase().endsWith('.svg')) {
         setSvgOriginalContent('')
         setSvgColors([])
@@ -122,7 +126,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
   // Draw the canvas whenever any option changes
   useEffect(() => {
     drawCanvas()
-  }, [selectedClientId, contentType, logoPosition, logoVariant, homeLogoVariant, customLogoUrl, customBgUrl, bgOverlayOpacity, bgZoom, homeVariation, bgColor, textColor, highlightColor, svgColorMap, sidewalkLogoColorMap, size, editableFeatures, editableDescription, descriptionFontSize])
+  }, [selectedClientId, contentType, logoPosition, logoVariant, homeLogoVariant, customLogoUrl, customBgUrl, bgOverlayOpacity, bgZoom, homeVariation, bgColor, textColor, highlightColor, svgOriginalContent, svgColorMap, sidewalkLogoColorMap, size, editableFeatures, editableDescription, descriptionFontSize])
 
   // Update editable text when content selection changes
   useEffect(() => {
