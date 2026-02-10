@@ -17,7 +17,7 @@ import {
 
 import { useAdminTheme } from './AdminThemeProvider'
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d']
+const COLORS = ['#212C34', '#CD5037', '#E5BF55', '#F0E8DD'] // Blue, Red, Yellow, Cream-ish darker
 
 export const CategoryPieChart = ({
   data,
@@ -112,8 +112,8 @@ export const FinancialBarChart = ({
             }}
           />
           <Legend wrapperStyle={{ color: axisColor }} />
-          <Bar dataKey="income" name="Monthly Revenue" fill="#82ca9d" />
-          <Bar dataKey="expense" name="Monthly Expenses" fill="#FF8042" />
+          <Bar dataKey="income" name="Monthly Revenue" fill="#212C34" /> {/* Brand Blue */}
+          <Bar dataKey="expense" name="Monthly Expenses" fill="#CD5037" /> {/* Brand Red */}
         </BarChart>
       </ResponsiveContainer>
     </div>

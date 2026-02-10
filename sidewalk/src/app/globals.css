@@ -6,6 +6,12 @@
   --background: 0 0% 100%;
   --foreground: 222.2 84% 4.9%;
 
+  /* Brand Colors */
+  --brand-cream: #FCF5EB;
+  --brand-red: #CD5037;
+  --brand-blue: #212C34;
+  --brand-yellow: #E5BF55;
+
   --card: 0 0% 100%;
   --card-foreground: 222.2 84% 4.9%;
 
@@ -93,42 +99,44 @@
 */
 
 [data-admin-theme='cream'] {
-  --admin-bg: #FCF5EB;
+  --admin-bg: var(--brand-cream);
   --admin-sidebar-bg: #F0E8DD; /* Slightly darker than bg */
   --admin-sidebar-border: #D8D0C5;
-  --admin-text: #212C34; /* Dark contrast */
+  --admin-text: var(--brand-blue); /* Dark contrast */
   --admin-text-muted: #5A646E;
-  --admin-accent: #CD5037;
+  --admin-accent: var(--brand-red);
   --admin-hover: rgba(33, 44, 52, 0.05);
 }
 
 [data-admin-theme='red'] {
-  --admin-bg: #CD5037;
+  --admin-bg: var(--brand-red);
   --admin-sidebar-bg: #B5422B; /* Darker red */
   --admin-sidebar-border: #9E3624;
   --admin-text: #FFFFFF;
   --admin-text-muted: rgba(255, 255, 255, 0.7);
-  --admin-accent: #FCF5EB;
+  --admin-accent: var(--brand-cream);
+  --admin-accent-text: var(--brand-red);
   --admin-hover: rgba(255, 255, 255, 0.1);
 }
 
 [data-admin-theme='blue'] {
-  --admin-bg: #212C34; /* Existing Zinc 950-ish match */
+  --admin-bg: var(--brand-blue); 
   --admin-sidebar-bg: #182026; /* Darker blue */
   --admin-sidebar-border: #2A3640;
   --admin-text: #FFFFFF;
   --admin-text-muted: #9CA3AF;
-  --admin-accent: #3b82f6;
+  --admin-accent: var(--brand-yellow); /* Yellow accel for blue theme */
+  --admin-accent-text: var(--brand-blue);
   --admin-hover: rgba(255, 255, 255, 0.05);
 }
 
 [data-admin-theme='yellow'] {
-  --admin-bg: #E5BF55;
+  --admin-bg: var(--brand-yellow);
   --admin-sidebar-bg: #D4AF4A; /* Darker yellow */
   --admin-sidebar-border: #C39F3F;
-  --admin-text: #212C34; /* Dark contrast */
+  --admin-text: var(--brand-blue); /* Dark contrast */
   --admin-text-muted: #4A545E;
-  --admin-accent: #CD5037;
+  --admin-accent: var(--brand-red);
   --admin-hover: rgba(33, 44, 52, 0.05);
 }
 

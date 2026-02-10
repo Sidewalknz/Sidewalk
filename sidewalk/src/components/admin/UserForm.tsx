@@ -29,8 +29,16 @@ export default function UserForm({ initialData, action, mode }: UserFormProps) {
              </div>
         )}
         
-        <div className="p-6 rounded-xl bg-zinc-950 border border-zinc-800 space-y-6">
-          <h3 className="text-xl font-semibold border-b border-zinc-800 pb-4">Account Information</h3>
+        <div className="p-6 rounded-xl border space-y-6 shadow-sm"
+             style={{ 
+                 backgroundColor: 'var(--admin-sidebar-bg)', 
+                 borderColor: 'var(--admin-sidebar-border)' 
+             }}>
+          <h3 className="text-xl font-semibold border-b pb-4" 
+              style={{ 
+                  borderColor: 'var(--admin-sidebar-border)',
+                  color: 'var(--admin-text)'
+              }}>Account Information</h3>
           
           <div className="space-y-4">
             {mode === 'edit' && (
@@ -38,44 +46,67 @@ export default function UserForm({ initialData, action, mode }: UserFormProps) {
             )}
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-400">Email</label>
+              <label className="text-sm font-medium" style={{ color: 'var(--admin-text-muted)' }}>Email</label>
               <input 
                 name="email" 
                 type="email" 
                 defaultValue={initialData?.email} 
                 required 
-                className="w-full px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all" 
+                className="w-full px-4 py-2 rounded-lg outline-none transition-all focus:ring-2 focus:ring-blue-500/20" 
+                style={{ 
+                     backgroundColor: 'var(--admin-bg)', 
+                     borderColor: 'var(--admin-sidebar-border)',
+                     color: 'var(--admin-text)',
+                     borderWidth: '1px'
+                 }}
               />
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-zinc-400">
+                    <label className="text-sm font-medium" style={{ color: 'var(--admin-text-muted)' }}>
                         {mode === 'edit' ? 'New Password (leave blank to keep current)' : 'Password'}
                     </label>
                     <input 
                         name="password" 
                         type="password" 
                         required={mode === 'create'}
-                        className="w-full px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all" 
+                        className="w-full px-4 py-2 rounded-lg outline-none transition-all focus:ring-2 focus:ring-blue-500/20" 
+                        style={{ 
+                             backgroundColor: 'var(--admin-bg)', 
+                             borderColor: 'var(--admin-sidebar-border)',
+                             color: 'var(--admin-text)',
+                             borderWidth: '1px'
+                         }}
                     />
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-zinc-400">Confirm Password</label>
+                    <label className="text-sm font-medium" style={{ color: 'var(--admin-text-muted)' }}>Confirm Password</label>
                     <input 
                         name="confirmPassword" 
                         type="password" 
                         required={mode === 'create'}
-                        className="w-full px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all" 
+                        className="w-full px-4 py-2 rounded-lg outline-none transition-all focus:ring-2 focus:ring-blue-500/20" 
+                        style={{ 
+                             backgroundColor: 'var(--admin-bg)', 
+                             borderColor: 'var(--admin-sidebar-border)',
+                             color: 'var(--admin-text)',
+                             borderWidth: '1px'
+                         }}
                     />
                 </div>
             </div>
           </div>
         </div>
 
-        <div className="pt-6 border-t border-zinc-800 flex justify-end gap-4">
-           <button type="submit" className="px-6 py-2 bg-white text-zinc-950 rounded-lg hover:bg-zinc-200 font-medium transition-colors">
+        <div className="pt-6 border-t flex justify-end gap-4" style={{ borderColor: 'var(--admin-sidebar-border)' }}>
+           <button type="submit" 
+                   className="px-6 py-2 rounded-lg font-medium transition-colors"
+                   style={{ 
+                       backgroundColor: 'var(--admin-text)', 
+                       color: 'var(--admin-bg)' 
+                   }}>
               {mode === 'create' ? 'Create User' : 'Update User'}
            </button>
         </div>

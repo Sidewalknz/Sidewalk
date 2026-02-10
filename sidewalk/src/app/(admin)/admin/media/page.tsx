@@ -16,7 +16,11 @@ export default async function MediaPage() {
             
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
                 {mediaItems.map((item) => (
-                    <div key={item.id} className="group relative aspect-square bg-zinc-900 rounded-lg border border-zinc-800 overflow-hidden">
+                    <div key={item.id} className="group relative aspect-square rounded-lg border overflow-hidden"
+                         style={{ 
+                             backgroundColor: 'var(--admin-sidebar-bg)', 
+                             borderColor: 'var(--admin-sidebar-border)' 
+                         }}>
                         {item.url && (
                             <Image 
                                 src={item.url} 
@@ -47,7 +51,11 @@ export default async function MediaPage() {
                 ))}
                 
                 {mediaItems.length === 0 && (
-                    <div className="col-span-full py-12 text-center text-zinc-500 border-2 border-dashed border-zinc-800 rounded-xl">
+                    <div className="col-span-full py-12 text-center border-2 border-dashed rounded-xl" 
+                         style={{ 
+                             color: 'var(--admin-text-muted)',
+                             borderColor: 'var(--admin-sidebar-border)'
+                         }}>
                         No media found. Upload something to get started.
                     </div>
                 )}

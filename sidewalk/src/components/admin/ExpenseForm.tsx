@@ -29,25 +29,53 @@ export default function ExpenseForm({ initialData, action, mode }: ExpenseFormPr
              </div>
         )}
         
-        <div className="p-6 rounded-xl bg-zinc-950 border border-zinc-800 space-y-6">
+        <div className="p-6 rounded-xl border space-y-6 shadow-sm"
+             style={{ 
+                 backgroundColor: 'var(--admin-sidebar-bg)', 
+                 borderColor: 'var(--admin-sidebar-border)' 
+             }}>
           <div className="grid grid-cols-1 gap-6">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-400">Expense Name</label>
-              <input name="name" defaultValue={initialData?.name} required className="w-full px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all" />
+              <label className="text-sm font-medium" style={{ color: 'var(--admin-text-muted)' }}>Expense Name</label>
+              <input name="name" defaultValue={initialData?.name} required 
+                     className="w-full px-4 py-2 rounded-lg outline-none transition-all focus:ring-2 focus:ring-blue-500/20" 
+                     style={{ 
+                         backgroundColor: 'var(--admin-bg)', 
+                         borderColor: 'var(--admin-sidebar-border)',
+                         color: 'var(--admin-text)',
+                         borderWidth: '1px'
+                     }}
+              />
             </div>
             
             <div className="grid grid-cols-2 gap-6">
                 <div className="space-y-2">
-                <label className="text-sm font-medium text-zinc-400">Amount</label>
+                <label className="text-sm font-medium" style={{ color: 'var(--admin-text-muted)' }}>Amount</label>
                 <div className="relative">
                     <span className="absolute left-4 top-2 text-zinc-500">$</span>
-                    <input name="amount" type="number" step="0.01" defaultValue={initialData?.amount} required className="w-full pl-8 pr-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all" />
+                    <input name="amount" type="number" step="0.01" defaultValue={initialData?.amount} required 
+                           className="w-full pl-8 pr-4 py-2 rounded-lg outline-none transition-all focus:ring-2 focus:ring-blue-500/20" 
+                           style={{ 
+                               backgroundColor: 'var(--admin-bg)', 
+                               borderColor: 'var(--admin-sidebar-border)',
+                               color: 'var(--admin-text)',
+                               borderWidth: '1px'
+                           }}
+                    />
                 </div>
                 </div>
 
                 <div className="space-y-2">
-                <label className="text-sm font-medium text-zinc-400">Frequency</label>
-                <select name="frequency" defaultValue={initialData?.frequency || 'monthly'} required className="w-full px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all">
+                <label className="text-sm font-medium" style={{ color: 'var(--admin-text-muted)' }}>Frequency</label>
+                <select name="frequency" defaultValue={initialData?.frequency || 'monthly'} required 
+                        className="w-full px-4 py-2 rounded-lg outline-none transition-all focus:ring-2 focus:ring-blue-500/20"
+                        style={{ 
+                             backgroundColor: 'var(--admin-bg)', 
+                             borderColor: 'var(--admin-sidebar-border)',
+                             color: 'var(--admin-text)',
+                             borderWidth: '1px'
+                         }}
+                >
                     <option value="weekly">Weekly</option>
                     <option value="monthly">Monthly</option>
                     <option value="yearly">Yearly</option>
@@ -56,30 +84,65 @@ export default function ExpenseForm({ initialData, action, mode }: ExpenseFormPr
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-400">Start Date</label>
-              <input name="startDate" type="date" defaultValue={initialData?.startDate ? initialData.startDate.split('T')[0] : ''} required className="w-full px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all" />
+              <label className="text-sm font-medium" style={{ color: 'var(--admin-text-muted)' }}>Start Date</label>
+              <input name="startDate" type="date" defaultValue={initialData?.startDate ? initialData.startDate.split('T')[0] : ''} required 
+                     className="w-full px-4 py-2 rounded-lg outline-none transition-all focus:ring-2 focus:ring-blue-500/20" 
+                     style={{ 
+                         backgroundColor: 'var(--admin-bg)', 
+                         borderColor: 'var(--admin-sidebar-border)',
+                         color: 'var(--admin-text)',
+                         borderWidth: '1px'
+                     }}
+              />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-400">Category</label>
-              <input name="category" defaultValue={initialData?.category || ''} placeholder="e.g. Hosting, Software" className="w-full px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all" />
+              <label className="text-sm font-medium" style={{ color: 'var(--admin-text-muted)' }}>Category</label>
+              <input name="category" defaultValue={initialData?.category || ''} placeholder="e.g. Hosting, Software" 
+                     className="w-full px-4 py-2 rounded-lg outline-none transition-all focus:ring-2 focus:ring-blue-500/20" 
+                     style={{ 
+                         backgroundColor: 'var(--admin-bg)', 
+                         borderColor: 'var(--admin-sidebar-border)',
+                         color: 'var(--admin-text)',
+                         borderWidth: '1px'
+                     }}
+              />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-400">Notes</label>
-              <textarea name="notes" defaultValue={initialData?.notes || ''} rows={3} className="w-full px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all" />
+              <label className="text-sm font-medium" style={{ color: 'var(--admin-text-muted)' }}>Notes</label>
+              <textarea name="notes" defaultValue={initialData?.notes || ''} rows={3} 
+                        className="w-full px-4 py-2 rounded-lg outline-none transition-all focus:ring-2 focus:ring-blue-500/20" 
+                        style={{ 
+                             backgroundColor: 'var(--admin-bg)', 
+                             borderColor: 'var(--admin-sidebar-border)',
+                             color: 'var(--admin-text)',
+                             borderWidth: '1px'
+                         }}
+              />
             </div>
 
             <div className="flex items-center gap-3 pt-2">
-                <input type="checkbox" name="isActive" id="isActive" defaultChecked={initialData?.isActive !== false} className="w-4 h-4 rounded border-zinc-800 bg-zinc-900 text-blue-500 focus:ring-blue-500/20" />
-                <label htmlFor="isActive" className="text-sm font-medium text-zinc-400">Active Expense</label>
+                <input type="checkbox" name="isActive" id="isActive" defaultChecked={initialData?.isActive !== false} 
+                       className="w-4 h-4 rounded text-blue-500 focus:ring-blue-500/20" 
+                       style={{ 
+                            backgroundColor: 'var(--admin-bg)', 
+                            borderColor: 'var(--admin-sidebar-border)',
+                        }}
+                />
+                <label htmlFor="isActive" className="text-sm font-medium" style={{ color: 'var(--admin-text-muted)' }}>Active Expense</label>
             </div>
           </div>
         </div>
 
-        <div className="pt-6 border-t border-zinc-800 flex justify-end gap-4">
+        <div className="pt-6 border-t flex justify-end gap-4" style={{ borderColor: 'var(--admin-sidebar-border)' }}>
            {/* Can add back button manually in parent */}
-           <button type="submit" className="px-6 py-2 bg-white text-zinc-950 rounded-lg hover:bg-zinc-200 font-medium transition-colors">
+           <button type="submit" 
+                   className="px-6 py-2 rounded-lg font-medium transition-colors"
+                   style={{ 
+                       backgroundColor: 'var(--admin-text)', 
+                       color: 'var(--admin-bg)' 
+                   }}>
               {mode === 'create' ? 'Create Expense' : 'Update Expense'}
            </button>
         </div>

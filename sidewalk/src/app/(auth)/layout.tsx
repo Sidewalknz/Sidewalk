@@ -11,6 +11,7 @@ export default function AuthLayout({
 }: {
   children: React.ReactNode
 }) {
+  return (
     <html lang="en">
       <body>
         <div className="min-h-screen bg-zinc-950 text-white font-sans antialiased flex items-center justify-center">
@@ -18,4 +19,5 @@ export default function AuthLayout({
         </div>
       </body>
     </html>
+  )
 }

@@ -73,33 +73,81 @@ export default function ClientForm({ initialData, action, mode }: ClientFormProp
         )}
         
         {/* Basic Information */}
-        <div className="p-6 rounded-xl bg-zinc-950 border border-zinc-800 space-y-6">
-          <h3 className="text-xl font-semibold border-b border-zinc-800 pb-4">Basic Information</h3>
+        <div className="p-6 rounded-xl border space-y-6 shadow-sm"
+             style={{ 
+                 backgroundColor: 'var(--admin-sidebar-bg)', 
+                 borderColor: 'var(--admin-sidebar-border)' 
+             }}>
+          <h3 className="text-xl font-semibold border-b pb-4" 
+              style={{ 
+                  borderColor: 'var(--admin-sidebar-border)',
+                  color: 'var(--admin-text)'
+              }}>Basic Information</h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-400">Company Name</label>
-              <input name="companyName" defaultValue={initialData?.companyName} required className="w-full px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all" />
+              <label className="text-sm font-medium" style={{ color: 'var(--admin-text-muted)' }}>Company Name</label>
+              <input name="companyName" defaultValue={initialData?.companyName} required 
+                     className="w-full px-4 py-2 rounded-lg outline-none transition-all focus:ring-2 focus:ring-blue-500/20"
+                     style={{ 
+                         backgroundColor: 'var(--admin-bg)', 
+                         borderColor: 'var(--admin-sidebar-border)',
+                         color: 'var(--admin-text)',
+                         borderWidth: '1px'
+                     }}
+              />
             </div>
             
             <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-400">Owner's Name</label>
-              <input name="ownerName" defaultValue={initialData?.ownerName} required className="w-full px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all" />
+              <label className="text-sm font-medium" style={{ color: 'var(--admin-text-muted)' }}>Owner's Name</label>
+              <input name="ownerName" defaultValue={initialData?.ownerName} required 
+                     className="w-full px-4 py-2 rounded-lg outline-none transition-all focus:ring-2 focus:ring-blue-500/20" 
+                     style={{ 
+                         backgroundColor: 'var(--admin-bg)', 
+                         borderColor: 'var(--admin-sidebar-border)',
+                         color: 'var(--admin-text)',
+                         borderWidth: '1px'
+                     }}
+              />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-400">Email</label>
-              <input name="email" type="email" defaultValue={initialData?.email} required className="w-full px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all" />
+              <label className="text-sm font-medium" style={{ color: 'var(--admin-text-muted)' }}>Email</label>
+              <input name="email" type="email" defaultValue={initialData?.email} required 
+                     className="w-full px-4 py-2 rounded-lg outline-none transition-all focus:ring-2 focus:ring-blue-500/20" 
+                     style={{ 
+                         backgroundColor: 'var(--admin-bg)', 
+                         borderColor: 'var(--admin-sidebar-border)',
+                         color: 'var(--admin-text)',
+                         borderWidth: '1px'
+                     }}
+              />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-400">Website</label>
-              <input name="website" type="url" defaultValue={initialData?.website || ''} placeholder="https://" className="w-full px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all" />
+              <label className="text-sm font-medium" style={{ color: 'var(--admin-text-muted)' }}>Website</label>
+              <input name="website" type="url" defaultValue={initialData?.website || ''} placeholder="https://" 
+                     className="w-full px-4 py-2 rounded-lg outline-none transition-all focus:ring-2 focus:ring-blue-500/20" 
+                     style={{ 
+                         backgroundColor: 'var(--admin-bg)', 
+                         borderColor: 'var(--admin-sidebar-border)',
+                         color: 'var(--admin-text)',
+                         borderWidth: '1px'
+                     }}
+              />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-400">Type</label>
-              <select name="type" defaultValue={initialData?.type} required className="w-full px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all">
+              <label className="text-sm font-medium" style={{ color: 'var(--admin-text-muted)' }}>Type</label>
+              <select name="type" defaultValue={initialData?.type} required 
+                      className="w-full px-4 py-2 rounded-lg outline-none transition-all focus:ring-2 focus:ring-blue-500/20"
+                      style={{ 
+                         backgroundColor: 'var(--admin-bg)', 
+                         borderColor: 'var(--admin-sidebar-border)',
+                         color: 'var(--admin-text)',
+                         borderWidth: '1px'
+                     }}
+              >
                 <option value="business">Business</option>
                 <option value="ecommerce">Ecommerce</option>
                 <option value="portfolio">Portfolio</option>
@@ -111,26 +159,46 @@ export default function ClientForm({ initialData, action, mode }: ClientFormProp
         </div>
 
         {/* Project Details */}
-        <div className="p-6 rounded-xl bg-zinc-950 border border-zinc-800 space-y-6">
-            <h3 className="text-xl font-semibold border-b border-zinc-800 pb-4">Project Details</h3>
+        <div className="p-6 rounded-xl border space-y-6 shadow-sm"
+             style={{ 
+                 backgroundColor: 'var(--admin-sidebar-bg)', 
+                 borderColor: 'var(--admin-sidebar-border)' 
+             }}>
+            <h3 className="text-xl font-semibold border-b pb-4" 
+              style={{ 
+                  borderColor: 'var(--admin-sidebar-border)',
+                  color: 'var(--admin-text)'
+              }}>Project Details</h3>
             <div className="space-y-4">
                  <div className="space-y-2">
-                  <label className="text-sm font-medium text-zinc-400">Description</label>
-                  <textarea name="description" defaultValue={initialData?.description || ''} rows={3} className="w-full px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all" />
+                  <label className="text-sm font-medium" style={{ color: 'var(--admin-text-muted)' }}>Description</label>
+                  <textarea name="description" defaultValue={initialData?.description || ''} rows={3} 
+                    className="w-full px-4 py-2 rounded-lg outline-none transition-all focus:ring-2 focus:ring-blue-500/20"
+                    style={{ 
+                         backgroundColor: 'var(--admin-bg)', 
+                         borderColor: 'var(--admin-sidebar-border)',
+                         color: 'var(--admin-text)',
+                         borderWidth: '1px'
+                     }}
+                  />
                 </div>
 
             </div>
 
             {/* Features List */}
-            <div className="space-y-4 pt-4 border-t border-zinc-800">
+            <div className="space-y-4 pt-4 border-t" style={{ borderColor: 'var(--admin-sidebar-border)' }}>
                 <div className="flex justify-between items-center">
-                    <h4 className="font-medium text-zinc-300">Features</h4>
+                    <h4 className="font-medium" style={{ color: 'var(--admin-text)' }}>Features</h4>
                     <button type="button" onClick={addFeature} className="flex items-center gap-2 text-sm text-blue-500 hover:text-blue-400 font-medium">
                         <Plus className="w-4 h-4" /> Add Feature
                     </button>
                 </div>
                 {features.map((feature: any, index) => (
-                    <div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-zinc-900/50 rounded-lg border border-zinc-800 relative group">
+                    <div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-lg border relative group"
+                         style={{ 
+                             backgroundColor: 'var(--admin-bg)', 
+                             borderColor: 'var(--admin-sidebar-border)' 
+                         }}>
                         {features.length > 0 && (
                             <button 
                             type="button" 
@@ -141,12 +209,28 @@ export default function ClientForm({ initialData, action, mode }: ClientFormProp
                             </button>
                         )}
                         <div className="space-y-2">
-                             <label className="text-xs font-medium text-zinc-500">Feature Name</label>
-                             <input name={`features[${index}][feature]`} defaultValue={feature.feature} required className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded focus:border-blue-500 outline-none text-sm" />
+                             <label className="text-xs font-medium" style={{ color: 'var(--admin-text-muted)' }}>Feature Name</label>
+                             <input name={`features[${index}][feature]`} defaultValue={feature.feature} required 
+                                className="w-full px-3 py-2 rounded outline-none text-sm"
+                                style={{ 
+                                     backgroundColor: 'var(--admin-sidebar-bg)', // Slightly darker for inner inputs 
+                                     borderColor: 'var(--admin-sidebar-border)',
+                                     color: 'var(--admin-text)',
+                                     borderWidth: '1px'
+                                 }}
+                             />
                         </div>
                         <div className="space-y-2">
-                             <label className="text-xs font-medium text-zinc-500">Description</label>
-                             <textarea name={`features[${index}][description]`} defaultValue={feature.description || ''} rows={1} className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded focus:border-blue-500 outline-none text-sm" />
+                             <label className="text-xs font-medium" style={{ color: 'var(--admin-text-muted)' }}>Description</label>
+                             <textarea name={`features[${index}][description]`} defaultValue={feature.description || ''} rows={1} 
+                                className="w-full px-3 py-2 rounded outline-none text-sm"
+                                style={{ 
+                                     backgroundColor: 'var(--admin-sidebar-bg)', 
+                                     borderColor: 'var(--admin-sidebar-border)',
+                                     color: 'var(--admin-text)',
+                                     borderWidth: '1px'
+                                 }}
+                             />
                         </div>
                     </div>
                 ))}
@@ -154,29 +238,49 @@ export default function ClientForm({ initialData, action, mode }: ClientFormProp
         </div>
 
         {/* Media */}
-        <div className="p-6 rounded-xl bg-zinc-950 border border-zinc-800 space-y-6">
-            <h3 className="text-xl font-semibold border-b border-zinc-800 pb-4">Media</h3>
+        <div className="p-6 rounded-xl border space-y-6 shadow-sm"
+             style={{ 
+                 backgroundColor: 'var(--admin-sidebar-bg)', 
+                 borderColor: 'var(--admin-sidebar-border)' 
+             }}>
+            <h3 className="text-xl font-semibold border-b pb-4" 
+              style={{ 
+                  borderColor: 'var(--admin-sidebar-border)',
+                  color: 'var(--admin-text)'
+              }}>Media</h3>
             
             <div className="space-y-2">
-                <label className="text-sm font-medium text-zinc-400">Icon URL</label>
+                <label className="text-sm font-medium" style={{ color: 'var(--admin-text-muted)' }}>Icon URL</label>
                 <div className="flex gap-4 items-start">
                     <div className="flex-1">
-                        <input name="icon" defaultValue={(initialData?.icon as string) || ''} placeholder="/assets/logos/client.svg" className="w-full px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all" />
-                        <p className="text-xs text-zinc-500 mt-1">Path to the logo file on the website</p>
+                        <input name="icon" defaultValue={(initialData?.icon as string) || ''} placeholder="/assets/logos/client.svg" 
+                               className="w-full px-4 py-2 rounded-lg outline-none transition-all focus:ring-2 focus:ring-blue-500/20"
+                               style={{ 
+                                     backgroundColor: 'var(--admin-bg)', 
+                                     borderColor: 'var(--admin-sidebar-border)',
+                                     color: 'var(--admin-text)',
+                                     borderWidth: '1px'
+                                 }}
+                        />
+                        <p className="text-xs mt-1" style={{ color: 'var(--admin-text-muted)' }}>Path to the logo file on the website</p>
                     </div>
                 </div>
             </div>
 
             {/* Gallery */}
-            <div className="space-y-4 pt-4 border-t border-zinc-800">
+            <div className="space-y-4 pt-4 border-t" style={{ borderColor: 'var(--admin-sidebar-border)' }}>
                 <div className="flex justify-between items-center">
-                    <h4 className="font-medium text-zinc-300">Gallery</h4>
+                    <h4 className="font-medium" style={{ color: 'var(--admin-text)' }}>Gallery</h4>
                     <button type="button" onClick={addGalleryItem} className="flex items-center gap-2 text-sm text-blue-500 hover:text-blue-400 font-medium">
                         <Plus className="w-4 h-4" /> Add Image
                     </button>
                 </div>
                 {gallery.map((item: any, index) => (
-                    <div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-zinc-900/50 rounded-lg border border-zinc-800 relative group">
+                    <div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-lg border relative group"
+                         style={{ 
+                             backgroundColor: 'var(--admin-bg)', 
+                             borderColor: 'var(--admin-sidebar-border)' 
+                         }}>
                         {gallery.length > 0 && (
                             <button 
                             type="button" 
@@ -187,20 +291,34 @@ export default function ClientForm({ initialData, action, mode }: ClientFormProp
                             </button>
                         )}
                          <div className="space-y-2">
-                            <label className="text-xs font-medium text-zinc-500">Image</label>
+                            <label className="text-xs font-medium" style={{ color: 'var(--admin-text-muted)' }}>Image</label>
                             {item.image && typeof item.image === 'object' && (
                                 <div className="mb-2">
-                                    <img src={getMediaUrl(item.image) || ''} alt="Gallery Item" className="h-20 w-auto object-cover rounded border border-zinc-800" />
+                                    <img src={getMediaUrl(item.image) || ''} alt="Gallery Item" 
+                                         className="h-20 w-auto object-cover rounded border" 
+                                         style={{ borderColor: 'var(--admin-sidebar-border)' }}
+                                    />
                                 </div>
                             )}
-                            <input type="file" name={`gallery[${index}][image]`} accept="image/*" className="w-full text-xs text-zinc-400 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-zinc-800 file:text-zinc-300 hover:file:bg-zinc-700" />
+                            <input type="file" name={`gallery[${index}][image]`} accept="image/*" 
+                                   className="w-full text-xs" 
+                                   style={{ color: 'var(--admin-text-muted)' }}
+                            />
                             {item.image && (
                                 <input type="hidden" name={`gallery[${index}][existingId]`} value={typeof item.image === 'object' ? item.image.id : item.image} />
                             )}
                         </div>
                         <div className="space-y-2">
-                             <label className="text-xs font-medium text-zinc-500">Caption</label>
-                             <input name={`gallery[${index}][caption]`} defaultValue={item.caption || ''} placeholder="Image caption..." className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded focus:border-blue-500 outline-none text-sm" />
+                             <label className="text-xs font-medium" style={{ color: 'var(--admin-text-muted)' }}>Caption</label>
+                             <input name={`gallery[${index}][caption]`} defaultValue={item.caption || ''} placeholder="Image caption..." 
+                                    className="w-full px-3 py-2 rounded outline-none text-sm"
+                                    style={{ 
+                                         backgroundColor: 'var(--admin-sidebar-bg)', 
+                                         borderColor: 'var(--admin-sidebar-border)',
+                                         color: 'var(--admin-text)',
+                                         borderWidth: '1px'
+                                     }}
+                             />
                         </div>
                     </div>
                 ))}
@@ -210,14 +328,18 @@ export default function ClientForm({ initialData, action, mode }: ClientFormProp
         {/* Products */}
         <div className="space-y-4">
           <div className="flex justify-between items-center">
-             <h3 className="text-xl font-semibold">Products & Services</h3>
+             <h3 className="text-xl font-semibold" style={{ color: 'var(--admin-text)' }}>Products & Services</h3>
              <button type="button" onClick={addProduct} className="flex items-center gap-2 text-sm text-blue-500 hover:text-blue-400 font-medium">
                <Plus className="w-4 h-4" /> Add Product
              </button>
           </div>
 
           {products.map((product: any, index) => (
-            <div key={index} className="p-6 rounded-xl bg-zinc-950 border border-zinc-800 space-y-6 relative group">
+            <div key={index} className="p-6 rounded-xl border space-y-6 relative group shadow-sm"
+                 style={{ 
+                     backgroundColor: 'var(--admin-sidebar-bg)', 
+                     borderColor: 'var(--admin-sidebar-border)' 
+                 }}>
               {products.length > 1 && (
                 <button 
                   type="button" 
@@ -230,8 +352,16 @@ export default function ClientForm({ initialData, action, mode }: ClientFormProp
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-zinc-400">Category</label>
-                  <select name={`products[${index}][category]`} defaultValue={product.category || 'website'} className="w-full px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all">
+                  <label className="text-sm font-medium" style={{ color: 'var(--admin-text-muted)' }}>Category</label>
+                  <select name={`products[${index}][category]`} defaultValue={product.category || 'website'} 
+                          className="w-full px-4 py-2 rounded-lg outline-none transition-all focus:ring-2 focus:ring-blue-500/20"
+                          style={{ 
+                             backgroundColor: 'var(--admin-bg)', 
+                             borderColor: 'var(--admin-sidebar-border)',
+                             color: 'var(--admin-text)',
+                             borderWidth: '1px'
+                         }}
+                  >
                     <option value="website">Website</option>
                     <option value="web-development">Web Development</option>
                     <option value="branding">Branding</option>
@@ -244,37 +374,82 @@ export default function ClientForm({ initialData, action, mode }: ClientFormProp
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-zinc-400">Product Name</label>
-                  <input name={`products[${index}][productName]`} defaultValue={product.productName} required className="w-full px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all" />
+                  <label className="text-sm font-medium" style={{ color: 'var(--admin-text-muted)' }}>Product Name</label>
+                  <input name={`products[${index}][productName]`} defaultValue={product.productName} required 
+                         className="w-full px-4 py-2 rounded-lg outline-none transition-all focus:ring-2 focus:ring-blue-500/20" 
+                         style={{ 
+                             backgroundColor: 'var(--admin-bg)', 
+                             borderColor: 'var(--admin-sidebar-border)',
+                             color: 'var(--admin-text)',
+                             borderWidth: '1px'
+                         }}
+                  />
                 </div>
 
                 <div className="col-span-2 space-y-2">
-                  <label className="text-sm font-medium text-zinc-400">Description</label>
-                  <textarea name={`products[${index}][productDescription]`} defaultValue={product.productDescription || ''} rows={2} className="w-full px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all" />
+                  <label className="text-sm font-medium" style={{ color: 'var(--admin-text-muted)' }}>Description</label>
+                  <textarea name={`products[${index}][productDescription]`} defaultValue={product.productDescription || ''} rows={2} 
+                        className="w-full px-4 py-2 rounded-lg outline-none transition-all focus:ring-2 focus:ring-blue-500/20" 
+                        style={{ 
+                             backgroundColor: 'var(--admin-bg)', 
+                             borderColor: 'var(--admin-sidebar-border)',
+                             color: 'var(--admin-text)',
+                             borderWidth: '1px'
+                         }}
+                  />
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-zinc-400">Price</label>
-                  <input name={`products[${index}][price]`} type="number" step="0.01" defaultValue={product.price || ''} className="w-full px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all" />
+                  <label className="text-sm font-medium" style={{ color: 'var(--admin-text-muted)' }}>Price</label>
+                  <input name={`products[${index}][price]`} type="number" step="0.01" defaultValue={product.price || ''} 
+                         className="w-full px-4 py-2 rounded-lg outline-none transition-all focus:ring-2 focus:ring-blue-500/20" 
+                         style={{ 
+                             backgroundColor: 'var(--admin-bg)', 
+                             borderColor: 'var(--admin-sidebar-border)',
+                             color: 'var(--admin-text)',
+                             borderWidth: '1px'
+                         }}
+                  />
                 </div>
 
                  <div className="space-y-2">
-                  <label className="text-sm font-medium text-zinc-400">Monthly Fee</label>
-                  <input name={`products[${index}][monthlyFee]`} type="number" step="0.01" defaultValue={product.monthlyFee || ''} className="w-full px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all" />
+                  <label className="text-sm font-medium" style={{ color: 'var(--admin-text-muted)' }}>Monthly Fee</label>
+                  <input name={`products[${index}][monthlyFee]`} type="number" step="0.01" defaultValue={product.monthlyFee || ''} 
+                         className="w-full px-4 py-2 rounded-lg outline-none transition-all focus:ring-2 focus:ring-blue-500/20" 
+                         style={{ 
+                             backgroundColor: 'var(--admin-bg)', 
+                             borderColor: 'var(--admin-sidebar-border)',
+                             color: 'var(--admin-text)',
+                             borderWidth: '1px'
+                         }}
+                  />
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-zinc-400">Start Date</label>
-                  <input name={`products[${index}][startDate]`} type="date" defaultValue={product.startDate ? product.startDate.split('T')[0] : ''} className="w-full px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all" />
+                  <label className="text-sm font-medium" style={{ color: 'var(--admin-text-muted)' }}>Start Date</label>
+                  <input name={`products[${index}][startDate]`} type="date" defaultValue={product.startDate ? product.startDate.split('T')[0] : ''} 
+                         className="w-full px-4 py-2 rounded-lg outline-none transition-all focus:ring-2 focus:ring-blue-500/20" 
+                         style={{ 
+                             backgroundColor: 'var(--admin-bg)', 
+                             borderColor: 'var(--admin-sidebar-border)',
+                             color: 'var(--admin-text)',
+                             borderWidth: '1px'
+                         }}
+                  />
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        <div className="pt-6 border-t border-zinc-800 flex justify-end gap-4">
+        <div className="pt-6 border-t flex justify-end gap-4" style={{ borderColor: 'var(--admin-sidebar-border)' }}>
            {/* Can add back button manually in parent */}
-           <button type="submit" className="px-6 py-2 bg-white text-zinc-950 rounded-lg hover:bg-zinc-200 font-medium transition-colors">
+           <button type="submit" 
+                   className="px-6 py-2 rounded-lg font-medium transition-colors"
+                   style={{ 
+                       backgroundColor: 'var(--admin-text)', 
+                       color: 'var(--admin-bg)' 
+                   }}>
               {mode === 'create' ? 'Create Client' : 'Update Client'}
            </button>
         </div>

@@ -12,30 +12,39 @@ export default async function UsersPage() {
                 <h2 className="text-3xl font-bold tracking-tight">Users</h2>
                 <Link 
                     href="/admin/users/new"
-                    className="px-4 py-2 bg-white text-zinc-950 rounded hover:bg-zinc-200 transition-colors font-medium"
+                    className="px-4 py-2 rounded transition-colors font-medium"
+                    style={{ 
+                        backgroundColor: 'var(--admin-text)', 
+                        color: 'var(--admin-bg)' 
+                    }}
                 >
                     Add User
                 </Link>
             </div>
             
-            <div className="rounded-xl border border-zinc-800 overflow-hidden bg-zinc-950">
+            <div className="rounded-xl border overflow-hidden" 
+                 style={{ 
+                     borderColor: 'var(--admin-sidebar-border)',
+                     backgroundColor: 'var(--admin-sidebar-bg)'
+                 }}>
                 <table className="w-full text-sm text-left">
-                    <thead className="bg-zinc-900/50 text-zinc-400">
+                    <thead style={{ backgroundColor: 'rgba(0,0,0,0.2)', color: 'var(--admin-text-muted)' }}>
                         <tr>
                             <th className="px-6 py-4 font-medium">Email</th>
                             <th className="px-6 py-4 font-medium">ID</th>
                             <th className="px-6 py-4 font-medium text-right">Actions</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-zinc-800">
+                    <tbody className="divide-y divide-[var(--admin-sidebar-border)]">
                         {users.map((user) => (
-                            <tr key={user.id} className="hover:bg-zinc-900/50 transition-colors">
-                                <td className="px-6 py-4 font-medium">{user.email}</td>
-                                <td className="px-6 py-4 text-zinc-400">{user.id}</td>
+                            <tr key={user.id} className="transition-colors hover:bg-white/5">
+                                <td className="px-6 py-4 font-medium" style={{ color: 'var(--admin-text)' }}>{user.email}</td>
+                                <td className="px-6 py-4" style={{ color: 'var(--admin-text-muted)' }}>{user.id}</td>
                                 <td className="px-6 py-4 text-right flex justify-end gap-2">
                                     <Link 
                                         href={`/admin/users/${user.id}`}
-                                        className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded transition-colors"
+                                        className="p-2 rounded transition-colors"
+                                        style={{ color: 'var(--admin-text-muted)' }}
                                     >
                                         <Edit className="w-4 h-4" />
                                     </Link>
@@ -45,7 +54,7 @@ export default async function UsersPage() {
                                     }}>
                                         <button 
                                             type="submit"
-                                            className="p-2 text-zinc-400 hover:text-red-500 hover:bg-red-500/10 rounded transition-colors"
+                                            className="p-2 text-[var(--admin-text-muted)] hover:text-red-500 hover:bg-red-500/10 rounded transition-colors"
                                         >
                                             <Trash2 className="w-4 h-4" />
                                         </button>
@@ -55,7 +64,7 @@ export default async function UsersPage() {
                         ))}
                         {users.length === 0 && (
                             <tr>
-                                <td colSpan={3} className="px-6 py-8 text-center text-zinc-500">
+                                <td colSpan={3} className="px-6 py-8 text-center" style={{ color: 'var(--admin-text-muted)' }}>
                                     No users found.
                                 </td>
                             </tr>

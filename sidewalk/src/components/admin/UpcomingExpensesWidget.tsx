@@ -74,13 +74,13 @@ export default async function UpcomingExpensesWidget({ payload }: { payload: Pay
         Upcoming Expenses (Next 30 Days)
       </h3>
       <div style={{ marginBottom: '1rem' }}>
-        <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#dc2626' }}>
+        <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--brand-red)' }}>
           {new Intl.NumberFormat('en-US', {
             style: 'currency',
             currency: 'USD',
           }).format(totalUpcoming)}
         </div>
-        <div style={{ color: 'var(--theme-elevation-450)', fontSize: '0.875rem' }}>
+        <div style={{ color: 'var(--admin-text-muted)', fontSize: '0.875rem' }}>
           Total due in next 30 days
         </div>
       </div>

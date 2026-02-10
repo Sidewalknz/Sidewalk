@@ -52,13 +52,13 @@ export function Sidebar() {
               )}
               style={{
                 backgroundColor: isActive ? 'var(--admin-accent)' : undefined,
-                color: isActive ? 'var(--admin-text)' : 'var(--admin-text-muted)'
+                color: isActive ? 'var(--admin-accent-text)' : 'var(--admin-text-muted)'
               }}
             >
               <item.icon 
                 className="w-5 h-5 transition-colors duration-300"
                 style={{
-                  color: isActive ? 'var(--admin-text)' : 'currentColor'
+                  color: isActive ? 'var(--admin-accent-text)' : 'currentColor'
                 }} 
               />
               <span className="font-medium">{item.name}</span>

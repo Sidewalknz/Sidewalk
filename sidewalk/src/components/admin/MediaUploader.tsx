@@ -50,7 +50,11 @@ export default function MediaUploader() {
             <button 
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isUploading}
-                className="px-4 py-2 bg-white text-zinc-950 rounded hover:bg-zinc-200 transition-colors font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 rounded transition-colors font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ 
+                    backgroundColor: 'var(--admin-text)', 
+                    color: 'var(--admin-bg)' 
+                }}
             >
                 {isUploading ? (
                     <>
