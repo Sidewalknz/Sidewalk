@@ -20,7 +20,7 @@ type Size = {
 const SIZES: Size[] = [
   { width: 1080, height: 1080, label: 'Instagram Square (1080x1080)', aspect: 'square' },
   { width: 1080, height: 1920, label: 'Instagram Story (1080x1920)', aspect: 'story' },
-  { width: 1200, height: 630, label: 'Facebook / Twitter (1200x630)', aspect: 'fb' },
+  { width: 1200, height: 630, label: 'Facebook (1200x630)', aspect: 'fb' },
 ]
 
 type ContentType = 'home' | 'features' | 'description'
@@ -57,15 +57,54 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
   const [customBgUrl, setCustomBgUrl] = useState<string>('')
   const [bgOverlayOpacity, setBgOverlayOpacity] = useState(0.4)
   const [size, setSize] = useState<Size>(SIZES[0])
+  const [bgZoom, setBgZoom] = useState(1.0)
   const [featureIndex, setFeatureIndex] = useState(0)
+  const [svgOriginalContent, setSvgOriginalContent] = useState<string>('')
+  const [svgColors, setSvgColors] = useState<string[]>([])
+  const [svgColorMap, setSvgColorMap] = useState<Record<string, string>>({})
   
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const selectedClient = clients.find(c => c.id == selectedClientId)
 
+  // Fetch and parse SVG colors
+  useEffect(() => {
+    const fetchSvg = async () => {
+      const iconUrl = customLogoUrl || selectedClient?.icon
+      if (!iconUrl || !iconUrl.toLowerCase().endsWith('.svg')) {
+        setSvgOriginalContent('')
+        setSvgColors([])
+        setSvgColorMap({})
+        return
+      }
+
+      try {
+        const response = await fetch(getProxiedUrl(iconUrl))
+        if (!response.ok) return
+        const svgText = await response.text()
+        setSvgOriginalContent(svgText)
+
+        // Extract colors
+        const colorRegex = /#(?:[0-9a-fA-F]{3}){1,2}\b/g;
+        const foundColors = svgText.match(colorRegex) || []
+        const uniqueColors = Array.from(new Set(foundColors.map(c => c.toUpperCase())))
+        setSvgColors(uniqueColors)
+        
+        // Reset color map
+        const newMap: Record<string, string> = {}
+        uniqueColors.forEach(c => newMap[c] = c)
+        setSvgColorMap(newMap)
+      } catch (err) {
+        console.error('Error fetching SVG:', err)
+      }
+    }
+
+    fetchSvg()
+  }, [selectedClientId, customLogoUrl, selectedClient?.icon])
+
   // Draw the canvas whenever any option changes
   useEffect(() => {
     drawCanvas()
-  }, [selectedClientId, contentType, logoPosition, logoVariant, homeLogoVariant, customLogoUrl, customBgUrl, bgOverlayOpacity, homeVariation, bgColor, textColor, highlightColor, size, featureIndex, editableFeatures, editableDescription])
+  }, [selectedClientId, contentType, logoPosition, logoVariant, homeLogoVariant, customLogoUrl, customBgUrl, bgOverlayOpacity, bgZoom, homeVariation, bgColor, textColor, highlightColor, svgColorMap, size, featureIndex, editableFeatures, editableDescription])
 
   // Update editable text when content selection changes
   useEffect(() => {
@@ -122,16 +161,15 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
             let drawW, drawH, drawX, drawY
             
             if (imgRatio > canvasRatio) {
-                drawH = canvas.height
+                drawH = canvas.height * bgZoom
                 drawW = drawH * imgRatio
-                drawX = (canvas.width - drawW) / 2
-                drawY = 0
             } else {
-                drawW = canvas.width
+                drawW = canvas.width * bgZoom
                 drawH = drawW / imgRatio
-                drawX = 0
-                drawY = (canvas.height - drawH) / 2
             }
+            
+            drawX = (canvas.width - drawW) / 2
+            drawY = (canvas.height - drawH) / 2
             
             ctx.drawImage(bgImg, drawX, drawY, drawW, drawH)
             
@@ -195,6 +233,38 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
     }
   }
 
+  const loadClientLogo = async (iconUrl: string): Promise<HTMLImageElement | null> => {
+    if (!iconUrl) return null
+
+    const logo = new Image()
+    logo.crossOrigin = 'anonymous'
+
+    return new Promise<HTMLImageElement | null>((resolve) => {
+      logo.onload = () => resolve(logo)
+      logo.onerror = () => {
+        console.error('Failed to load client logo', iconUrl)
+        resolve(null)
+      }
+
+      const isSvg = iconUrl.toLowerCase().endsWith('.svg')
+      if (isSvg && svgOriginalContent) {
+        // Use recolored SVG
+        let newSvg = svgOriginalContent
+        Object.entries(svgColorMap).forEach(([oldColor, newColor]) => {
+          if (oldColor.toLowerCase() !== newColor.toLowerCase()) {
+            const regex = new RegExp(oldColor, 'gi')
+            newSvg = newSvg.replace(regex, newColor)
+          }
+        })
+        const blob = new Blob([newSvg], { type: 'image/svg+xml;charset=utf-8' })
+        const url = URL.createObjectURL(blob)
+        logo.src = url
+      } else {
+        logo.src = getProxiedUrl(iconUrl)
+      }
+    })
+  }
+
   const drawHomeTemplate = async (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, margin: number) => {
     // Load Home Template Logo
     const homeLogoImg = new Image()
@@ -230,19 +300,8 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
 
     // Load Client Logo URL
     const iconUrl = customLogoUrl || selectedClient?.icon
-    let clientLogo: HTMLImageElement | null = null
-    let logoLoaded = false
-
-    if (iconUrl) {
-        clientLogo = new Image()
-        clientLogo.crossOrigin = 'anonymous'
-        logoLoaded = await new Promise<boolean>((resolve) => {
-            if (!clientLogo) return resolve(false)
-            clientLogo.onload = () => resolve(true)
-            clientLogo.onerror = () => resolve(false)
-            clientLogo.src = getProxiedUrl(iconUrl)
-        })
-    }
+    const clientLogo = iconUrl ? await loadClientLogo(iconUrl) : null
+    const logoLoaded = !!clientLogo
 
     const swLogoAspect = 0.5
     const gap = canvas.width * 0.08
@@ -515,26 +574,64 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
           </div>
 
           {/* Custom Logo Override */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--admin-text-muted)' }}>
-               Custom Client Logo URL
-            </label>
-            <input 
-              type="text"
-              placeholder="https://... or /assets/..."
-              className="w-full transition-colors outline-none focus:ring-1 focus:ring-blue-500 text-xs py-2 px-3 rounded-lg border"
-              style={{ backgroundColor: 'var(--admin-bg)', color: 'var(--admin-text)', borderColor: 'var(--admin-sidebar-border)' }}
-              value={customLogoUrl}
-              onChange={(e) => setCustomLogoUrl(e.target.value)}
-            />
-            {customLogoUrl && (
-              <button 
-                onClick={() => setCustomLogoUrl('')}
-                className="text-[10px] uppercase font-bold tracking-wider"
-                style={{ color: 'var(--admin-accent)' }}
-              >
-                Clear Override
-              </button>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--admin-text-muted)' }}>
+                 Custom Client Logo URL
+              </label>
+              <input 
+                type="text"
+                placeholder="https://... or /assets/..."
+                className="w-full transition-colors outline-none focus:ring-1 focus:ring-blue-500 text-xs py-2 px-3 rounded-lg border"
+                style={{ backgroundColor: 'var(--admin-bg)', color: 'var(--admin-text)', borderColor: 'var(--admin-sidebar-border)' }}
+                value={customLogoUrl}
+                onChange={(e) => setCustomLogoUrl(e.target.value)}
+              />
+              {customLogoUrl && (
+                <button 
+                  onClick={() => setCustomLogoUrl('')}
+                  className="text-[10px] uppercase font-bold tracking-wider"
+                  style={{ color: 'var(--admin-accent)' }}
+                >
+                  Clear Override
+                </button>
+              )}
+            </div>
+
+            {/* SVG Logo Color Recolor */}
+            {svgColors.length > 0 && (
+              <div className="space-y-3">
+                <label className="text-xs font-bold uppercase tracking-wider flex items-center gap-2" style={{ color: 'var(--admin-text-muted)' }}>
+                  <Palette className="w-3 h-3" /> Logo Colours
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {svgColors.map((color) => (
+                    <label 
+                      key={color}
+                      className="w-8 h-8 rounded-full border border-zinc-500/20 transition-all hover:scale-110 flex items-center justify-center p-0.5 cursor-pointer relative"
+                      style={{ 
+                          borderColor: svgColorMap[color] !== color ? 'var(--admin-accent)' : 'transparent',
+                          backgroundColor: 'var(--admin-bg)'
+                      }}
+                      title={`Original: ${color}`}
+                    >
+                      <div className="w-full h-full rounded-full shadow-sm" 
+                           style={{ backgroundColor: svgColorMap[color] || color }} />
+                      <input 
+                        type="color" 
+                        value={svgColorMap[color] || color} 
+                        onChange={(e) => {
+                          setSvgColorMap(prev => ({
+                            ...prev,
+                            [color]: e.target.value
+                          }))
+                        }}
+                        className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                      />
+                    </label>
+                  ))}
+                </div>
+              </div>
             )}
           </div>
 
@@ -589,7 +686,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
 
           {/* Real-time Content Editor */}
           {contentType === 'description' && (
-            <div className="space-y-4 p-4 rounded-xl border bg-zinc-900/5" style={{ borderColor: 'var(--admin-sidebar-border)' }}>
+            <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--admin-text-muted)' }}>
                   <RefreshCw className="w-3 h-3" /> Edit Content
@@ -627,7 +724,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
 
               <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
                 {editableFeatures.map((f, i) => (
-                  <div key={i} className="space-y-2 p-3 rounded-lg border bg-zinc-900/5 relative group" style={{ borderColor: 'var(--admin-sidebar-border)' }}>
+                  <div key={i} className="space-y-2 relative group pt-4 first:pt-0 border-t first:border-0" style={{ borderColor: 'var(--admin-sidebar-border)' }}>
                     <button 
                       onClick={() => setEditableFeatures(editableFeatures.filter((_, idx) => idx !== i))}
                       className="absolute top-2 right-2 p-1 text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
@@ -796,7 +893,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-4">
               {/* Text Color */}
               <div className="space-y-2">
                 <label className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--admin-text-muted)' }}>
@@ -822,8 +919,28 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
                       <div className={`w-full h-full rounded-full ${c.class} shadow-sm`} />
                     </button>
                   ))}
+                  
+                  {/* Custom Rainbow Color Picker */}
+                  <label 
+                    className="w-8 h-8 rounded-full border border-zinc-500/20 transition-all hover:scale-110 flex items-center justify-center p-0.5 cursor-pointer relative"
+                    style={{ 
+                        borderColor: !['#CD5037', '#E5BF55', '#FCF5EB', '#212C34'].includes(textColor.toUpperCase()) ? 'var(--admin-accent)' : 'transparent',
+                        backgroundColor: 'var(--admin-bg)'
+                    }}
+                    title="Custom Color"
+                  >
+                    <div className="w-full h-full rounded-full shadow-sm" 
+                         style={{ background: 'conic-gradient(red, yellow, lime, aqua, blue, magenta, red)' }} />
+                    <input 
+                      type="color" 
+                      value={textColor} 
+                      onChange={(e) => setTextColor(e.target.value)}
+                      className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                    />
+                  </label>
                 </div>
               </div>
+
 
               {/* Highlight Color */}
               <div className="space-y-2">
@@ -850,6 +967,25 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
                       <div className={`w-full h-full rounded-full ${c.class} shadow-sm`} />
                     </button>
                   ))}
+                  
+                  {/* Custom Rainbow Color Picker */}
+                  <label 
+                    className="w-8 h-8 rounded-full border border-zinc-500/20 transition-all hover:scale-110 flex items-center justify-center p-0.5 cursor-pointer relative"
+                    style={{ 
+                        borderColor: !['#CD5037', '#E5BF55', '#FCF5EB', '#212C34'].includes(highlightColor.toUpperCase()) ? 'var(--admin-accent)' : 'transparent',
+                        backgroundColor: 'var(--admin-bg)'
+                    }}
+                    title="Custom Color"
+                  >
+                    <div className="w-full h-full rounded-full shadow-sm" 
+                         style={{ background: 'conic-gradient(red, yellow, lime, aqua, blue, magenta, red)' }} />
+                    <input 
+                      type="color" 
+                      value={highlightColor} 
+                      onChange={(e) => setHighlightColor(e.target.value)}
+                      className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                    />
+                  </label>
                 </div>
               </div>
             </div>
@@ -885,6 +1021,55 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
             </div>
           )}
 
+          {/* Background Colour */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--admin-text-muted)' }}>
+              <Palette className="w-4 h-4" /> Background Colour
+            </label>
+            <div className="flex flex-col gap-3">
+              <div className="flex gap-1.5">
+                {[
+                  { id: '#CD5037', label: 'Red', class: 'bg-[#CD5037]' },
+                  { id: '#E5BF55', label: 'Yellow', class: 'bg-[#E5BF55]' },
+                  { id: '#FCF5EB', label: 'Cream', class: 'bg-[#FCF5EB]' },
+                  { id: '#212C34', label: 'Blue', class: 'bg-[#212C34]' }
+                ].map((c) => (
+                  <button
+                    key={c.id}
+                    onClick={() => setBgColor(c.id)}
+                    className="w-8 h-8 rounded-full border border-zinc-500/20 transition-all hover:scale-110 flex items-center justify-center p-0.5"
+                    style={{ 
+                        borderColor: bgColor === c.id ? 'var(--admin-accent)' : 'transparent',
+                        backgroundColor: 'var(--admin-bg)'
+                    }}
+                    title={c.label}
+                  >
+                    <div className={`w-full h-full rounded-full ${c.class} shadow-sm`} />
+                  </button>
+                ))}
+                
+                {/* Custom Rainbow Color Picker */}
+                <label 
+                  className="w-8 h-8 rounded-full border border-zinc-500/20 transition-all hover:scale-110 flex items-center justify-center p-0.5 cursor-pointer relative"
+                  style={{ 
+                      borderColor: !['#CD5037', '#E5BF55', '#FCF5EB', '#212C34'].includes(bgColor.toUpperCase()) ? 'var(--admin-accent)' : 'transparent',
+                      backgroundColor: 'var(--admin-bg)'
+                  }}
+                  title="Custom Color"
+                >
+                  <div className="w-full h-full rounded-full shadow-sm" 
+                       style={{ background: 'conic-gradient(red, yellow, lime, aqua, blue, magenta, red)' }} />
+                  <input 
+                    type="color" 
+                    value={bgColor} 
+                    onChange={(e) => setBgColor(e.target.value)}
+                    className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                  />
+                </label>
+              </div>
+            </div>
+          </div>
+
           {/* Size Selection */}
           <div className="space-y-2">
             <label className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--admin-text-muted)' }}>
@@ -902,82 +1087,79 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
             </select>
           </div>
 
-          {/* Custom Background Color */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--admin-text-muted)' }}>
-              <Palette className="w-4 h-4" /> Custom Background Color
-            </label>
-            <div className="flex gap-2">
-              <input 
-                type="color" 
-                value={bgColor} 
-                onChange={(e) => setBgColor(e.target.value)}
-                className="w-10 h-10 rounded cursor-pointer bg-transparent border-0"
-              />
+          {/* Background Image */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <label className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--admin-text-muted)' }}>
+                <ImageIcon className="w-4 h-4" /> Custom Background
+              </label>
+              {customBgUrl && (
+                <button onClick={() => setCustomBgUrl('')} className="text-[10px] font-bold uppercase text-red-500 hover:text-red-600">
+                  Clear
+                </button>
+              )}
+            </div>
+            
+            <div className="space-y-2">
               <input 
                 type="text" 
-                value={bgColor} 
-                onChange={(e) => setBgColor(e.target.value)}
-                className="flex-1 border rounded-lg px-2 text-xs uppercase"
-                style={{ backgroundColor: 'var(--admin-bg)', color: 'var(--admin-text)', borderColor: 'var(--admin-sidebar-border)' }}
+                placeholder="Paste Image URL..."
+                className="w-full bg-transparent border rounded-lg p-2 outline-none text-[10px]"
+                style={{ borderColor: 'var(--admin-sidebar-border)', color: 'var(--admin-text)' }}
+                value={customBgUrl.startsWith('data:') ? '' : customBgUrl}
+                onChange={(e) => setCustomBgUrl(e.target.value)}
               />
-            </div>
-          </div>
-
-            {/* Background Image */}
-            <div className="space-y-3 p-4 rounded-xl border bg-zinc-900/5 mt-4" style={{ borderColor: 'var(--admin-sidebar-border)' }}>
-              <div className="flex items-center justify-between">
-                <label className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--admin-text-muted)' }}>
-                  <ImageIcon className="w-4 h-4" /> Custom Background
-                </label>
-                {customBgUrl && (
-                  <button onClick={() => setCustomBgUrl('')} className="text-[10px] font-bold uppercase text-red-500 hover:text-red-600">
-                    Clear
-                  </button>
-                )}
+              
+              <div className="flex items-center gap-2 py-1">
+                <div className="h-[1px] flex-1 bg-zinc-500/10" />
+                <span className="text-[9px] font-bold text-zinc-500">OR</span>
+                <div className="h-[1px] flex-1 bg-zinc-500/10" />
               </div>
               
-              <div className="space-y-2">
+              <label className="w-full flex items-center justify-center gap-2 py-2 border border-dashed rounded-lg cursor-pointer hover:bg-zinc-500/5 transition-colors"
+                     style={{ borderColor: 'var(--admin-sidebar-border)', color: 'var(--admin-text-muted)' }}>
+                <Upload className="w-3 h-3" />
+                <span className="text-[10px] font-medium uppercase font-bold tracking-wider">Upload File</span>
                 <input 
-                  type="text" 
-                  placeholder="Paste Image URL..."
-                  className="w-full bg-transparent border rounded-lg p-2 outline-none text-[10px]"
-                  style={{ borderColor: 'var(--admin-sidebar-border)', color: 'var(--admin-text)' }}
-                  value={customBgUrl.startsWith('data:') ? '' : customBgUrl}
-                  onChange={(e) => setCustomBgUrl(e.target.value)}
+                  type="file" 
+                  className="hidden" 
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0]
+                    if (file) {
+                      const reader = new FileReader()
+                      reader.onload = (rev) => setCustomBgUrl(rev.target?.result as string)
+                      reader.readAsDataURL(file)
+                    }
+                  }}
                 />
-                
-                <div className="flex items-center gap-2 py-1">
-                  <div className="h-[1px] flex-1 bg-zinc-500/10" />
-                  <span className="text-[9px] font-bold text-zinc-500">OR</span>
-                  <div className="h-[1px] flex-1 bg-zinc-500/10" />
-                </div>
-                
-                <label className="w-full flex items-center justify-center gap-2 py-2 border border-dashed rounded-lg cursor-pointer hover:bg-zinc-500/5 transition-colors"
-                       style={{ borderColor: 'var(--admin-sidebar-border)', color: 'var(--admin-text-muted)' }}>
-                  <Upload className="w-3 h-3" />
-                  <span className="text-[10px] font-medium uppercase font-bold tracking-wider">Upload File</span>
-                  <input 
-                    type="file" 
-                    className="hidden" 
-                    accept="image/*"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0]
-                      if (file) {
-                        const reader = new FileReader()
-                        reader.onload = (rev) => setCustomBgUrl(rev.target?.result as string)
-                        reader.readAsDataURL(file)
-                      }
-                    }}
-                  />
-                </label>
-              </div>
+              </label>
+            </div>
 
-              {customBgUrl && (
-                <div className="space-y-2 pt-2 border-t" style={{ borderColor: 'var(--admin-sidebar-border)' }}>
+            {customBgUrl && (
+              <div className="space-y-4 pt-4">
+                <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <label className="text-[9px] uppercase font-bold" style={{ color: 'var(--admin-text-muted)' }}>
-                      Text Overlay Darken
+                      Zoom
+                    </label>
+                    <span className="text-[10px] font-mono">{bgZoom.toFixed(2)}x</span>
+                  </div>
+                  <input 
+                    type="range"
+                    min="1"
+                    max="3"
+                    step="0.05"
+                    className="w-full h-1 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                    value={bgZoom}
+                    onChange={(e) => setBgZoom(parseFloat(e.target.value))}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="text-[9px] uppercase font-bold" style={{ color: 'var(--admin-text-muted)' }}>
+                      Darken
                     </label>
                     <span className="text-[10px] font-mono">{Math.round(bgOverlayOpacity * 100)}%</span>
                   </div>
@@ -991,8 +1173,10 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
                     onChange={(e) => setBgOverlayOpacity(parseFloat(e.target.value))}
                   />
                 </div>
-              )}
-            </div>
+              </div>
+            )}
+          </div>
+
 
           <button 
             onClick={downloadImage}
@@ -1006,10 +1190,11 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
             <Download className="w-5 h-5" /> Download Image
           </button>
         </Card>
+
       </div>
 
       {/* Preview Area */}
-      <div className="lg:col-span-8 flex flex-col items-center">
+      <div className="lg:col-span-8 flex flex-col items-center lg:sticky lg:top-6 self-start">
         <div className="w-full rounded-xl p-8 border flex items-center justify-center overflow-auto min-h-[600px] shadow-inner"
              style={{ backgroundColor: 'var(--admin-bg)', borderColor: 'var(--admin-sidebar-border)' }}>
            <div className="relative shadow-2xl">
