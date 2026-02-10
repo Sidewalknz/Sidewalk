@@ -969,7 +969,7 @@ body {
 
 .contact-tagline-columns {
   display: grid;
-  grid-template-columns: minmax(clamp(200px, 8vw, 300px), clamp(300px, 9vw, 950px)) minmax(clamp(200px, 8vw, 300px), clamp(300px, 9vw, 950px)) minmax(clamp(150px, 6vw, 200px), clamp(180px, 6.5vw, 280px)) minmax(clamp(200px, 7vw, 300px), 1fr);
+  grid-template-columns: minmax(clamp(200px, 8vw, 300px), clamp(300px, 9vw, 950px)) minmax(clamp(200px, 8vw, 300px), clamp(300px, 9vw, 950px)) minmax(clamp(150px, 6vw, 200px), clamp(250px, 12vw, 400px)) minmax(clamp(200px, 7vw, 300px), 1fr);
   gap: clamp(1rem, 2vw, 2rem);
   align-items: start;
   max-width: min(100%, calc(100vw - 4rem));
@@ -1046,7 +1046,7 @@ body {
 .contact-tagline-col-3 {
   text-align: left;
   min-width: clamp(150px, 6vw, 200px);
-  max-width: clamp(180px, 6.5vw, 280px);
+  max-width: clamp(250px, 12vw, 400px);
   overflow-wrap: break-word;
 }
 
