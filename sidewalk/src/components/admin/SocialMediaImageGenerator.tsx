@@ -35,7 +35,7 @@ const SIDEWALK_LOGO_DARK_PRESETS = [
   { name: 'Dark Yellow', colors: { '#CD5037': '#FCF5EB', '#E5BF55': '#E5BF55', '#FCF5EB': '#212C34' } },
 ]
 
-type ContentType = 'home' | 'features' | 'description'
+type ContentType = 'home' | 'features' | 'description' | 'blank'
 type LogoPosition = 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right'
 type SidewalkLogoStyle = 'logo.svg' | 'logo2.svg' | 'none'
 
@@ -51,6 +51,8 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
   const [editableFeatures, setEditableFeatures] = useState<{ title: string, description: string }[]>([])
   const [editableDescription, setEditableDescription] = useState('')
   const [descriptionFontSize, setDescriptionFontSize] = useState(1.0)
+  const [showCoBranding, setShowCoBranding] = useState(false)
+
   
   // Theme-based initial colors
   const getThemeColors = (themeName: string) => {
@@ -126,7 +128,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
   // Draw the canvas whenever any option changes
   useEffect(() => {
     drawCanvas()
-  }, [selectedClientId, contentType, logoPosition, logoVariant, homeLogoVariant, customLogoUrl, customBgUrl, bgOverlayOpacity, bgZoom, homeVariation, bgColor, textColor, highlightColor, svgOriginalContent, svgColorMap, sidewalkLogoColorMap, size, editableFeatures, editableDescription, descriptionFontSize])
+  }, [selectedClientId, contentType, logoPosition, logoVariant, homeLogoVariant, customLogoUrl, customBgUrl, bgOverlayOpacity, bgZoom, homeVariation, bgColor, textColor, highlightColor, svgOriginalContent, svgColorMap, sidewalkLogoColorMap, size, editableFeatures, editableDescription, descriptionFontSize, showCoBranding])
 
   // Update editable text when content selection changes
   useEffect(() => {
@@ -231,6 +233,8 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
         drawFeaturesTemplate(ctx, canvas, logoImg, margin)
     } else if (contentType === 'description') {
         drawDescriptionTemplate(ctx, canvas, logoImg, margin)
+    } else if (contentType === 'blank') {
+        drawBlankTemplate(ctx, canvas, margin)
     }
 
     // Draw Sidewalk Logo watermark
@@ -240,17 +244,59 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
         let logoX = margin
         let logoY = margin
 
-        if (logoPosition.includes('center')) {
-          logoX = (canvas.width - logoW) / 2
-        } else if (logoPosition.includes('right')) {
-          logoX = canvas.width - logoW - margin
-        }
+        const swLogoScale = 0.18
+        const swLogoW = canvas.width * swLogoScale
+        const swLogoH = swLogoW * 0.5
 
-        if (logoPosition.includes('bottom')) {
-          logoY = canvas.height - logoH - margin
-        }
+        const iconUrl = customLogoUrl || selectedClient?.icon
+        const clientLogo = (iconUrl && showCoBranding) ? await loadClientLogo(iconUrl) : null
 
-        ctx.drawImage(logoImg, logoX, logoY, logoW, logoH)
+        if (showCoBranding && clientLogo && clientLogo.complete) {
+            const clientAspect = clientLogo.width / clientLogo.height || 1
+            const clientW = swLogoW * 0.8
+            const clientH = clientW / clientAspect
+            const gap = canvas.width * 0.05
+            
+            const totalWidth = swLogoW + gap + clientW
+            const totalHeight = Math.max(swLogoH, clientH)
+
+            if (logoPosition.includes('center')) {
+                logoX = (canvas.width - totalWidth) / 2
+            } else if (logoPosition.includes('right')) {
+                logoX = canvas.width - totalWidth - margin
+            }
+
+            if (logoPosition.includes('bottom')) {
+                logoY = canvas.height - totalHeight - margin
+            }
+
+            // Draw Sidewalk Logo
+            ctx.drawImage(logoImg, logoX, logoY + (totalHeight - swLogoH) / 2, swLogoW, swLogoH)
+
+            // Draw 'x'
+            ctx.fillStyle = textColor
+            ctx.font = `bold ${canvas.width * 0.03}px sans-serif`
+            ctx.textAlign = 'center'
+            ctx.textBaseline = 'middle'
+            ctx.globalAlpha = 0.5
+            ctx.fillText('x', logoX + swLogoW + gap / 2, logoY + totalHeight / 2)
+            ctx.globalAlpha = 1.0
+
+            // Draw Client Logo
+            ctx.drawImage(clientLogo, logoX + swLogoW + gap, logoY + (totalHeight - clientH) / 2, clientW, clientH)
+        } else {
+            if (logoPosition.includes('center')) {
+                logoX = (canvas.width - swLogoW) / 2
+            } else if (logoPosition.includes('right')) {
+                logoX = canvas.width - swLogoW - margin
+            }
+
+            if (logoPosition.includes('bottom')) {
+                logoY = canvas.height - swLogoH - margin
+            }
+
+            ctx.drawImage(logoImg, logoX, logoY, swLogoW, swLogoH)
+        }
         ctx.globalAlpha = 1.0
     }
   }
@@ -535,6 +581,11 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
     wrapText(ctx, description.toLowerCase(), margin, finalY, availableWidth, lineHeight * descriptionFontSize, true, highlightColor)
   }
 
+  const drawBlankTemplate = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, margin: number) => {
+    // Blank template doesn't draw text, background and watermarks (including co-branding) are already handled in drawCanvas
+    return
+  }
+
   const wrapText = (ctx: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number, draw: boolean = true, hColor?: string) => {
     const lines = text.split('\n')
     let currentY = y
@@ -690,7 +741,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
               <Type className="w-4 h-4" /> Content Type
             </label>
             <div className="grid grid-cols-2 gap-2">
-              {(['home', 'features', 'description'] as ContentType[]).map((type) => (
+              {(['home', 'features', 'description', 'blank'] as ContentType[]).map((type) => (
                 <button
                   key={type}
                   onClick={() => setContentType(type)}
@@ -732,6 +783,13 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
               </div>
             </div>
           )}
+
+          {contentType === 'blank' && (
+            <div className="space-y-4">
+               <p className="text-[10px] text-zinc-500 italic">No specific content for Blank template. Use the logo and background controls below.</p>
+            </div>
+          )}
+
 
           {/* Real-time Content Editor */}
           {contentType === 'description' && (
@@ -838,6 +896,17 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
             <div className="space-y-2">
               <label className="text-sm font-medium flex items-center justify-between" style={{ color: 'var(--admin-text-muted)' }}>
                 <span>{contentType === 'home' ? 'Logo Style' : 'Sidewalk Logo Style'}</span>
+                <button 
+                  onClick={() => setShowCoBranding(!showCoBranding)}
+                  className="text-[10px] px-2 py-1 rounded border transition-colors uppercase font-bold"
+                  style={{ 
+                    backgroundColor: showCoBranding ? 'rgba(var(--admin-accent), 0.1)' : 'var(--admin-bg)',
+                    borderColor: showCoBranding ? 'var(--admin-accent)' : 'var(--admin-sidebar-border)',
+                    color: showCoBranding ? 'var(--admin-text)' : 'var(--admin-text-muted)'
+                  }}
+                >
+                  {showCoBranding ? 'Co-branded On' : 'Co-branded Off'}
+                </button>
               </label>
               <div className="flex gap-2">
                 {[
