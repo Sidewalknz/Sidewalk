@@ -244,18 +244,31 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
         let logoX = margin
         let logoY = margin
 
-        const swLogoScale = 0.18
-        const swLogoW = canvas.width * swLogoScale
-        const swLogoH = swLogoW * 0.5
+        const swLogoScale = 0.22
+        let swLogoW = canvas.width * swLogoScale
+        const swAspect = logoImg.width / logoImg.height || 2
+        let swLogoH = swLogoW / swAspect
+
+        // Constrain height (especially for square Icon Only style)
+        const maxSwH = canvas.width * 0.10 // Cap height at 10% of canvas width
+        if (swLogoH > maxSwH) {
+            swLogoH = maxSwH
+            swLogoW = swLogoH * swAspect
+        }
+
 
         const iconUrl = customLogoUrl || selectedClient?.icon
         const clientLogo = (iconUrl && showCoBranding) ? await loadClientLogo(iconUrl) : null
 
         if (showCoBranding && clientLogo && clientLogo.complete) {
             const clientAspect = clientLogo.width / clientLogo.height || 1
-            const clientW = swLogoW * 0.8
-            const clientH = clientW / clientAspect
+            
+            // Match heights perfectly
+            const clientH = swLogoH
+            const clientW = clientH * clientAspect
+
             const gap = canvas.width * 0.05
+            const xOffset = canvas.width * 0.02
             
             const totalWidth = swLogoW + gap + clientW
             const totalHeight = Math.max(swLogoH, clientH)
@@ -270,33 +283,39 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
                 logoY = canvas.height - totalHeight - margin
             }
 
-            // Draw Sidewalk Logo
+            // Draw Sidewalk Logo (Vertically centered)
             ctx.drawImage(logoImg, logoX, logoY + (totalHeight - swLogoH) / 2, swLogoW, swLogoH)
 
-            // Draw 'x'
+            // Draw 'x' (Centered in the gap)
             ctx.fillStyle = textColor
-            ctx.font = `bold ${canvas.width * 0.03}px sans-serif`
+            ctx.font = `bold ${canvas.width * 0.04}px sans-serif`
             ctx.textAlign = 'center'
             ctx.textBaseline = 'middle'
-            ctx.globalAlpha = 0.5
+            ctx.globalAlpha = 0.4
             ctx.fillText('x', logoX + swLogoW + gap / 2, logoY + totalHeight / 2)
             ctx.globalAlpha = 1.0
 
-            // Draw Client Logo
+            // Draw Client Logo (Vertically centered)
             ctx.drawImage(clientLogo, logoX + swLogoW + gap, logoY + (totalHeight - clientH) / 2, clientW, clientH)
         } else {
+
+            const finalSwW = swLogoW
+            const finalSwAspect = logoImg.width / logoImg.height || 2
+            const finalSwH = finalSwW / finalSwAspect
+
             if (logoPosition.includes('center')) {
-                logoX = (canvas.width - swLogoW) / 2
+                logoX = (canvas.width - finalSwW) / 2
             } else if (logoPosition.includes('right')) {
-                logoX = canvas.width - swLogoW - margin
+                logoX = canvas.width - finalSwW - margin
             }
 
             if (logoPosition.includes('bottom')) {
-                logoY = canvas.height - swLogoH - margin
+                logoY = canvas.height - finalSwH - margin
             }
 
-            ctx.drawImage(logoImg, logoX, logoY, swLogoW, swLogoH)
+            ctx.drawImage(logoImg, logoX, logoY, finalSwW, finalSwH)
         }
+
         ctx.globalAlpha = 1.0
     }
   }
