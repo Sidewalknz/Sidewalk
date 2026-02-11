@@ -1,6 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-import { Edit } from 'lucide-react'
+import { Edit, ExternalLink } from 'lucide-react'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import DeleteButton from '@/components/admin/DeleteButton'
@@ -39,6 +39,7 @@ export default async function ClientsPage() {
                             <th className="px-6 py-4 font-medium">Company Name</th>
                             <th className="px-6 py-4 font-medium">Owner</th>
                             <th className="px-6 py-4 font-medium">Email</th>
+                            <th className="px-6 py-4 font-medium">Website</th>
                             <th className="px-6 py-4 font-medium">Type</th>
                             <th className="px-6 py-4 font-medium">Status</th>
                             <th className="px-6 py-4 font-medium text-right">Actions</th>
@@ -47,7 +48,7 @@ export default async function ClientsPage() {
                     <tbody className="divide-y divide-[var(--admin-sidebar-border)]">
                         {clients.docs.length === 0 ? (
                             <tr>
-                                <td colSpan={7} className="px-6 py-8 text-center" style={{ color: 'var(--admin-text-muted)' }}>
+                                <td colSpan={8} className="px-6 py-8 text-center" style={{ color: 'var(--admin-text-muted)' }}>
                                     No clients found. Click "Add Client" to get started.
                                 </td>
                             </tr>
@@ -91,6 +92,23 @@ export default async function ClientsPage() {
                                         <td className="px-6 py-4 font-medium" style={{ borderColor: 'var(--admin-sidebar-border)', color: 'var(--admin-text)' }}>{client.companyName}</td>
                                         <td className="px-6 py-4" style={{ borderColor: 'var(--admin-sidebar-border)', color: 'var(--admin-text-muted)' }}>{client.ownerName}</td>
                                         <td className="px-6 py-4" style={{ borderColor: 'var(--admin-sidebar-border)', color: 'var(--admin-text-muted)' }}>{client.email}</td>
+                                        <td className="px-6 py-4" style={{ borderColor: 'var(--admin-sidebar-border)', color: 'var(--admin-text-muted)' }}>
+                                            {client.website ? (
+                                                <a 
+                                                    href={client.website} 
+                                                    target="_blank" 
+                                                    rel="noopener noreferrer"
+                                                    className="flex items-center gap-1 hover:text-[var(--admin-text)] transition-colors"
+                                                >
+                                                    <ExternalLink className="w-3.5 h-3.5" />
+                                                    <span className="truncate max-w-[120px]">
+                                                        {client.website.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}
+                                                    </span>
+                                                </a>
+                                            ) : (
+                                                <span className="text-xs opacity-30">N/A</span>
+                                            )}
+                                        </td>
                                         <td className="px-6 py-4" style={{ borderColor: 'var(--admin-sidebar-border)' }}>
                                             <span className={`px-2 py-1 rounded-full text-xs capitalize ${typeBadgeClass}`}>
                                                 {client.type}
