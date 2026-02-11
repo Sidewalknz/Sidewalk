@@ -481,7 +481,8 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
   }
 
   const drawFeaturesTemplate = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, logoImg: HTMLImageElement | null, margin: number) => {
-    const contentY = logoPosition.startsWith('top') ? margin * 3 : margin * 1.5
+    ctx.textAlign = 'left'
+    ctx.textBaseline = 'top'
 
     if (editableFeatures.length === 0) {
         ctx.fillStyle = textColor
@@ -491,23 +492,28 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
         return
     }
 
+    // Determine starting area based on logo position
+    // We want a clear header area
+    let contentY = logoPosition.startsWith('top') ? margin * 3.5 : margin * 1.5
+    
     // Determine max available height
     let maxContentHeight = canvas.height - contentY - margin
     if (logoPosition.startsWith('bottom')) {
-        maxContentHeight -= margin * 1.5
+        maxContentHeight -= margin * 2.5 // More space for logo watermark
     }
 
-    let titleFontSize = canvas.width * 0.06
-    let descFontSize = canvas.width * 0.035
+    let titleFontSize = canvas.width * 0.075 // Slightly smaller than description for better list balance
+    let descFontSize = canvas.width * 0.04
     let scaleFactor = 1.0
 
-    // Scaling loop
-    while (scaleFactor > 0.5) {
+    // Scaling loop to fit all content
+    let finalTotalHeight = 0
+    while (scaleFactor > 0.45) {
         let testY = 0
         const currentTitleSize = titleFontSize * scaleFactor
         const currentDescSize = descFontSize * scaleFactor
-        const currentTitleLH = currentTitleSize * 1.2
-        const currentDescLH = currentDescSize * 1.3
+        const currentTitleLH = currentTitleSize * 1.3
+        const currentDescLH = currentDescSize * 1.4
 
         editableFeatures.forEach((feature) => {
             ctx.font = `bold ${currentTitleSize}px sans-serif`
@@ -516,48 +522,48 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
             if (feature.description) {
                 ctx.font = `${currentDescSize}px sans-serif`
                 testY += wrapText(ctx, feature.description.toLowerCase(), margin, 0, canvas.width - margin * 2, currentDescLH, false)
-                testY += margin * 0.3 * scaleFactor
+                testY += margin * 0.8 * scaleFactor // More breathing room
             } else {
-                testY += margin * 0.3 * scaleFactor
+                testY += margin * 0.8 * scaleFactor
             }
         })
 
+        finalTotalHeight = testY
         if (testY <= maxContentHeight) break
         scaleFactor -= 0.05
     }
 
     const currentTitleSize = titleFontSize * scaleFactor
     const currentDescSize = descFontSize * scaleFactor
-    const currentTitleLH = currentTitleSize * 1.2
-    const currentDescLH = currentDescSize * 1.3
+    const currentTitleLH = currentTitleSize * 1.3
+    const currentDescLH = currentDescSize * 1.4
 
-    ctx.font = `bold ${canvas.width * 0.04}px sans-serif`
-    ctx.textAlign = 'left'
-    ctx.textBaseline = 'top'
-    ctx.fillStyle = textColor
-    ctx.globalAlpha = 0.6
-    ctx.fillText('features', margin, contentY)
-    ctx.globalAlpha = 1.0
+    // Vertical centering within the target area
+    let startY = contentY
+    if (finalTotalHeight < maxContentHeight) {
+        startY = contentY + (maxContentHeight - finalTotalHeight) / 2
+    }
 
-    let currentY = contentY + margin
+    let currentY = startY
 
     editableFeatures.forEach((feature) => {
-        // Title
+        // Title - Use textColor by default
         ctx.fillStyle = textColor
         ctx.font = `bold ${currentTitleSize}px sans-serif`
         const titleHeight = wrapText(ctx, feature.title.toLowerCase(), margin, currentY, canvas.width - margin * 2, currentTitleLH, true, highlightColor)
         
         currentY += titleHeight
 
-        // Description
+        // Description - Use textColor by default
         if (feature.description) {
+            ctx.fillStyle = textColor
             ctx.font = `${currentDescSize}px sans-serif`
-            ctx.globalAlpha = 0.7
+            ctx.globalAlpha = 0.8
             const descHeight = wrapText(ctx, feature.description.toLowerCase(), margin, currentY, canvas.width - margin * 2, currentDescLH, true, highlightColor)
             ctx.globalAlpha = 1.0
-            currentY += descHeight + margin * 0.3 * scaleFactor
+            currentY += descHeight + margin * 0.8 * scaleFactor
         } else {
-            currentY += margin * 0.3 * scaleFactor
+            currentY += margin * 0.8 * scaleFactor
         }
     })
   }
