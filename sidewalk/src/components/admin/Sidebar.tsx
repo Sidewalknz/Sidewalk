@@ -11,7 +11,7 @@ export function cn(...inputs: (string | undefined | null | false)[]) {
   return twMerge(clsx(inputs))
 }
 
-const navItems = [
+export const navItems = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
   { name: 'Clients', href: '/admin/clients', icon: Briefcase },
   { name: 'Expenses', href: '/admin/ongoing-expenses', icon: CreditCard },

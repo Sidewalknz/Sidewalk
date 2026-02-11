@@ -15,10 +15,10 @@ export default async function ClientsPage() {
 
     return (
         <div className="space-y-6">
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <h2 className="text-3xl font-bold tracking-tight">Clients</h2>
                 <Link href="/admin/clients/add" 
-                      className="px-4 py-2 rounded transition-colors font-medium"
+                      className="w-full sm:w-auto px-4 py-2 rounded transition-colors font-medium text-center"
                       style={{ 
                           backgroundColor: 'var(--admin-text)', 
                           color: 'var(--admin-bg)' 
@@ -27,7 +27,8 @@ export default async function ClientsPage() {
                 </Link>
             </div>
             
-            <div className="rounded-xl border overflow-hidden" 
+            {/* Desktop Table View */}
+            <div className="hidden md:block rounded-xl border overflow-hidden" 
                  style={{ 
                      borderColor: 'var(--admin-sidebar-border)',
                      backgroundColor: 'var(--admin-sidebar-bg)'
@@ -137,6 +138,102 @@ export default async function ClientsPage() {
                         )}
                     </tbody>
                 </table>
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="md:hidden space-y-4">
+                {clients.docs.length === 0 ? (
+                    <div className="p-8 text-center rounded-xl border italic" 
+                         style={{ 
+                             borderColor: 'var(--admin-sidebar-border)',
+                             backgroundColor: 'var(--admin-sidebar-bg)',
+                             color: 'var(--admin-text-muted)'
+                         }}>
+                        No clients found.
+                    </div>
+                ) : (
+                    clients.docs.map((client) => {
+                        const typeStyles = {
+                            ecommerce: 'bg-green-500/10 text-green-500',
+                            portfolio: 'bg-purple-500/10 text-purple-500',
+                            business: 'bg-blue-500/10 text-blue-500',
+                            blog: 'bg-yellow-500/10 text-yellow-500',
+                            other: 'bg-zinc-500/10 text-zinc-500',
+                        }
+                        
+                        const statusStyles = {
+                            in_progress: 'bg-blue-500/10 text-blue-500',
+                            completed: 'bg-emerald-500/10 text-emerald-500',
+                            in_talks: 'bg-amber-500/10 text-amber-500',
+                            completed_hide: 'bg-zinc-500/10 text-zinc-500',
+                        }
+                        
+                        const typeBadgeClass = typeStyles[client.type as keyof typeof typeStyles] || typeStyles.other
+                        const statusBadgeClass = statusStyles[client.status as keyof typeof statusStyles] || statusStyles.completed_hide
+
+                        return (
+                            <div key={client.id} 
+                                 className="p-5 rounded-xl border space-y-4"
+                                 style={{ 
+                                     borderColor: 'var(--admin-sidebar-border)',
+                                     backgroundColor: 'var(--admin-sidebar-bg)'
+                                 }}>
+                                <div className="flex justify-between items-start">
+                                    <div className="flex items-center gap-3">
+                                        {client.icon ? (
+                                            // eslint-disable-next-line @next/next/no-img-element
+                                            <img
+                                                src={client.icon}
+                                                alt={`${client.companyName} logo`}
+                                                className="h-10 w-10 object-contain"
+                                            />
+                                        ) : (
+                                            <div className="h-10 w-10 rounded-lg flex items-center justify-center text-sm font-bold"
+                                                 style={{ backgroundColor: 'rgba(255,255,255,0.1)', color: 'var(--admin-text-muted)' }}>
+                                                {client.companyName?.charAt(0) || '?'}
+                                            </div>
+                                        )}
+                                        <div>
+                                            <h3 className="font-bold text-lg" style={{ color: 'var(--admin-text)' }}>{client.companyName}</h3>
+                                            <p className="text-sm" style={{ color: 'var(--admin-text-muted)' }}>{client.ownerName}</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-1">
+                                        <Link 
+                                            href={`/admin/clients/${client.id}`} 
+                                            className="p-2 rounded-lg transition-colors bg-white/5 hover:bg-white/10" 
+                                            style={{ color: 'var(--admin-text)' }}
+                                        >
+                                            <Edit className="w-4 h-4" />
+                                        </Link>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-3 pt-2">
+                                    <div className="space-y-1">
+                                        <p className="text-[10px] uppercase tracking-wider font-semibold" style={{ color: 'var(--admin-text-muted)' }}>Type</p>
+                                        <span className={`inline-block px-2 py-0.5 rounded-full text-[11px] capitalize ${typeBadgeClass}`}>
+                                            {client.type}
+                                        </span>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <p className="text-[10px] uppercase tracking-wider font-semibold" style={{ color: 'var(--admin-text-muted)' }}>Status</p>
+                                        <span className={`inline-block px-2 py-0.5 rounded-full text-[11px] capitalize ${statusBadgeClass}`}>
+                                            {(client.status || 'unknown').replace('_', ' ')}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div className="pt-4 border-t flex justify-between items-center" style={{ borderColor: 'var(--admin-sidebar-border)' }}>
+                                    <div className="text-xs truncate max-w-[180px]" style={{ color: 'var(--admin-text-muted)' }}>
+                                        {client.email}
+                                    </div>
+                                    <DeleteButton id={client.id} itemName={client.companyName} action={deleteClient} />
+                                </div>
+                            </div>
+                        )
+                    })
+                )}
             </div>
         </div>
     )

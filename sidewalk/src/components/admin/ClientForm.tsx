@@ -60,9 +60,9 @@ export default function ClientForm({ initialData, action, mode }: ClientFormProp
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pb-12">
-      <div className="flex justify-between items-center">
-        <h2 className="text-3xl font-bold tracking-tight">{mode === 'create' ? 'Add New Client' : 'Edit Client'}</h2>
+    <div className="max-w-4xl mx-auto space-y-6 md:space-y-8 pb-12">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <h2 className="text-2xl md:text-3xl font-bold tracking-tight">{mode === 'create' ? 'Add New Client' : 'Edit Client'}</h2>
       </div>
 
       <form action={formAction} className="space-y-8" encType="multipart/form-data">
@@ -73,12 +73,12 @@ export default function ClientForm({ initialData, action, mode }: ClientFormProp
         )}
         
         {/* Basic Information */}
-        <div className="p-6 rounded-xl border space-y-6 shadow-sm"
+        <div className="p-4 md:p-6 rounded-xl border space-y-6 shadow-sm"
              style={{ 
                  backgroundColor: 'var(--admin-sidebar-bg)', 
                  borderColor: 'var(--admin-sidebar-border)' 
              }}>
-          <h3 className="text-xl font-semibold border-b pb-4" 
+          <h3 className="text-lg md:text-xl font-semibold border-b pb-4" 
               style={{ 
                   borderColor: 'var(--admin-sidebar-border)',
                   color: 'var(--admin-text)'
@@ -177,12 +177,12 @@ export default function ClientForm({ initialData, action, mode }: ClientFormProp
         </div>
 
         {/* Project Details */}
-        <div className="p-6 rounded-xl border space-y-6 shadow-sm"
+        <div className="p-4 md:p-6 rounded-xl border space-y-6 shadow-sm"
              style={{ 
                  backgroundColor: 'var(--admin-sidebar-bg)', 
                  borderColor: 'var(--admin-sidebar-border)' 
              }}>
-            <h3 className="text-xl font-semibold border-b pb-4" 
+            <h3 className="text-lg md:text-xl font-semibold border-b pb-4" 
               style={{ 
                   borderColor: 'var(--admin-sidebar-border)',
                   color: 'var(--admin-text)'
@@ -256,12 +256,12 @@ export default function ClientForm({ initialData, action, mode }: ClientFormProp
         </div>
 
         {/* Media */}
-        <div className="p-6 rounded-xl border space-y-6 shadow-sm"
+        <div className="p-4 md:p-6 rounded-xl border space-y-6 shadow-sm"
              style={{ 
                  backgroundColor: 'var(--admin-sidebar-bg)', 
                  borderColor: 'var(--admin-sidebar-border)' 
              }}>
-            <h3 className="text-xl font-semibold border-b pb-4" 
+            <h3 className="text-lg md:text-xl font-semibold border-b pb-4" 
               style={{ 
                   borderColor: 'var(--admin-sidebar-border)',
                   color: 'var(--admin-text)'
@@ -353,7 +353,7 @@ export default function ClientForm({ initialData, action, mode }: ClientFormProp
           </div>
 
           {products.map((product: any, index) => (
-            <div key={index} className="p-6 rounded-xl border space-y-6 relative group shadow-sm"
+            <div key={index} className="p-4 md:p-6 rounded-xl border space-y-6 relative group shadow-sm"
                  style={{ 
                      backgroundColor: 'var(--admin-sidebar-bg)', 
                      borderColor: 'var(--admin-sidebar-border)' 
@@ -460,10 +460,10 @@ export default function ClientForm({ initialData, action, mode }: ClientFormProp
           ))}
         </div>
 
-        <div className="pt-6 border-t flex justify-end gap-4" style={{ borderColor: 'var(--admin-sidebar-border)' }}>
+        <div className="pt-6 border-t flex flex-col sm:flex-row justify-end gap-3 sm:gap-4" style={{ borderColor: 'var(--admin-sidebar-border)' }}>
            {/* Can add back button manually in parent */}
            <button type="submit" 
-                   className="px-6 py-2 rounded-lg font-medium transition-colors"
+                   className="w-full sm:w-auto px-6 py-3 md:py-2 rounded-lg font-medium transition-colors"
                    style={{ 
                        backgroundColor: 'var(--admin-text)', 
                        color: 'var(--admin-bg)' 
