@@ -42,6 +42,8 @@ FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
+# Set global Playwright browser path
+ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
@@ -49,6 +51,7 @@ ENV NODE_ENV production
 RUN apt-get update && apt-get install -y \
     wget \
     gnupg \
+    && mkdir -p $PLAYWRIGHT_BROWSERS_PATH \
     && npx playwright install-deps chromium \
     && npx playwright install chromium \
     && rm -rf /var/lib/apt/lists/*
@@ -59,9 +62,9 @@ RUN adduser --system --uid 1001 nextjs
 # Remove this line if you do not have this folder
 COPY --from=builder /app/public ./public
 
-# Set the correct permission for prerender cache
+# Set the correct permission for prerender cache and browser directory
 RUN mkdir .next
-RUN chown nextjs:nodejs .next
+RUN chown -R nextjs:nodejs .next $PLAYWRIGHT_BROWSERS_PATH
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
