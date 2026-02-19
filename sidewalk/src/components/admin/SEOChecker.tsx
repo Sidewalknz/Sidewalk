@@ -533,15 +533,15 @@ export default function SEOChecker({ clients }: SEOCheckerProps) {
                             </button>
                             {check.recommendation && expandedChecks.has(check.id) && (
                                 <div className="px-14 pb-4 animate-in slide-in-from-top-1 duration-200">
-                                    <div className="p-3 rounded-lg bg-zinc-800/50 border border-zinc-700/50 text-xs text-zinc-400 leading-relaxed space-y-2">
+                                    <div className="p-3 rounded-lg bg-[var(--admin-bg)] border border-[var(--admin-sidebar-border)] text-xs text-[var(--admin-text)] font-medium leading-relaxed space-y-2 shadow-inner">
                                         <div>
-                                            <span className="text-[9px] font-bold uppercase text-zinc-500 block mb-1">Recommendation</span>
+                                            <span className="text-[9px] font-bold uppercase text-[var(--admin-accent)] block mb-1 tracking-widest">Recommendation</span>
                                             {check.recommendation}
                                         </div>
                                         {check.details && check.details.length > 0 && (
-                                            <div className="pt-2 border-t border-zinc-700/50">
-                                                <span className="text-[9px] font-bold uppercase text-zinc-500 block mb-1">Specific Findings</span>
-                                                <ul className="list-disc list-inside space-y-1 text-zinc-500">
+                                            <div className="pt-2 border-t border-[var(--admin-sidebar-border)]">
+                                                <span className="text-[9px] font-bold uppercase text-[var(--admin-accent)] block mb-1 tracking-widest">Specific Findings</span>
+                                                <ul className="list-disc list-inside space-y-1 text-[var(--admin-text-muted)]">
                                                     {check.details.map((detail, i) => (
                                                         <li key={i} className="break-all">{detail}</li>
                                                     ))}
