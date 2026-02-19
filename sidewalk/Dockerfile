@@ -52,8 +52,8 @@ RUN apt-get update && apt-get install -y \
     wget \
     gnupg \
     && mkdir -p $PLAYWRIGHT_BROWSERS_PATH \
-    && npx playwright install-deps chromium \
-    && npx playwright install chromium \
+    && npx playwright@1.56.1 install-deps chromium \
+    && npx playwright@1.56.1 install chromium \
     && rm -rf /var/lib/apt/lists/*
 
 RUN addgroup --system --gid 1001 nodejs
