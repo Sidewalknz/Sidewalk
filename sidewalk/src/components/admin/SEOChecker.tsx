@@ -145,7 +145,7 @@ export default function SEOChecker({ clients }: SEOCheckerProps) {
   };
 
   const handleClientSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const client = clients.find(c => c.id === e.target.value);
+    const client = clients.find(c => String(c.id) === e.target.value);
     if (client?.website) setUrl(client.website);
   };
 
