@@ -1,0 +1,366 @@
+SEO AUDIT TOOL – INTERNAL PAYLOAD INTEGRATION PLAN
+
+Project Purpose:
+Build an internal SEO audit system integrated into Payload CMS to assist with client website development, QA, and pre-launch validation.
+
+This tool is NOT public-facing.
+It is NOT a SaaS.
+It is for internal development workflow improvement.
+
+OVERALL GOAL
+
+Create a lightweight SEO audit module that:
+
+Audits a single URL
+
+Optionally crawls a small site (max 50 pages)
+
+Detects technical + on-page SEO issues
+
+Stores structured reports per client
+
+Runs inside existing Payload instance
+
+Uses minimal CPU and storage
+
+Primary use case:
+Pre-launch validation + development QA.
+
+ARCHITECTURE OVERVIEW
+
+Payload CMS
+└── Custom Endpoint (/api/seo-audit)
+└── SEO Engine Module
+├── Page Auditor
+├── Crawl Engine (optional)
+├── Rule Engine
+└── Scoring Aggregator
+└── SEOReports Collection
+
+Runs on existing Hetzner server.
+No external services required (initially).
+
+TECH STACK
+
+Core:
+
+Node.js (inside Payload)
+
+Axios (HTTP requests)
+
+Cheerio (HTML parsing)
+
+Optional:
+
+Playwright (ONLY if JS rendering required)
+
+Redis (optional caching)
+
+No heavy database.
+No HTML storage.
+Store only structured JSON reports.
+
+PAYLOAD COLLECTION STRUCTURE
+
+Collection: SEOReports
+
+Fields:
+
+id
+
+client (relationship)
+
+domain (string)
+
+auditType (single-page | crawl | prelaunch)
+
+reportJSON (JSON)
+
+score (number)
+
+criticalCount (number)
+
+warningCount (number)
+
+createdAt (auto)
+
+Do NOT store full HTML.
+Do NOT store raw crawl dumps.
+
+CORE FEATURES (PHASE 1 – SINGLE PAGE AUDIT)
+
+Input:
+
+URL
+
+Checks:
+
+ON-PAGE:
+
+Title exists
+
+Title length (50–60 chars recommended)
+
+Meta description exists
+
+Meta description length (150–160 chars recommended)
+
+H1 exists and count == 1
+
+Heading hierarchy validation (no skipping H2 → H4)
+
+Image alt coverage %
+
+Canonical tag presence
+
+Canonical matches URL
+
+Robots meta check (noindex detection)
+
+OpenGraph tags presence
+
+Twitter card tags presence
+
+Schema markup presence
+
+Word count
+
+TECHNICAL:
+
+HTTP status
+
+Redirect detection
+
+HTTPS enforcement
+
+Page size limit
+
+Internal vs external link count
+
+Broken internal links (basic validation)
+
+Output structure per check:
+
+{
+id: "missing-meta-description",
+severity: "critical" | "warning" | "info",
+impact: -10,
+message: "Meta description is missing",
+recommendation: "Add a 150–160 character meta description in <head>"
+}
+
+SCORING SYSTEM
+
+Start score = 100
+
+Deduct based on severity:
+
+Critical: -10 to -20
+
+Warning: -5 to -10
+
+Info: 0
+
+Also track:
+
+criticalCount
+
+warningCount
+
+passedCount
+
+Internal tool focus:
+Prioritize issue clarity over marketing-style "SEO score".
+
+CRAWL ENGINE (PHASE 2)
+
+Scope:
+
+Same domain only
+
+Max 50 pages
+
+Breadth-first crawl
+
+Concurrency limit: 2
+
+Timeout: 8–10 seconds
+
+Analyze per page:
+
+Title
+
+Meta description
+
+Status
+
+Canonical
+
+H1 count
+
+Broken links
+
+Site-level checks:
+
+Duplicate titles
+
+Duplicate meta descriptions
+
+Pages with no H1
+
+404 pages
+
+Redirect chains
+
+Store only structured results per URL.
+
+PRE-LAUNCH MODE (HIGH PRIORITY FEATURE)
+
+One-click audit that runs:
+
+Crawl (max 50 pages)
+
+Detect noindex tags
+
+Detect robots.txt issues
+
+Validate sitemap.xml existence
+
+Detect broken links
+
+Detect missing canonicals
+
+Detect duplicate titles
+
+HTTPS validation
+
+This acts as:
+"Final SEO QA Before Going Live"
+
+MODULE STRUCTURE
+
+/seo
+auditPage.ts
+crawlSite.ts
+scoring.ts
+utils.ts
+/checks
+title.ts
+meta.ts
+headings.ts
+images.ts
+canonical.ts
+robots.ts
+schema.ts
+links.ts
+og.ts
+twitter.ts
+
+Each check must:
+
+Be isolated
+
+Return standardized result object
+
+Not depend on global state
+
+PERFORMANCE RULES
+
+To protect Hetzner server:
+
+Limit HTML size to 2MB
+
+Timeout all requests at 10s
+
+Max 2 concurrent crawl requests
+
+Only enable Playwright if:
+
+No meaningful HTML returned
+
+Title missing
+
+Client specifically requires JS rendering
+
+Default = static parsing only.
+
+ADMIN UI IN PAYLOAD
+
+Client Page → Add "SEO Audit" Tab
+
+Features:
+
+Run Audit Button
+
+Run Pre-Launch Audit Button
+
+Display Last Audit Timestamp
+
+Show:
+Critical Issues
+Warnings
+Passed Checks
+
+Expandable issue list
+
+Export JSON (future: PDF)
+
+DEVELOPMENT ROADMAP
+
+PHASE 1 :
+
+Build page fetcher
+
+Implement 10–12 core checks
+
+Create scoring system
+
+Return structured JSON
+
+Store report in Payload
+
+PHASE 2 :
+
+Implement small crawler
+
+Add duplicate detection
+
+Add broken link detection
+
+Integrate into admin UI
+
+PHASE 3 :
+
+PDF export
+
+Lighthouse API integration
+
+Content semantic analysis (AI)
+
+Sitemap parsing improvements
+
+NON-GOALS (DO NOT BUILD)
+
+Backlink analysis
+
+SERP scraping
+
+Keyword tracking
+
+Domain authority metrics
+
+Large-scale crawling
+
+Public-facing SaaS features
+
+Keep this tool lean and development-focused.
+
+END OF PLAN
+
+If you’d like, I can next generate:
+
+A folder scaffold template
+
+A starter auditPage.ts boilerplate
+
+Or the first 10 check implementations ready to paste into your project

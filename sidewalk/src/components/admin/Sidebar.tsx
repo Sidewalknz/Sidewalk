@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Users, Image as ImageIcon, Briefcase, CreditCard, LogOut, Share2 } from 'lucide-react'
+import { LayoutDashboard, Users, Image as ImageIcon, Briefcase, CreditCard, LogOut, Share2, Search } from 'lucide-react'
 import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { useAdminTheme, ADMIN_THEMES } from './AdminThemeProvider'
@@ -14,6 +14,7 @@ export function cn(...inputs: (string | undefined | null | false)[]) {
 export const navItems = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
   { name: 'Clients', href: '/admin/clients', icon: Briefcase },
+  { name: 'SEO Checker', href: '/admin/seo', icon: Search },
   { name: 'Expenses', href: '/admin/ongoing-expenses', icon: CreditCard },
   { name: 'Media', href: '/admin/media', icon: ImageIcon },
   { name: 'Social Media', href: '/admin/social-media', icon: Share2 },
