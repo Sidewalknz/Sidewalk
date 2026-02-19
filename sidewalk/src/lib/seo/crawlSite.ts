@@ -58,7 +58,7 @@ export async function crawlSite(
         // --- Phase 3: Lighthouse (First URL only, if requested) ---
         let lighthouse: LighthouseScores | undefined;
         if (includeLighthouse && pagesAudited === 0) {
-          const { scores, checks: lhChecks } = await fetchLighthouse(url);
+          const { scores, checks: lhChecks } = await fetchLighthouse(url, process.env.GOOGLE_PAGESPEED_API_KEY);
           lighthouse = scores;
           homepageLighthouse = scores;
           report.checks.push(...lhChecks);
