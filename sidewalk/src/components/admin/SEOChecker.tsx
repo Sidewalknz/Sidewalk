@@ -533,9 +533,21 @@ export default function SEOChecker({ clients }: SEOCheckerProps) {
                             </button>
                             {check.recommendation && expandedChecks.has(check.id) && (
                                 <div className="px-14 pb-4 animate-in slide-in-from-top-1 duration-200">
-                                    <div className="p-3 rounded-lg bg-[var(--admin-bg)] border border-[var(--admin-sidebar-border)] text-xs text-[var(--admin-text-muted)] font-medium leading-relaxed shadow-inner">
-                                        <span className="text-[9px] font-bold uppercase text-[var(--admin-accent)] block mb-1 tracking-widest">Recommendation</span>
-                                        {check.recommendation}
+                                    <div className="p-3 rounded-lg bg-zinc-800/50 border border-zinc-700/50 text-xs text-zinc-400 leading-relaxed space-y-2">
+                                        <div>
+                                            <span className="text-[9px] font-bold uppercase text-zinc-500 block mb-1">Recommendation</span>
+                                            {check.recommendation}
+                                        </div>
+                                        {check.details && check.details.length > 0 && (
+                                            <div className="pt-2 border-t border-zinc-700/50">
+                                                <span className="text-[9px] font-bold uppercase text-zinc-500 block mb-1">Specific Findings</span>
+                                                <ul className="list-disc list-inside space-y-1 text-zinc-500">
+                                                    {check.details.map((detail, i) => (
+                                                        <li key={i} className="break-all">{detail}</li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             )}

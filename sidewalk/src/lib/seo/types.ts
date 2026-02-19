@@ -6,6 +6,7 @@ export interface SEOCheck {
   impact: number;
   message: string;
   recommendation?: string;
+  details?: string[];
 }
 
 export interface SEOReport {

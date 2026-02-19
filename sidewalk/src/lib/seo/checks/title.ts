@@ -21,6 +21,7 @@ export function checkTitle($: CheerioAPI): SEOCheck[] {
         impact: -5,
         message: `Title is too short (${title.length} chars)`,
         recommendation: 'Aim for 50-60 characters to maximize SERP visibility.',
+        details: [`Current: "${title}"`]
       });
     } else if (title.length > 60) {
       checks.push({
@@ -29,6 +30,7 @@ export function checkTitle($: CheerioAPI): SEOCheck[] {
         impact: -5,
         message: `Title is too long (${title.length} chars)`,
         recommendation: 'Keep titles under 60 characters to avoid truncation in search results.',
+        details: [`Current: "${title}"`]
       });
     } else {
       checks.push({

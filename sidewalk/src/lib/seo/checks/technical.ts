@@ -26,6 +26,7 @@ export function checkTechnical($: CheerioAPI, url: string): SEOCheck[] {
           impact: -5,
           message: 'Canonical URL does not match current URL',
           recommendation: 'Ensure canonical points to the primary version of this page.',
+          details: [`Expected: ${currentUrl}`, `Found: ${canonicalUrl}`]
         });
       } else {
         checks.push({

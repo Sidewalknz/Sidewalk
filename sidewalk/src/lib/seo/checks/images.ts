@@ -25,12 +25,16 @@ export function checkImages($: CheerioAPI): SEOCheck[] {
   const coveragePercent = Math.round(((totalCount - missingAltCount) / totalCount) * 100);
 
   if (missingAltCount > 0) {
+    const details = imagesWithoutAlt.get().slice(0, 10).map(img => $(img).attr('src') || 'unknown source');
+    if (imagesWithoutAlt.length > 10) details.push(`...and ${imagesWithoutAlt.length - 10} more`);
+
     checks.push({
       id: 'missing-alt-tags',
       severity: missingAltCount > 5 ? 'critical' : 'warning',
       impact: missingAltCount > 5 ? -15 : -5,
       message: `${missingAltCount} images are missing alt text (${coveragePercent}% coverage)`,
       recommendation: 'Add descriptive alt text to all informative images for SEO and accessibility.',
+      details
     });
   } else {
     checks.push({

@@ -21,6 +21,7 @@ export function checkMeta($: CheerioAPI): SEOCheck[] {
         impact: -5,
         message: `Meta description is a bit short (${description.length} chars)`,
         recommendation: 'Aim for 150-160 characters for a more descriptive snippet.',
+        details: [`Current: "${description}"`]
       });
     } else if (description.length > 160) {
       checks.push({
@@ -29,6 +30,7 @@ export function checkMeta($: CheerioAPI): SEOCheck[] {
         impact: -5,
         message: `Meta description is too long (${description.length} chars)`,
         recommendation: 'Keep descriptions under 160 characters to avoid truncation.',
+        details: [`Current: "${description}"`]
       });
     } else {
       checks.push({

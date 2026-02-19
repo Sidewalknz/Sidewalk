@@ -17,6 +17,7 @@ export function checkOG($: CheerioAPI): SEOCheck[] {
         impact: 0,
         message: tag.message,
         recommendation: `Add an ${tag.property} tag to control how your page looks when shared on Facebook and LinkedIn.`,
+        details: [`Target property: ${tag.property}`]
       });
     }
   }
