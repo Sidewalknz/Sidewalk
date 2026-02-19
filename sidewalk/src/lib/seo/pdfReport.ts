@@ -2,7 +2,9 @@ import { chromium } from 'playwright';
 import { SEOReport, SiteCrawlReport, PreLaunchReport } from './types';
 
 export async function generatePDF(report: any): Promise<Buffer> {
-  const browser = await chromium.launch();
+  const browser = await chromium.launch({
+    args: ['--no-sandbox', '--disable-setuid-sandbox']
+  });
   const page = await browser.newPage();
 
   const isCrawl = 'pages' in report;
