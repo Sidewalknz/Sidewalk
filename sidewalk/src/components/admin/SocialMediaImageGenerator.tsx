@@ -36,7 +36,7 @@ const SIDEWALK_LOGO_DARK_PRESETS = [
   { name: 'Dark Yellow', colors: { '#CD5037': '#FCF5EB', '#E5BF55': '#E5BF55', '#FCF5EB': '#212C34' } },
 ]
 
-type ContentType = 'home' | 'features' | 'description' | 'blank' | 'showcase'
+type ContentType = 'home' | 'features' | 'description' | 'blank'
 type LogoPosition = 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right'
 type SidewalkLogoStyle = 'logo.svg' | 'logo2.svg' | 'none'
 
@@ -53,6 +53,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
   const [editableDescription, setEditableDescription] = useState('')
   const [descriptionFontSize, setDescriptionFontSize] = useState(1.0)
   const [showCoBranding, setShowCoBranding] = useState(false)
+  const [backgroundType, setBackgroundType] = useState<'solid' | 'image' | 'showcase'>('solid')
 
   // Showcase state
   const [showcasePages, setShowcasePages] = useState<{ url: string, yOffset: number, screenshot: string | null }[]>([
@@ -62,6 +63,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
   ])
   const [showcaseLoading, setShowcaseLoading] = useState<boolean[]>([false, false, false])
   const [showcaseWaitTime, setShowcaseWaitTime] = useState(3000)
+  const [showcaseRotation, setShowcaseRotation] = useState(-15)
 
   
   // Theme-based initial colors
@@ -140,7 +142,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
   // Draw the canvas whenever any option changes
   useEffect(() => {
     drawCanvas()
-  }, [selectedClientId, contentType, logoPosition, logoVariant, homeLogoVariant, customLogoUrl, customBgUrl, bgOverlayOpacity, bgZoom, bgImageOpacity, homeVariation, bgColor, textColor, highlightColor, svgOriginalContent, svgColorMap, sidewalkLogoColorMap, size, editableFeatures, editableDescription, descriptionFontSize, showCoBranding, showcasePages])
+  }, [selectedClientId, contentType, logoPosition, logoVariant, homeLogoVariant, customLogoUrl, customBgUrl, bgOverlayOpacity, bgZoom, bgImageOpacity, homeVariation, bgColor, textColor, highlightColor, svgOriginalContent, svgColorMap, sidewalkLogoColorMap, size, editableFeatures, editableDescription, descriptionFontSize, showCoBranding, showcasePages, backgroundType, showcaseRotation])
 
   const handleCaptureScreenshot = async (index: number) => {
     const url = showcasePages[index].url
@@ -244,12 +246,17 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
     renderCount.current += 1
     const thisRender = renderCount.current
 
-    // Background
+    // Background layer
     ctx.fillStyle = bgColor
     ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-    // Custom Background Image
-    if (customBgUrl) {
+    // Logo size and margins
+    const logoScale = 0.18
+    const logoW = canvas.width * logoScale
+    const logoH = logoW * 0.5
+    const margin = canvas.width * 0.08
+
+    if (backgroundType === 'image' && customBgUrl) {
         const bgImg = new Image()
         bgImg.crossOrigin = 'anonymous'
         await new Promise(resolve => {
@@ -262,7 +269,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
         if (thisRender !== renderCount.current) return
         
         if (bgImg.complete && bgImg.width > 0) {
-            // Draw (object-fit: cover)
+            // ... (rest of image background logic)
             const canvasRatio = canvas.width / canvas.height
             const imgRatio = bgImg.width / bgImg.height
             let drawW, drawH, drawX, drawY
@@ -281,13 +288,17 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
             ctx.globalAlpha = bgImageOpacity
             ctx.drawImage(bgImg, drawX, drawY, drawW, drawH)
             ctx.globalAlpha = 1.0
-            
-            // Apply Overlay
-            if (bgOverlayOpacity > 0) {
-                ctx.fillStyle = `rgba(0,0,0,${bgOverlayOpacity})`
-                ctx.fillRect(0, 0, canvas.width, canvas.height)
-            }
         }
+    } else if (backgroundType === 'showcase') {
+        await drawShowcaseTemplate(ctx, canvas, margin, bgZoom, bgImageOpacity, showcaseRotation)
+        // Abort if a newer render has started
+        if (thisRender !== renderCount.current) return
+    }
+
+    // Apply Overlay (common for Image and Showcase)
+    if (bgOverlayOpacity > 0 && backgroundType !== 'solid') {
+        ctx.fillStyle = `rgba(0,0,0,${bgOverlayOpacity})`
+        ctx.fillRect(0, 0, canvas.width, canvas.height)
     }
 
     // Load Sidewalk Logo Watermark
@@ -296,13 +307,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
     // Abort if a newer render has started
     if (thisRender !== renderCount.current) return
 
-    // Logo size and margins
-    const logoScale = 0.18
-    const logoW = canvas.width * logoScale
-    const logoH = logoW * 0.5
-    const margin = canvas.width * 0.08
-
-    // Draw Content based on type
+    // Draw Content on top of background
     if (contentType === 'home') {
         await drawHomeTemplate(ctx, canvas, margin)
         // Abort if a newer render has started
@@ -313,10 +318,6 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
         drawDescriptionTemplate(ctx, canvas, logoImg, margin)
     } else if (contentType === 'blank') {
         drawBlankTemplate(ctx, canvas, margin)
-    } else if (contentType === 'showcase') {
-        await drawShowcaseTemplate(ctx, canvas, margin)
-        // Abort if a newer render has started
-        if (thisRender !== renderCount.current) return
     }
 
     // Draw Sidewalk Logo watermark
@@ -693,14 +694,14 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
     return
   }
 
-  const drawShowcaseTemplate = async (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, margin: number) => {
+  const drawShowcaseTemplate = async (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, margin: number, zoom: number = 1.0, opacity: number = 1.0, rotationDeg: number = -15) => {
     const activePages = showcasePages.filter(p => !!p.screenshot)
     if (activePages.length === 0) return
 
-    const rotation = -15 * Math.PI / 180
+    const rotation = rotationDeg * Math.PI / 180
     
     // Total width to cover rotation (overscan)
-    const totalRotationWidth = canvas.width * 1.8 
+    const totalRotationWidth = (canvas.width * 1.8) * zoom
     const numActive = activePages.length
     const colWidth = totalRotationWidth / numActive
     
@@ -723,8 +724,8 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
         // Position columns
         const centerX = canvas.width / 2
         const xOffsetStart = -totalRotationWidth / 2
-        const x = centerX + xOffsetStart + (i * colWidth) + (colWidth / 2)
-        const y = canvas.height / 2
+        const x = Math.round(centerX + xOffsetStart + (i * colWidth) + (colWidth / 2))
+        const y = Math.round(canvas.height / 2)
         
         ctx.translate(x, y)
         ctx.rotate(rotation)
@@ -734,23 +735,27 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
         
         // Use a very tall rect to ensure background is covered
         const rectH = canvas.height * 3.0
+        const overlap = 6 // 6 pixel overlap to hide seams (Phase 2 fix)
         
         ctx.fillStyle = '#fff'
         
         // Draw the clipping area
         ctx.beginPath()
-        ctx.rect(-colWidth/2, -rectH/2 + verticalStagger, colWidth, rectH)
+        ctx.rect(Math.round(-colWidth/2 - overlap/2), Math.round(-rectH/2 + verticalStagger), Math.round(colWidth + overlap), Math.round(rectH))
         ctx.fill()
         ctx.clip()
         
         // Draw screenshot part
         const imgAspect = img.width / img.height
-        const drawW = colWidth
+        const drawW = Math.round(colWidth + overlap)
         const drawH = drawW / imgAspect
         
         // Scroll calculation: 0-100% represents one full image height for looping
         const scrollY = (page.yOffset / 100) * drawH
         
+        // Apply individual column opacity if needed (using global opacity for now)
+        ctx.globalAlpha = opacity
+
         // Draw image multiple times to fill the tall clipping rect (vertical tiling/looping)
         // We start drawing from the stagger point and expand upwards and downwards
         let startY = -rectH/2 + verticalStagger - (scrollY % drawH)
@@ -763,7 +768,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
         // Fill the clipping rect downwards
         let currentY = startY
         while (currentY < rectH/2 + verticalStagger) {
-            ctx.drawImage(img, -colWidth/2, currentY, drawW, drawH)
+            ctx.drawImage(img, Math.round(-colWidth/2 - overlap/2), Math.round(currentY), Math.round(drawW), Math.round(drawH))
             currentY += drawH
         }
         
@@ -926,7 +931,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
               <Type className="w-4 h-4" /> Content Type
             </label>
             <div className="grid grid-cols-2 gap-2">
-              {(['home', 'features', 'description', 'showcase', 'blank'] as ContentType[]).map((type) => (
+              {(['home', 'features', 'description', 'blank'] as ContentType[]).map((type) => (
                 <button
                   key={type}
                   onClick={() => setContentType(type)}
@@ -969,91 +974,6 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
             </div>
           )}
 
-          {contentType === 'showcase' && (
-            <div className="space-y-6">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <label className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--admin-text-muted)' }}>
-                    <Monitor className="w-4 h-4" /> Showcase Setup
-                  </label>
-                </div>
-                
-                <div className="space-y-4">
-                  {[0, 1, 2].map((i) => (
-                    <div key={i} className="space-y-2 p-3 rounded-lg border" style={{ borderColor: 'var(--admin-sidebar-border)' }}>
-                      <div className="flex items-center justify-between">
-                         <label className="text-[10px] uppercase font-bold" style={{ color: 'var(--admin-text-muted)' }}>Column {i + 1}</label>
-                         {showcasePages[i].screenshot && (
-                           <span className="text-[9px] text-green-500 font-bold uppercase">Captured</span>
-                         )}
-                      </div>
-                      <div className="flex gap-2">
-                        <input 
-                          type="text"
-                          placeholder="https://..."
-                          className="flex-1 bg-transparent border rounded-lg px-2 py-1 text-xs outline-none"
-                          style={{ borderColor: 'var(--admin-sidebar-border)', color: 'var(--admin-text)' }}
-                          value={showcasePages[i].url}
-                          onChange={(e) => {
-                             const newPages = [...showcasePages]
-                             newPages[i].url = e.target.value
-                             setShowcasePages(newPages)
-                          }}
-                        />
-                        <button 
-                          onClick={() => handleCaptureScreenshot(i)}
-                          disabled={showcaseLoading[i] || !showcasePages[i].url}
-                          className="px-2 py-1 bg-blue-500 text-white rounded text-[10px] font-bold uppercase disabled:opacity-50 flex items-center gap-1"
-                        >
-                          {showcaseLoading[i] ? <RefreshCw className="w-3 h-3 animate-spin" /> : 'Capture'}
-                        </button>
-                      </div>
-                      
-                      <div className="space-y-1">
-                        <div className="flex items-center justify-between">
-                           <label className="text-[9px] uppercase font-bold opacity-50">Y Offset</label>
-                           <span className="text-[9px] font-mono">{showcasePages[i].yOffset}%</span>
-                        </div>
-                        <input 
-                          type="range"
-                          min="0"
-                          max="100"
-                          className="w-full h-1 rounded-lg appearance-none cursor-pointer"
-                          style={{ backgroundColor: 'var(--admin-sidebar-border)', accentColor: 'var(--admin-accent)' }}
-                          value={showcasePages[i].yOffset}
-                          onChange={(e) => {
-                             const newPages = [...showcasePages]
-                             newPages[i].yOffset = parseInt(e.target.value)
-                             setShowcasePages(newPages)
-                          }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--admin-text-muted)' }}>
-                    Fade-in Wait Time
-                  </label>
-                  <span className="text-[10px] font-mono">{showcaseWaitTime}ms</span>
-                </div>
-                <input 
-                  type="range"
-                  min="1000"
-                  max="8000"
-                  step="500"
-                  className="w-full h-1 rounded-lg appearance-none cursor-pointer"
-                  style={{ backgroundColor: 'var(--admin-sidebar-border)', accentColor: 'var(--admin-accent)' }}
-                  value={showcaseWaitTime}
-                  onChange={(e) => setShowcaseWaitTime(parseInt(e.target.value))}
-                />
-                <p className="text-[9px] italic opacity-50" style={{ color: 'var(--admin-text-muted)' }}>Increase if the page has slow load-in animations.</p>
-              </div>
-            </div>
-          )}
 
           {contentType === 'blank' && (
             <div className="space-y-4">
@@ -1478,8 +1398,37 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
           </div>
 
 
-          {/* Background Colour */}
-          <div className="space-y-2">
+          {/* Background Customization */}
+          <div className="space-y-4 pt-4 border-t" style={{ borderColor: 'var(--admin-sidebar-border)' }}>
+            <div className="space-y-2">
+              <label className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--admin-text-muted)' }}>
+                <ImageIcon className="w-4 h-4" /> Background Type
+              </label>
+              <div className="flex gap-2">
+                {[
+                  { id: 'solid', label: 'Solid', icon: Palette },
+                  { id: 'image', label: 'Image', icon: ImageIcon },
+                  { id: 'showcase', label: 'Showcase', icon: Monitor }
+                ].map((t) => (
+                  <button
+                    key={t.id}
+                    onClick={() => setBackgroundType(t.id as any)}
+                    className="flex-1 py-2 rounded-lg border transition-all text-[10px] font-bold uppercase tracking-wider flex flex-col items-center gap-1"
+                    style={{ 
+                      borderColor: backgroundType === t.id ? 'var(--admin-accent)' : 'var(--admin-sidebar-border)',
+                      backgroundColor: backgroundType === t.id ? 'rgba(var(--admin-accent), 0.1)' : 'var(--admin-bg)',
+                      color: backgroundType === t.id ? 'var(--admin-text)' : 'var(--admin-text-muted)'
+                    }}
+                  >
+                    <t.icon className="w-3 h-3" />
+                    {t.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Background Colour (always visible as base for solid or fallback/overlay) */}
+            <div className="space-y-2">
             <label className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--admin-text-muted)' }}>
               <Palette className="w-4 h-4" /> Background Colour
             </label>
@@ -1544,71 +1493,90 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
             </select>
           </div>
 
-          {/* Background Image */}
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <label className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--admin-text-muted)' }}>
-                <ImageIcon className="w-4 h-4" /> Custom Background
-              </label>
-              {customBgUrl && (
-                <button onClick={() => setCustomBgUrl('')} className="text-[10px] font-bold uppercase text-red-500 hover:text-red-600">
-                  Clear
-                </button>
-              )}
-            </div>
-            
-            <div className="space-y-2">
-              <input 
-                type="text" 
-                placeholder="Paste Image URL..."
-                className="w-full bg-transparent border rounded-lg p-2 outline-none text-[10px] bg-url-input"
-                style={{ borderColor: 'var(--admin-sidebar-border)', color: 'var(--admin-text)' }}
-                value={customBgUrl.startsWith('data:') ? '' : customBgUrl}
-                onChange={(e) => setCustomBgUrl(e.target.value)}
-              />
-              
-              <div className="flex items-center gap-2 py-1">
-                <div className="h-[1px] flex-1 bg-zinc-500/10" />
-                <span className="text-[9px] font-bold text-zinc-500">OR</span>
-                <div className="h-[1px] flex-1 bg-zinc-500/10" />
+          {/* Show Showcase Setup when Showcase background is selected */}
+          {backgroundType === 'showcase' && (
+            <div className="space-y-6 pt-2">
+              <div className="space-y-4">
+                <label className="text-xs font-bold uppercase tracking-wider flex items-center gap-2" style={{ color: 'var(--admin-text-muted)' }}>
+                  <Monitor className="w-3 h-3" /> Showcase Columns
+                </label>
+                
+                <div className="space-y-4">
+                  {[0, 1, 2].map((i) => (
+                    <div key={i} className="space-y-2 p-3 rounded-lg border" style={{ borderColor: 'var(--admin-sidebar-border)' }}>
+                      <div className="flex items-center justify-between">
+                         <label className="text-[10px] uppercase font-bold" style={{ color: 'var(--admin-text-muted)' }}>Column {i + 1}</label>
+                         {showcasePages[i].screenshot && (
+                           <span className="text-[9px] text-green-500 font-bold uppercase">Captured</span>
+                         )}
+                      </div>
+                      <div className="flex gap-2">
+                        <input 
+                          type="text"
+                          placeholder="https://..."
+                          className="flex-1 bg-transparent border rounded-lg px-2 py-1 text-[10px] outline-none"
+                          style={{ borderColor: 'var(--admin-sidebar-border)', color: 'var(--admin-text)' }}
+                          value={showcasePages[i].url}
+                          onChange={(e) => {
+                             const newPages = [...showcasePages]
+                             newPages[i].url = e.target.value
+                             setShowcasePages(newPages)
+                          }}
+                        />
+                        <button 
+                          onClick={() => handleCaptureScreenshot(i)}
+                          disabled={showcaseLoading[i] || !showcasePages[i].url}
+                          className="px-2 py-0.5 bg-blue-500 text-white rounded text-[9px] font-bold uppercase disabled:opacity-50 flex items-center gap-1"
+                        >
+                          {showcaseLoading[i] ? <RefreshCw className="w-3 h-3 animate-spin" /> : 'Capture'}
+                        </button>
+                      </div>
+                      
+                      <div className="space-y-1">
+                        <div className="flex items-center justify-between">
+                           <label className="text-[9px] uppercase font-bold opacity-50">Y Offset</label>
+                           <span className="text-[9px] font-mono">{showcasePages[i].yOffset}%</span>
+                        </div>
+                        <input 
+                          type="range"
+                          min="0"
+                          max="100"
+                          className="w-full h-1 rounded-lg appearance-none cursor-pointer"
+                          style={{ backgroundColor: 'var(--admin-sidebar-border)', accentColor: 'var(--admin-accent)' }}
+                          value={showcasePages[i].yOffset}
+                          onChange={(e) => {
+                             const newPages = [...showcasePages]
+                             newPages[i].yOffset = parseInt(e.target.value)
+                             setShowcasePages(newPages)
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-              
-              <label 
-                onDragOver={(e) => {
-                    e.preventDefault()
-                    setIsDragging(true)
-                }}
-                onDragLeave={() => setIsDragging(false)}
-                onDrop={(e) => {
-                    e.preventDefault()
-                    setIsDragging(false)
-                    const file = e.dataTransfer.files?.[0]
-                    if (file) handleFile(file)
-                }}
-                className={`w-full flex flex-col items-center justify-center gap-2 py-4 border border-dashed rounded-lg cursor-pointer transition-all ${isDragging ? 'bg-blue-500/10 border-blue-500 scale-[1.02]' : 'hover:bg-zinc-500/5'}`}
-                style={{ borderColor: isDragging ? 'var(--admin-accent)' : 'var(--admin-sidebar-border)', color: 'var(--admin-text-muted)' }}
-              >
-                <Upload className={`w-4 h-4 ${isDragging ? 'text-blue-500 animate-bounce' : ''}`} />
-                <div className="text-center">
-                    <span className="text-[10px] font-medium uppercase font-bold tracking-wider block">
-                        {isDragging ? 'Drop Image Here' : 'Upload or Drag Image'}
-                    </span>
-                    {!isDragging && <span className="text-[8px] opacity-50 block mt-1">Supports Paste (Ctrl+V)</span>}
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="text-[10px] uppercase font-bold" style={{ color: 'var(--admin-text-muted)' }}>
+                    Fade-in Wait Time
+                  </label>
+                  <span className="text-[10px] font-mono">{showcaseWaitTime}ms</span>
                 </div>
                 <input 
-                  type="file" 
-                  className="hidden" 
-                  accept="image/*"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0]
-                    if (file) handleFile(file)
-                  }}
+                  type="range"
+                  min="1000"
+                  max="8000"
+                  step="500"
+                  className="w-full h-1 rounded-lg appearance-none cursor-pointer"
+                  style={{ backgroundColor: 'var(--admin-sidebar-border)', accentColor: 'var(--admin-accent)' }}
+                  value={showcaseWaitTime}
+                  onChange={(e) => setShowcaseWaitTime(parseInt(e.target.value))}
                 />
-              </label>
-            </div>
+              </div>
 
-            {customBgUrl && (
-              <div className="space-y-4 pt-4">
+              {/* Shared Background Controls for Showcase */}
+              <div className="space-y-4 pt-2 border-t border-zinc-500/10">
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <label className="text-[9px] uppercase font-bold" style={{ color: 'var(--admin-text-muted)' }}>
@@ -1631,7 +1599,26 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <label className="text-[9px] uppercase font-bold" style={{ color: 'var(--admin-text-muted)' }}>
-                      Image Opacity
+                      Rotation
+                    </label>
+                    <span className="text-[10px] font-mono">{showcaseRotation}°</span>
+                  </div>
+                  <input 
+                    type="range"
+                    min="-45"
+                    max="45"
+                    step="1"
+                    className="w-full h-1 rounded-lg appearance-none cursor-pointer"
+                    style={{ backgroundColor: 'var(--admin-sidebar-border)', accentColor: 'var(--admin-accent)' }}
+                    value={showcaseRotation}
+                    onChange={(e) => setShowcaseRotation(parseInt(e.target.value))}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="text-[9px] uppercase font-bold" style={{ color: 'var(--admin-text-muted)' }}>
+                      Showcase Opacity
                     </label>
                     <span className="text-[10px] font-mono">{Math.round(bgImageOpacity * 100)}%</span>
                   </div>
@@ -1650,7 +1637,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <label className="text-[9px] uppercase font-bold" style={{ color: 'var(--admin-text-muted)' }}>
-                      Darken
+                      Darken overlay
                     </label>
                     <span className="text-[10px] font-mono">{Math.round(bgOverlayOpacity * 100)}%</span>
                   </div>
@@ -1666,8 +1653,136 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
                   />
                 </div>
               </div>
-            )}
-          </div>
+            </div>
+          )}
+
+          {/* Background Image - Only show when Image background is selected */}
+          {backgroundType === 'image' && (
+            <div className="space-y-3 pt-2">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold uppercase tracking-wider flex items-center gap-2" style={{ color: 'var(--admin-text-muted)' }}>
+                  <ImageIcon className="w-3 h-3" /> Custom Background
+                </label>
+                {customBgUrl && (
+                  <button onClick={() => setCustomBgUrl('')} className="text-[10px] font-bold uppercase text-red-500 hover:text-red-600">
+                    Clear
+                  </button>
+                )}
+              </div>
+              
+              <div className="space-y-2">
+                <input 
+                  type="text" 
+                  placeholder="Paste Image URL..."
+                  className="w-full bg-transparent border rounded-lg p-2 outline-none text-[10px] bg-url-input"
+                  style={{ borderColor: 'var(--admin-sidebar-border)', color: 'var(--admin-text)' }}
+                  value={customBgUrl.startsWith('data:') ? '' : customBgUrl}
+                  onChange={(e) => setCustomBgUrl(e.target.value)}
+                />
+                
+                <div className="flex items-center gap-2 py-1">
+                  <div className="h-[1px] flex-1 bg-zinc-500/10" />
+                  <span className="text-[9px] font-bold text-zinc-500">OR</span>
+                  <div className="h-[1px] flex-1 bg-zinc-500/10" />
+                </div>
+                
+                <label 
+                  onDragOver={(e) => {
+                      e.preventDefault()
+                      setIsDragging(true)
+                  }}
+                  onDragLeave={() => setIsDragging(false)}
+                  onDrop={(e) => {
+                      e.preventDefault()
+                      setIsDragging(false)
+                      const file = e.dataTransfer.files?.[0]
+                      if (file) handleFile(file)
+                  }}
+                  className={`w-full flex flex-col items-center justify-center gap-2 py-4 border border-dashed rounded-lg cursor-pointer transition-all ${isDragging ? 'bg-blue-500/10 border-blue-500 scale-[1.02]' : 'hover:bg-zinc-500/5'}`}
+                  style={{ borderColor: isDragging ? 'var(--admin-accent)' : 'var(--admin-sidebar-border)', color: 'var(--admin-text-muted)' }}
+                >
+                  <Upload className={`w-4 h-4 ${isDragging ? 'text-blue-500 animate-bounce' : ''}`} />
+                  <div className="text-center">
+                      <span className="text-[10px] font-medium uppercase font-bold tracking-wider block">
+                          {isDragging ? 'Drop Image Here' : 'Upload or Drag Image'}
+                      </span>
+                      {!isDragging && <span className="text-[8px] opacity-50 block mt-1">Supports Paste (Ctrl+V)</span>}
+                  </div>
+                  <input 
+                    type="file" 
+                    className="hidden" 
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0]
+                      if (file) handleFile(file)
+                    }}
+                  />
+                </label>
+              </div>
+
+              {customBgUrl && (
+                <div className="space-y-4 pt-2">
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <label className="text-[9px] uppercase font-bold" style={{ color: 'var(--admin-text-muted)' }}>
+                        Zoom
+                      </label>
+                      <span className="text-[10px] font-mono">{bgZoom.toFixed(2)}x</span>
+                    </div>
+                    <input 
+                      type="range"
+                      min="1"
+                      max="3"
+                      step="0.05"
+                      className="w-full h-1 rounded-lg appearance-none cursor-pointer"
+                      style={{ backgroundColor: 'var(--admin-sidebar-border)', accentColor: 'var(--admin-accent)' }}
+                      value={bgZoom}
+                      onChange={(e) => setBgZoom(parseFloat(e.target.value))}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <label className="text-[9px] uppercase font-bold" style={{ color: 'var(--admin-text-muted)' }}>
+                        Image Opacity
+                      </label>
+                      <span className="text-[10px] font-mono">{Math.round(bgImageOpacity * 100)}%</span>
+                    </div>
+                    <input 
+                      type="range"
+                      min="0"
+                      max="1"
+                      step="0.05"
+                      className="w-full h-1 rounded-lg appearance-none cursor-pointer"
+                      style={{ backgroundColor: 'var(--admin-sidebar-border)', accentColor: 'var(--admin-accent)' }}
+                      value={bgImageOpacity}
+                      onChange={(e) => setBgImageOpacity(parseFloat(e.target.value))}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <label className="text-[9px] uppercase font-bold" style={{ color: 'var(--admin-text-muted)' }}>
+                        Darken overlay
+                      </label>
+                      <span className="text-[10px] font-mono">{Math.round(bgOverlayOpacity * 100)}%</span>
+                    </div>
+                    <input 
+                      type="range"
+                      min="0"
+                      max="0.9"
+                      step="0.05"
+                      className="w-full h-1 rounded-lg appearance-none cursor-pointer"
+                      style={{ backgroundColor: 'var(--admin-sidebar-border)', accentColor: 'var(--admin-accent)' }}
+                      value={bgOverlayOpacity}
+                      onChange={(e) => setBgOverlayOpacity(parseFloat(e.target.value))}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
 
 
           <button 
