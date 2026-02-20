@@ -85,6 +85,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
   const [bgImageOpacity, setBgImageOpacity] = useState(1.0)
   const [bgOverlayOpacity, setBgOverlayOpacity] = useState(0.4)
   const [isDragging, setIsDragging] = useState(false)
+  const [showcaseDragging, setShowcaseDragging] = useState<number | null>(null)
   const [size, setSize] = useState<Size>(SIZES[1])
   const [bgZoom, setBgZoom] = useState(1.0)
   const [svgOriginalContent, setSvgOriginalContent] = useState<string>('')
@@ -207,6 +208,18 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
     if (file && file.type.startsWith('image/')) {
       const reader = new FileReader()
       reader.onload = (rev) => setCustomBgUrl(rev.target?.result as string)
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const handleShowcaseFile = (file: File, index: number) => {
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader()
+      reader.onload = (rev) => {
+        const newPages = [...showcasePages]
+        newPages[index] = { ...newPages[index], screenshot: rev.target?.result as string }
+        setShowcasePages(newPages)
+      }
       reader.readAsDataURL(file)
     }
   }
@@ -705,8 +718,8 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
     const numActive = activePages.length
     const colWidth = totalRotationWidth / numActive
     
-    // Draw columns from left to right
-    for (let i = 0; i < numActive; i++) {
+    // Draw columns from right to left (to ensure overlap paints in the right order)
+    for (let i = numActive - 1; i >= 0; i--) {
         const page = activePages[i]
         
         const img = new Image()
@@ -724,7 +737,10 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
         // Position columns
         const centerX = canvas.width / 2
         const xOffsetStart = -totalRotationWidth / 2
-        const x = Math.round(centerX + xOffsetStart + (i * colWidth) + (colWidth / 2))
+        
+        // Accurate pixel positioning to minimize seams
+        const colStartX = centerX + xOffsetStart + (i * colWidth)
+        const x = Math.round(colStartX + (colWidth / 2))
         const y = Math.round(canvas.height / 2)
         
         ctx.translate(x, y)
@@ -735,11 +751,13 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
         
         // Use a very tall rect to ensure background is covered
         const rectH = canvas.height * 3.0
-        const overlap = 6 // 6 pixel overlap to hide seams (Phase 2 fix)
+        
+        // Dynamic overlap based on column width to ensure no sub-pixel gaps
+        const overlap = Math.max(8, Math.round(colWidth * 0.02))
         
         ctx.fillStyle = '#fff'
         
-        // Draw the clipping area
+        // Draw the clipping area with overlap
         ctx.beginPath()
         ctx.rect(Math.round(-colWidth/2 - overlap/2), Math.round(-rectH/2 + verticalStagger), Math.round(colWidth + overlap), Math.round(rectH))
         ctx.fill()
@@ -1503,12 +1521,41 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
                 
                 <div className="space-y-4">
                   {[0, 1, 2].map((i) => (
-                    <div key={i} className="space-y-2 p-3 rounded-lg border" style={{ borderColor: 'var(--admin-sidebar-border)' }}>
+                    <div 
+                      key={i} 
+                      className={`space-y-2 p-3 rounded-lg border transition-all ${showcaseDragging === i ? 'bg-blue-500/5 ring-1 ring-blue-500' : ''}`} 
+                      style={{ borderColor: 'var(--admin-sidebar-border)' }}
+                      onDragOver={(e) => {
+                          e.preventDefault()
+                          setShowcaseDragging(i)
+                      }}
+                      onDragLeave={() => setShowcaseDragging(null)}
+                      onDrop={(e) => {
+                          e.preventDefault()
+                          setShowcaseDragging(null)
+                          const file = e.dataTransfer.files?.[0]
+                          if (file) handleShowcaseFile(file, i)
+                      }}
+                    >
                       <div className="flex items-center justify-between">
                          <label className="text-[10px] uppercase font-bold" style={{ color: 'var(--admin-text-muted)' }}>Column {i + 1}</label>
-                         {showcasePages[i].screenshot && (
-                           <span className="text-[9px] text-green-500 font-bold uppercase">Captured</span>
-                         )}
+                         <div className="flex items-center gap-2">
+                            {showcasePages[i].screenshot && (
+                              <button 
+                                onClick={() => {
+                                  const newPages = [...showcasePages]
+                                  newPages[i].screenshot = null
+                                  setShowcasePages(newPages)
+                                }}
+                                className="text-[9px] text-red-500 hover:text-red-600 font-bold uppercase transition-colors"
+                              >
+                                Clear
+                              </button>
+                            )}
+                            {showcasePages[i].screenshot && (
+                              <span className="text-[9px] text-green-500 font-bold uppercase">Ready</span>
+                            )}
+                         </div>
                       </div>
                       <div className="flex gap-2">
                         <input 
@@ -1527,8 +1574,50 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
                           onClick={() => handleCaptureScreenshot(i)}
                           disabled={showcaseLoading[i] || !showcasePages[i].url}
                           className="px-2 py-0.5 bg-blue-500 text-white rounded text-[9px] font-bold uppercase disabled:opacity-50 flex items-center gap-1"
+                          title="Capture from URL"
                         >
-                          {showcaseLoading[i] ? <RefreshCw className="w-3 h-3 animate-spin" /> : 'Capture'}
+                          {showcaseLoading[i] ? <RefreshCw className="w-3 h-3 animate-spin" /> : <Monitor className="w-3 h-3" />}
+                        </button>
+                        
+                        <label className="cursor-pointer">
+                          <input 
+                            type="file" 
+                            className="hidden" 
+                            accept="image/*"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0]
+                              if (file) handleShowcaseFile(file, i)
+                            }}
+                          />
+                          <div className="px-2 py-0.5 bg-zinc-500 text-white rounded text-[9px] font-bold uppercase hover:bg-zinc-600 flex items-center gap-1">
+                             <Upload className="w-3 h-3" />
+                          </div>
+                        </label>
+
+                        <button 
+                          onClick={async () => {
+                            try {
+                              const clipboardItems = await navigator.clipboard.read()
+                              for (const item of clipboardItems) {
+                                for (const type of item.types) {
+                                  if (type.startsWith('image/')) {
+                                    const blob = await item.getType(type)
+                                    const file = new File([blob], "pasted-image.png", { type })
+                                    handleShowcaseFile(file, i)
+                                    return
+                                  }
+                                }
+                              }
+                              alert('No image found in clipboard. Use Ctrl+V or copy an image first.')
+                            } catch (err) {
+                              console.error('Clipboard paste failed:', err)
+                              alert('Please use Ctrl+V or enable clipboard permissions.')
+                            }
+                          }}
+                          className="px-2 py-0.5 bg-zinc-500 text-white rounded text-[9px] font-bold uppercase hover:bg-zinc-600 flex items-center gap-1"
+                          title="Paste from Clipboard"
+                        >
+                          <ImageIcon className="w-3 h-3" />
                         </button>
                       </div>
                       
