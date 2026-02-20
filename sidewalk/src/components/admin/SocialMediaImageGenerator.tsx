@@ -71,7 +71,9 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
   const [textColor, setTextColor] = useState(initialColors.text)
   const [highlightColor, setHighlightColor] = useState('#CD5037') // Default to Red
   const [customBgUrl, setCustomBgUrl] = useState<string>('')
+  const [bgImageOpacity, setBgImageOpacity] = useState(1.0)
   const [bgOverlayOpacity, setBgOverlayOpacity] = useState(0.4)
+  const [isDragging, setIsDragging] = useState(false)
   const [size, setSize] = useState<Size>(SIZES[1])
   const [bgZoom, setBgZoom] = useState(1.0)
   const [svgOriginalContent, setSvgOriginalContent] = useState<string>('')
@@ -129,7 +131,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
   // Draw the canvas whenever any option changes
   useEffect(() => {
     drawCanvas()
-  }, [selectedClientId, contentType, logoPosition, logoVariant, homeLogoVariant, customLogoUrl, customBgUrl, bgOverlayOpacity, bgZoom, homeVariation, bgColor, textColor, highlightColor, svgOriginalContent, svgColorMap, sidewalkLogoColorMap, size, editableFeatures, editableDescription, descriptionFontSize, showCoBranding])
+  }, [selectedClientId, contentType, logoPosition, logoVariant, homeLogoVariant, customLogoUrl, customBgUrl, bgOverlayOpacity, bgZoom, bgImageOpacity, homeVariation, bgColor, textColor, highlightColor, svgOriginalContent, svgColorMap, sidewalkLogoColorMap, size, editableFeatures, editableDescription, descriptionFontSize, showCoBranding])
 
   // Update editable text when content selection changes
   useEffect(() => {
@@ -157,6 +159,38 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
     }
     return url
   }
+
+  const handleFile = (file: File) => {
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader()
+      reader.onload = (rev) => setCustomBgUrl(rev.target?.result as string)
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const handlePaste = (e: ClipboardEvent) => {
+    // Only handle paste if we're not in an input/textarea (unless it's the custom bg input)
+    const target = e.target as HTMLElement
+    if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+        if (!target.classList.contains('bg-url-input')) return
+    }
+
+    const items = e.clipboardData?.items
+    if (items) {
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.indexOf('image') !== -1) {
+          const file = items[i].getAsFile()
+          if (file) handleFile(file)
+          break
+        }
+      }
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('paste', handlePaste)
+    return () => window.removeEventListener('paste', handlePaste)
+  }, [])
 
   const drawCanvas = async () => {
     const canvas = canvasRef.current
@@ -203,7 +237,9 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
             drawX = (canvas.width - drawW) / 2
             drawY = (canvas.height - drawH) / 2
             
+            ctx.globalAlpha = bgImageOpacity
             ctx.drawImage(bgImg, drawX, drawY, drawW, drawH)
+            ctx.globalAlpha = 1.0
             
             // Apply Overlay
             if (bgOverlayOpacity > 0) {
@@ -1316,7 +1352,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
               <input 
                 type="text" 
                 placeholder="Paste Image URL..."
-                className="w-full bg-transparent border rounded-lg p-2 outline-none text-[10px]"
+                className="w-full bg-transparent border rounded-lg p-2 outline-none text-[10px] bg-url-input"
                 style={{ borderColor: 'var(--admin-sidebar-border)', color: 'var(--admin-text)' }}
                 value={customBgUrl.startsWith('data:') ? '' : customBgUrl}
                 onChange={(e) => setCustomBgUrl(e.target.value)}
@@ -1328,21 +1364,35 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
                 <div className="h-[1px] flex-1 bg-zinc-500/10" />
               </div>
               
-              <label className="w-full flex items-center justify-center gap-2 py-2 border border-dashed rounded-lg cursor-pointer hover:bg-zinc-500/5 transition-colors"
-                     style={{ borderColor: 'var(--admin-sidebar-border)', color: 'var(--admin-text-muted)' }}>
-                <Upload className="w-3 h-3" />
-                <span className="text-[10px] font-medium uppercase font-bold tracking-wider">Upload File</span>
+              <label 
+                onDragOver={(e) => {
+                    e.preventDefault()
+                    setIsDragging(true)
+                }}
+                onDragLeave={() => setIsDragging(false)}
+                onDrop={(e) => {
+                    e.preventDefault()
+                    setIsDragging(false)
+                    const file = e.dataTransfer.files?.[0]
+                    if (file) handleFile(file)
+                }}
+                className={`w-full flex flex-col items-center justify-center gap-2 py-4 border border-dashed rounded-lg cursor-pointer transition-all ${isDragging ? 'bg-blue-500/10 border-blue-500 scale-[1.02]' : 'hover:bg-zinc-500/5'}`}
+                style={{ borderColor: isDragging ? 'var(--admin-accent)' : 'var(--admin-sidebar-border)', color: 'var(--admin-text-muted)' }}
+              >
+                <Upload className={`w-4 h-4 ${isDragging ? 'text-blue-500 animate-bounce' : ''}`} />
+                <div className="text-center">
+                    <span className="text-[10px] font-medium uppercase font-bold tracking-wider block">
+                        {isDragging ? 'Drop Image Here' : 'Upload or Drag Image'}
+                    </span>
+                    {!isDragging && <span className="text-[8px] opacity-50 block mt-1">Supports Paste (Ctrl+V)</span>}
+                </div>
                 <input 
                   type="file" 
                   className="hidden" 
                   accept="image/*"
                   onChange={(e) => {
                     const file = e.target.files?.[0]
-                    if (file) {
-                      const reader = new FileReader()
-                      reader.onload = (rev) => setCustomBgUrl(rev.target?.result as string)
-                      reader.readAsDataURL(file)
-                    }
+                    if (file) handleFile(file)
                   }}
                 />
               </label>
@@ -1366,6 +1416,25 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
                     style={{ backgroundColor: 'var(--admin-sidebar-border)', accentColor: 'var(--admin-accent)' }}
                     value={bgZoom}
                     onChange={(e) => setBgZoom(parseFloat(e.target.value))}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="text-[9px] uppercase font-bold" style={{ color: 'var(--admin-text-muted)' }}>
+                      Image Opacity
+                    </label>
+                    <span className="text-[10px] font-mono">{Math.round(bgImageOpacity * 100)}%</span>
+                  </div>
+                  <input 
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.05"
+                    className="w-full h-1 rounded-lg appearance-none cursor-pointer"
+                    style={{ backgroundColor: 'var(--admin-sidebar-border)', accentColor: 'var(--admin-accent)' }}
+                    value={bgImageOpacity}
+                    onChange={(e) => setBgImageOpacity(parseFloat(e.target.value))}
                   />
                 </div>
 
