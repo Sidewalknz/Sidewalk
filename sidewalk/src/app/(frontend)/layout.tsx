@@ -3,8 +3,34 @@ import Script from 'next/script'
 import './styles.css'
 
 export const metadata = {
-  description: 'Sidewalk - Web solutions company specializing in Next.js, Payload CMS, and PostgreSQL. Self-hosted, modern web experiences.',
-  title: 'Sidewalk - Web Solutions Company',
+  metadataBase: new URL('https://sidewalks.co.nz'),
+  title: 'Sidewalk - Modern Web Solutions, Next.js & Payload CMS Experts',
+  description: 'Sidewalk - Web solutions company specializing in Next.js, Payload CMS, and PostgreSQL. Self-hosted, modern web experiences that streamline business workflows.',
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    title: 'Sidewalk - Modern Web Solutions',
+    description: 'Expert Next.js and Payload CMS development. We build self-hosted, scalable web experiences.',
+    url: 'https://sidewalks.co.nz',
+    siteName: 'Sidewalk',
+    images: [
+      {
+        url: '/logo-w-r.svg', // Using a white logo on red as a placeholder OG image
+        width: 1200,
+        height: 630,
+        alt: 'Sidewalk Logo',
+      },
+    ],
+    locale: 'en_NZ',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Sidewalk - Modern Web Solutions',
+    description: 'Expert Next.js and Payload CMS development.',
+    images: ['/logo-w-r.svg'],
+  },
 }
 
 export default async function RootLayout(props: { children: React.ReactNode }) {

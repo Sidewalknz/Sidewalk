@@ -672,9 +672,9 @@ export default function HomePage() {
         style={{ '--bg-color': activeTabData.color } as React.CSSProperties}
       >
         <div ref={sidewalkTopRef} className="swiss-title-top">SIDEWALK</div>
-        <div className={`swiss-title-middle ${activeTab === 'projects' ? 'projects-title' : ''}`}>
+        <h1 className={`swiss-title-middle ${activeTab === 'projects' ? 'projects-title' : ''}`}>
           {getPageTitle(activeTab)}
-        </div>
+        </h1>
         <div className="swiss-title-bottom-container">
           <div ref={sidewalkBottomRef} className="swiss-title-bottom">SIDEWALK</div>
           {(getPageTagline(activeTab) || activeTab === 'projects') && (

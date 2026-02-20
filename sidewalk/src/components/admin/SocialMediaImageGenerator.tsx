@@ -14,11 +14,12 @@ type Size = {
   width: number
   height: number
   label: string
-  aspect: 'square' | 'story' | 'fb'
+  aspect: 'square' | 'story' | 'fb' | 'portrait'
 }
 
 const SIZES: Size[] = [
-  { width: 1440, height: 1440, label: 'Instagram Post (1440x1440)', aspect: 'square' },
+  { width: 1440, height: 1440, label: 'Instagram Post Landscape (1440x1440)', aspect: 'square' },
+  { width: 1440, height: 1918, label: 'Instagram Post Portrait (1440x1918)', aspect: 'portrait' },
   { width: 1080, height: 1920, label: 'Instagram Story (1080x1920)', aspect: 'story' },
   { width: 1200, height: 630, label: 'Facebook (1200x630)', aspect: 'fb' },
 ]
@@ -1419,7 +1420,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
                         maxWidth: '100%', 
                         maxHeight: '70vh', 
                         height: 'auto',
-                        width: size.aspect === 'square' ? '500px' : size.aspect === 'story' ? '300px' : '600px'
+                        width: size.aspect === 'square' ? '500px' : size.aspect === 'portrait' ? '400px' : size.aspect === 'story' ? '300px' : '600px'
                     }}
                     className="rounded shadow-lg bg-black"
                 />
