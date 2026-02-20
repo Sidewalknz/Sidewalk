@@ -752,12 +752,12 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
         const verticalStagger = (i - (numActive - 1) / 2) * (canvas.height * 0.15)
         
         // Use a very tall rect to ensure background is covered
-        const rectH = canvas.height * 3.0
-        
-        // Dynamic overlap based on column width to ensure no sub-pixel gaps
-        const overlap = Math.max(8, Math.round(colWidth * 0.02))
-        
-        // Draw the clipping area with overlap
+      const rectH = canvas.height * 3.0
+      
+      // Minimal overlap now that the white fill is gone and we have image bleed
+      const overlap = 2
+      
+      // Draw the clipping area with overlap
         // We removed the white fill() here as it was causing bright lines to bleed through
         ctx.beginPath()
         ctx.rect(Math.round(-colWidth/2 - overlap/2), Math.round(-rectH/2 + verticalStagger), Math.round(colWidth + overlap), Math.round(rectH))
