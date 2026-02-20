@@ -718,8 +718,10 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
     const numActive = activePages.length
     const colWidth = totalRotationWidth / numActive
     
-    // Draw columns from right to left (to ensure overlap paints in the right order)
-    for (let i = numActive - 1; i >= 0; i--) {
+    // Define drawing order: sides first, then middle (to ensure middle overlaps both)
+    const drawIndices = numActive === 3 ? [0, 2, 1] : Array.from({ length: numActive }, (_, i) => i)
+
+    for (const i of drawIndices) {
         const page = activePages[i]
         
         const img = new Image()
