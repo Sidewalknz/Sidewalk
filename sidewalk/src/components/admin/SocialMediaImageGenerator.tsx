@@ -36,7 +36,7 @@ const SIDEWALK_LOGO_DARK_PRESETS = [
   { name: 'Dark Yellow', colors: { '#CD5037': '#FCF5EB', '#E5BF55': '#E5BF55', '#FCF5EB': '#212C34' } },
 ]
 
-type ContentType = 'home' | 'features' | 'description' | 'blank'
+type ContentType = 'home' | 'features' | 'description' | 'blank' | 'showcase'
 type LogoPosition = 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right'
 type SidewalkLogoStyle = 'logo.svg' | 'logo2.svg' | 'none'
 
@@ -53,6 +53,15 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
   const [editableDescription, setEditableDescription] = useState('')
   const [descriptionFontSize, setDescriptionFontSize] = useState(1.0)
   const [showCoBranding, setShowCoBranding] = useState(false)
+
+  // Showcase state
+  const [showcasePages, setShowcasePages] = useState<{ url: string, yOffset: number, screenshot: string | null }[]>([
+    { url: '', yOffset: 0, screenshot: null },
+    { url: '', yOffset: 10, screenshot: null },
+    { url: '', yOffset: 20, screenshot: null },
+  ])
+  const [showcaseLoading, setShowcaseLoading] = useState<boolean[]>([false, false, false])
+  const [showcaseWaitTime, setShowcaseWaitTime] = useState(3000)
 
   
   // Theme-based initial colors
@@ -131,7 +140,39 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
   // Draw the canvas whenever any option changes
   useEffect(() => {
     drawCanvas()
-  }, [selectedClientId, contentType, logoPosition, logoVariant, homeLogoVariant, customLogoUrl, customBgUrl, bgOverlayOpacity, bgZoom, bgImageOpacity, homeVariation, bgColor, textColor, highlightColor, svgOriginalContent, svgColorMap, sidewalkLogoColorMap, size, editableFeatures, editableDescription, descriptionFontSize, showCoBranding])
+  }, [selectedClientId, contentType, logoPosition, logoVariant, homeLogoVariant, customLogoUrl, customBgUrl, bgOverlayOpacity, bgZoom, bgImageOpacity, homeVariation, bgColor, textColor, highlightColor, svgOriginalContent, svgColorMap, sidewalkLogoColorMap, size, editableFeatures, editableDescription, descriptionFontSize, showCoBranding, showcasePages])
+
+  const handleCaptureScreenshot = async (index: number) => {
+    const url = showcasePages[index].url
+    if (!url) return
+
+    const newLoading = [...showcaseLoading]
+    newLoading[index] = true
+    setShowcaseLoading(newLoading)
+
+    try {
+      const response = await fetch('/api/screenshot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url, waitTime: showcaseWaitTime })
+      })
+
+      if (!response.ok) throw new Error('Failed to capture')
+
+      const data = await response.json()
+      
+      const newPages = [...showcasePages]
+      newPages[index] = { ...newPages[index], screenshot: data.screenshot }
+      setShowcasePages(newPages)
+    } catch (err) {
+      console.error('Screenshot error:', err)
+      alert('Failed to capture screenshot. Make sure the URL is correct and public.')
+    } finally {
+      const finalLoading = [...showcaseLoading]
+      finalLoading[index] = false
+      setShowcaseLoading(finalLoading)
+    }
+  }
 
   // Update editable text when content selection changes
   useEffect(() => {
@@ -272,6 +313,10 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
         drawDescriptionTemplate(ctx, canvas, logoImg, margin)
     } else if (contentType === 'blank') {
         drawBlankTemplate(ctx, canvas, margin)
+    } else if (contentType === 'showcase') {
+        await drawShowcaseTemplate(ctx, canvas, margin)
+        // Abort if a newer render has started
+        if (thisRender !== renderCount.current) return
     }
 
     // Draw Sidewalk Logo watermark
@@ -648,6 +693,84 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
     return
   }
 
+  const drawShowcaseTemplate = async (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, margin: number) => {
+    const activePages = showcasePages.filter(p => !!p.screenshot)
+    if (activePages.length === 0) return
+
+    const rotation = -15 * Math.PI / 180
+    
+    // Total width to cover rotation (overscan)
+    const totalRotationWidth = canvas.width * 1.8 
+    const numActive = activePages.length
+    const colWidth = totalRotationWidth / numActive
+    
+    // Draw columns from left to right
+    for (let i = 0; i < numActive; i++) {
+        const page = activePages[i]
+        
+        const img = new Image()
+        img.crossOrigin = 'anonymous'
+        await new Promise(resolve => {
+            img.onload = resolve
+            img.onerror = () => resolve(null)
+            img.src = page.screenshot!
+        })
+
+        if (!img.complete || img.width === 0) continue
+
+        ctx.save()
+        
+        // Position columns
+        const centerX = canvas.width / 2
+        const xOffsetStart = -totalRotationWidth / 2
+        const x = centerX + xOffsetStart + (i * colWidth) + (colWidth / 2)
+        const y = canvas.height / 2
+        
+        ctx.translate(x, y)
+        ctx.rotate(rotation)
+        
+        // Cascading vertical alignment based on number of active columns
+        const verticalStagger = (i - (numActive - 1) / 2) * (canvas.height * 0.15)
+        
+        // Use a very tall rect to ensure background is covered
+        const rectH = canvas.height * 3.0
+        
+        ctx.fillStyle = '#fff'
+        
+        // Draw the clipping area
+        ctx.beginPath()
+        ctx.rect(-colWidth/2, -rectH/2 + verticalStagger, colWidth, rectH)
+        ctx.fill()
+        ctx.clip()
+        
+        // Draw screenshot part
+        const imgAspect = img.width / img.height
+        const drawW = colWidth
+        const drawH = drawW / imgAspect
+        
+        // Scroll calculation: 0-100% represents one full image height for looping
+        const scrollY = (page.yOffset / 100) * drawH
+        
+        // Draw image multiple times to fill the tall clipping rect (vertical tiling/looping)
+        // We start drawing from the stagger point and expand upwards and downwards
+        let startY = -rectH/2 + verticalStagger - (scrollY % drawH)
+        
+        // Ensure we start high enough to cover the top of the clipping rect
+        while (startY > -rectH/2 + verticalStagger) {
+            startY -= drawH
+        }
+        
+        // Fill the clipping rect downwards
+        let currentY = startY
+        while (currentY < rectH/2 + verticalStagger) {
+            ctx.drawImage(img, -colWidth/2, currentY, drawW, drawH)
+            currentY += drawH
+        }
+        
+        ctx.restore()
+    }
+  }
+
   const wrapText = (ctx: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number, draw: boolean = true, hColor?: string) => {
     const lines = text.split('\n')
     let currentY = y
@@ -803,7 +926,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
               <Type className="w-4 h-4" /> Content Type
             </label>
             <div className="grid grid-cols-2 gap-2">
-              {(['home', 'features', 'description', 'blank'] as ContentType[]).map((type) => (
+              {(['home', 'features', 'description', 'showcase', 'blank'] as ContentType[]).map((type) => (
                 <button
                   key={type}
                   onClick={() => setContentType(type)}
@@ -842,6 +965,92 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
                     {v.label}
                   </button>
                 ))}
+              </div>
+            </div>
+          )}
+
+          {contentType === 'showcase' && (
+            <div className="space-y-6">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <label className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--admin-text-muted)' }}>
+                    <Monitor className="w-4 h-4" /> Showcase Setup
+                  </label>
+                </div>
+                
+                <div className="space-y-4">
+                  {[0, 1, 2].map((i) => (
+                    <div key={i} className="space-y-2 p-3 rounded-lg border" style={{ borderColor: 'var(--admin-sidebar-border)' }}>
+                      <div className="flex items-center justify-between">
+                         <label className="text-[10px] uppercase font-bold" style={{ color: 'var(--admin-text-muted)' }}>Column {i + 1}</label>
+                         {showcasePages[i].screenshot && (
+                           <span className="text-[9px] text-green-500 font-bold uppercase">Captured</span>
+                         )}
+                      </div>
+                      <div className="flex gap-2">
+                        <input 
+                          type="text"
+                          placeholder="https://..."
+                          className="flex-1 bg-transparent border rounded-lg px-2 py-1 text-xs outline-none"
+                          style={{ borderColor: 'var(--admin-sidebar-border)', color: 'var(--admin-text)' }}
+                          value={showcasePages[i].url}
+                          onChange={(e) => {
+                             const newPages = [...showcasePages]
+                             newPages[i].url = e.target.value
+                             setShowcasePages(newPages)
+                          }}
+                        />
+                        <button 
+                          onClick={() => handleCaptureScreenshot(i)}
+                          disabled={showcaseLoading[i] || !showcasePages[i].url}
+                          className="px-2 py-1 bg-blue-500 text-white rounded text-[10px] font-bold uppercase disabled:opacity-50 flex items-center gap-1"
+                        >
+                          {showcaseLoading[i] ? <RefreshCw className="w-3 h-3 animate-spin" /> : 'Capture'}
+                        </button>
+                      </div>
+                      
+                      <div className="space-y-1">
+                        <div className="flex items-center justify-between">
+                           <label className="text-[9px] uppercase font-bold opacity-50">Y Offset</label>
+                           <span className="text-[9px] font-mono">{showcasePages[i].yOffset}%</span>
+                        </div>
+                        <input 
+                          type="range"
+                          min="0"
+                          max="100"
+                          className="w-full h-1 rounded-lg appearance-none cursor-pointer"
+                          style={{ backgroundColor: 'var(--admin-sidebar-border)', accentColor: 'var(--admin-accent)' }}
+                          value={showcasePages[i].yOffset}
+                          onChange={(e) => {
+                             const newPages = [...showcasePages]
+                             newPages[i].yOffset = parseInt(e.target.value)
+                             setShowcasePages(newPages)
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--admin-text-muted)' }}>
+                    Fade-in Wait Time
+                  </label>
+                  <span className="text-[10px] font-mono">{showcaseWaitTime}ms</span>
+                </div>
+                <input 
+                  type="range"
+                  min="1000"
+                  max="8000"
+                  step="500"
+                  className="w-full h-1 rounded-lg appearance-none cursor-pointer"
+                  style={{ backgroundColor: 'var(--admin-sidebar-border)', accentColor: 'var(--admin-accent)' }}
+                  value={showcaseWaitTime}
+                  onChange={(e) => setShowcaseWaitTime(parseInt(e.target.value))}
+                />
+                <p className="text-[9px] italic opacity-50" style={{ color: 'var(--admin-text-muted)' }}>Increase if the page has slow load-in animations.</p>
               </div>
             </div>
           )}
