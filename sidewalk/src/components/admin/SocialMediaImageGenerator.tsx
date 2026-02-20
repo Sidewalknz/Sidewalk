@@ -757,17 +757,18 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
         // Dynamic overlap based on column width to ensure no sub-pixel gaps
         const overlap = Math.max(8, Math.round(colWidth * 0.02))
         
-        ctx.fillStyle = '#fff'
-        
         // Draw the clipping area with overlap
+        // We removed the white fill() here as it was causing bright lines to bleed through
         ctx.beginPath()
         ctx.rect(Math.round(-colWidth/2 - overlap/2), Math.round(-rectH/2 + verticalStagger), Math.round(colWidth + overlap), Math.round(rectH))
-        ctx.fill()
         ctx.clip()
         
         // Draw screenshot part
         const imgAspect = img.width / img.height
-        const drawW = Math.round(colWidth + overlap)
+        const baseDrawW = Math.round(colWidth + overlap)
+        // Add a slight 2px bleed to ensure the image covers the anti-aliased edges of the clip perfectly
+        const bleed = 2
+        const drawW = baseDrawW + bleed
         const drawH = drawW / imgAspect
         
         // Scroll calculation: 0-100% represents one full image height for looping
@@ -788,7 +789,8 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
         // Fill the clipping rect downwards
         let currentY = startY
         while (currentY < rectH/2 + verticalStagger) {
-            ctx.drawImage(img, Math.round(-colWidth/2 - overlap/2), Math.round(currentY), Math.round(drawW), Math.round(drawH))
+            // Centered bleed: draw slightly larger and offset by half the bleed
+            ctx.drawImage(img, Math.round(-colWidth/2 - overlap/2 - bleed/2), Math.round(currentY - bleed/2), Math.round(drawW), Math.round(drawH))
             currentY += drawH
         }
         
