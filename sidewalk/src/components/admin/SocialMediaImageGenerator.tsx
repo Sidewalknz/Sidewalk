@@ -18,7 +18,7 @@ type Size = {
 }
 
 const SIZES: Size[] = [
-  { width: 1080, height: 1080, label: 'Instagram Square (1080x1080)', aspect: 'square' },
+  { width: 1440, height: 1440, label: 'Instagram Post (1440x1440)', aspect: 'square' },
   { width: 1080, height: 1920, label: 'Instagram Story (1080x1920)', aspect: 'story' },
   { width: 1200, height: 630, label: 'Facebook (1200x630)', aspect: 'fb' },
 ]
