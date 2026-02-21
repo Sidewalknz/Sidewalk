@@ -56,14 +56,13 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
   const [backgroundType, setBackgroundType] = useState<'solid' | 'image' | 'showcase'>('solid')
 
   // Showcase state
-  const [showcasePages, setShowcasePages] = useState<{ url: string, yOffset: number, screenshot: string | null }[]>([
-    { url: '', yOffset: 0, screenshot: null },
-    { url: '', yOffset: 10, screenshot: null },
-    { url: '', yOffset: 20, screenshot: null },
+  const [showcasePages, setShowcasePages] = useState<{ yOffset: number, screenshot: string | null }[]>([
+    { yOffset: 0, screenshot: null },
+    { yOffset: 10, screenshot: null },
+    { yOffset: 20, screenshot: null },
   ])
-  const [showcaseLoading, setShowcaseLoading] = useState<boolean[]>([false, false, false])
-  const [showcaseWaitTime, setShowcaseWaitTime] = useState(3000)
   const [showcaseRotation, setShowcaseRotation] = useState(-15)
+  const [activeShowcaseColumn, setActiveShowcaseColumn] = useState<number | null>(null)
 
   
   // Theme-based initial colors
@@ -145,37 +144,6 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
     drawCanvas()
   }, [selectedClientId, contentType, logoPosition, logoVariant, homeLogoVariant, customLogoUrl, customBgUrl, bgOverlayOpacity, bgZoom, bgImageOpacity, homeVariation, bgColor, textColor, highlightColor, svgOriginalContent, svgColorMap, sidewalkLogoColorMap, size, editableFeatures, editableDescription, descriptionFontSize, showCoBranding, showcasePages, backgroundType, showcaseRotation])
 
-  const handleCaptureScreenshot = async (index: number) => {
-    const url = showcasePages[index].url
-    if (!url) return
-
-    const newLoading = [...showcaseLoading]
-    newLoading[index] = true
-    setShowcaseLoading(newLoading)
-
-    try {
-      const response = await fetch('/api/screenshot', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url, waitTime: showcaseWaitTime })
-      })
-
-      if (!response.ok) throw new Error('Failed to capture')
-
-      const data = await response.json()
-      
-      const newPages = [...showcasePages]
-      newPages[index] = { ...newPages[index], screenshot: data.screenshot }
-      setShowcasePages(newPages)
-    } catch (err) {
-      console.error('Screenshot error:', err)
-      alert('Failed to capture screenshot. Make sure the URL is correct and public.')
-    } finally {
-      const finalLoading = [...showcaseLoading]
-      finalLoading[index] = false
-      setShowcaseLoading(finalLoading)
-    }
-  }
 
   // Update editable text when content selection changes
   useEffect(() => {
@@ -236,7 +204,21 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
       for (let i = 0; i < items.length; i++) {
         if (items[i].type.indexOf('image') !== -1) {
           const file = items[i].getAsFile()
-          if (file) handleFile(file)
+          if (file) {
+            if (backgroundType === 'showcase') {
+              // If a column is specifically focused, use it
+              if (activeShowcaseColumn !== null) {
+                handleShowcaseFile(file, activeShowcaseColumn)
+              } else {
+                // Smart auto-fill: find first empty column, or default to first column
+                const firstEmptyIndex = showcasePages.findIndex(p => !p.screenshot)
+                const targetIndex = firstEmptyIndex !== -1 ? firstEmptyIndex : 0
+                handleShowcaseFile(file, targetIndex)
+              }
+            } else {
+              handleFile(file)
+            }
+          }
           break
         }
       }
@@ -246,7 +228,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
   useEffect(() => {
     window.addEventListener('paste', handlePaste)
     return () => window.removeEventListener('paste', handlePaste)
-  }, [])
+  }, [handlePaste])
 
   const drawCanvas = async () => {
     const canvas = canvasRef.current
@@ -1527,8 +1509,8 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
                   {[0, 1, 2].map((i) => (
                     <div 
                       key={i} 
-                      className={`space-y-2 p-3 rounded-lg border transition-all ${showcaseDragging === i ? 'bg-blue-500/5 ring-1 ring-blue-500' : ''}`} 
-                      style={{ borderColor: 'var(--admin-sidebar-border)' }}
+                      className={`space-y-2 p-3 rounded-lg border transition-all ${showcaseDragging === i ? 'bg-blue-500/5 ring-1 ring-blue-500' : ''} ${activeShowcaseColumn === i ? 'bg-blue-500/5 ring-2 ring-blue-500/50' : ''}`} 
+                      style={{ borderColor: activeShowcaseColumn === i ? 'var(--admin-accent)' : 'var(--admin-sidebar-border)' }}
                       onDragOver={(e) => {
                           e.preventDefault()
                           setShowcaseDragging(i)
@@ -1562,28 +1544,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
                          </div>
                       </div>
                       <div className="flex gap-2">
-                        <input 
-                          type="text"
-                          placeholder="https://..."
-                          className="flex-1 bg-transparent border rounded-lg px-2 py-1 text-[10px] outline-none"
-                          style={{ borderColor: 'var(--admin-sidebar-border)', color: 'var(--admin-text)' }}
-                          value={showcasePages[i].url}
-                          onChange={(e) => {
-                             const newPages = [...showcasePages]
-                             newPages[i].url = e.target.value
-                             setShowcasePages(newPages)
-                          }}
-                        />
-                        <button 
-                          onClick={() => handleCaptureScreenshot(i)}
-                          disabled={showcaseLoading[i] || !showcasePages[i].url}
-                          className="px-2 py-0.5 bg-blue-500 text-white rounded text-[9px] font-bold uppercase disabled:opacity-50 flex items-center gap-1"
-                          title="Capture from URL"
-                        >
-                          {showcaseLoading[i] ? <RefreshCw className="w-3 h-3 animate-spin" /> : <Monitor className="w-3 h-3" />}
-                        </button>
-                        
-                        <label className="cursor-pointer">
+                        <label className="flex-1 cursor-pointer">
                           <input 
                             type="file" 
                             className="hidden" 
@@ -1593,13 +1554,14 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
                               if (file) handleShowcaseFile(file, i)
                             }}
                           />
-                          <div className="px-2 py-0.5 bg-zinc-500 text-white rounded text-[9px] font-bold uppercase hover:bg-zinc-600 flex items-center gap-1">
-                             <Upload className="w-3 h-3" />
+                          <div className="w-full py-2 bg-zinc-500/10 hover:bg-zinc-500/20 text-zinc-500 border border-dashed border-zinc-500/30 rounded-lg text-[10px] font-bold uppercase flex items-center justify-center gap-2 transition-colors">
+                             <Upload className="w-3 h-3" /> Upload Image
                           </div>
                         </label>
 
-                        <button 
+                         <button 
                           onClick={async () => {
+                            setActiveShowcaseColumn(i)
                             try {
                               const clipboardItems = await navigator.clipboard.read()
                               for (const item of clipboardItems) {
@@ -1608,6 +1570,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
                                     const blob = await item.getType(type)
                                     const file = new File([blob], "pasted-image.png", { type })
                                     handleShowcaseFile(file, i)
+                                    setActiveShowcaseColumn(null)
                                     return
                                   }
                                 }
@@ -1615,17 +1578,23 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
                               alert('No image found in clipboard. Use Ctrl+V or copy an image first.')
                             } catch (err) {
                               console.error('Clipboard paste failed:', err)
-                              alert('Please use Ctrl+V or enable clipboard permissions.')
+                              // Keep the indicator active if auto-paste fails so they can still manual paste
+                              alert('Permission required for one-click paste. Use Ctrl+V instead.')
                             }
                           }}
-                          className="px-2 py-0.5 bg-zinc-500 text-white rounded text-[9px] font-bold uppercase hover:bg-zinc-600 flex items-center gap-1"
-                          title="Paste from Clipboard"
+                          className={`px-3 py-2 border rounded-lg text-[10px] font-bold uppercase flex items-center gap-2 transition-all ${
+                            activeShowcaseColumn === i 
+                            ? 'bg-blue-500 text-white border-blue-600 animate-pulse' 
+                            : 'bg-zinc-500/10 hover:bg-zinc-500/20 text-zinc-500 border-zinc-500/30'
+                          }`}
+                          title="Paste from Clipboard (One-click)"
                         >
                           <ImageIcon className="w-3 h-3" />
+                          Paste
                         </button>
                       </div>
                       
-                      <div className="space-y-1">
+                      <div className="space-y-1.5 pt-1">
                         <div className="flex items-center justify-between">
                            <label className="text-[9px] uppercase font-bold opacity-50">Y Offset</label>
                            <span className="text-[9px] font-mono">{showcasePages[i].yOffset}%</span>
@@ -1649,24 +1618,6 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <label className="text-[10px] uppercase font-bold" style={{ color: 'var(--admin-text-muted)' }}>
-                    Fade-in Wait Time
-                  </label>
-                  <span className="text-[10px] font-mono">{showcaseWaitTime}ms</span>
-                </div>
-                <input 
-                  type="range"
-                  min="1000"
-                  max="8000"
-                  step="500"
-                  className="w-full h-1 rounded-lg appearance-none cursor-pointer"
-                  style={{ backgroundColor: 'var(--admin-sidebar-border)', accentColor: 'var(--admin-accent)' }}
-                  value={showcaseWaitTime}
-                  onChange={(e) => setShowcaseWaitTime(parseInt(e.target.value))}
-                />
-              </div>
 
               {/* Shared Background Controls for Showcase */}
               <div className="space-y-4 pt-2 border-t border-zinc-500/10">
