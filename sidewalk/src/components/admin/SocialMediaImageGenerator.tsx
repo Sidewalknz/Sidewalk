@@ -56,10 +56,10 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
   const [backgroundType, setBackgroundType] = useState<'solid' | 'image' | 'showcase'>('solid')
 
   // Showcase state
-  const [showcasePages, setShowcasePages] = useState<{ yOffset: number, screenshot: string | null }[]>([
-    { yOffset: 0, screenshot: null },
-    { yOffset: 10, screenshot: null },
-    { yOffset: 20, screenshot: null },
+  const [showcasePages, setShowcasePages] = useState<{ yOffset: number, xOffset: number, screenshot: string | null }[]>([
+    { yOffset: 0, xOffset: 0, screenshot: null },
+    { yOffset: 10, xOffset: 0, screenshot: null },
+    { yOffset: 20, xOffset: 0, screenshot: null },
   ])
   const [showcaseRotation, setShowcaseRotation] = useState(-30)
   const [activeShowcaseColumn, setActiveShowcaseColumn] = useState<number | null>(null)
@@ -698,23 +698,22 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
     // Calculate the minimum width needed to cover the rotated canvas
     const absCos = Math.abs(Math.cos(rotation))
     const absSin = Math.abs(Math.sin(rotation))
-    const totalRotationWidth = (canvas.width * absCos + canvas.height * absSin) * 1.25 * zoom
+    const totalRotationWidth = (canvas.width * absCos + canvas.height * absSin) * 1.3 * zoom
     const numActive = activePages.length
     
-    // Draw in order left-to-right — no layering
-    const drawIndices = Array.from({ length: numActive }, (_, i) => i)
-
-    // Equal-width columns with no gaps or overlap
+    // Equal-width columns
     const colWidth = totalRotationWidth / numActive
+    const rectH = canvas.height * 3.0
 
-    const getColumnX = (index: number) => {
-        const centerX = canvas.width / 2
-        // Position each column so they tile seamlessly edge-to-edge
-        const startX = centerX - totalRotationWidth / 2
-        return startX + (index * colWidth) + (colWidth / 2)
-    }
-
-    for (const i of drawIndices) {
+    ctx.save()
+    
+    // Global transform for the entire assembly
+    const centerX = canvas.width / 2
+    const centerY = canvas.height / 2
+    ctx.translate(centerX, centerY)
+    ctx.rotate(rotation)
+    
+    for (let i = 0; i < numActive; i++) {
         const page = activePages[i]
         
         const img = new Image()
@@ -729,54 +728,44 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
 
         ctx.save()
         
-        // Position columns
-        const x = getColumnX(i)
-        const y = canvas.height / 2
+        // Horizontal position in the center-aligned rotated assembly
+        // centerX is already at 0,0. We need to center the whole width.
+        const assemblyStartX = -totalRotationWidth / 2
+        // Base X plus user-defined offset (percentage of colWidth)
+        const xPosInAssembly = assemblyStartX + (i * colWidth) + (colWidth / 2) + (page.xOffset / 100) * colWidth
         
-        ctx.translate(x, y)
-        ctx.rotate(rotation)
-        
-        // Cascading vertical alignment
+        // Vertical stagger
         const verticalStagger = (i - (numActive - 1) / 2) * (canvas.height * 0.15)
         
-        // Use a very tall rect to ensure background is covered
-        const rectH = canvas.height * 3.0
-
-        // Draw the clipping area — exact column width, no overlap
+        ctx.translate(xPosInAssembly, verticalStagger)
+        
+        // Clipping area
+        const overlap = 1
         ctx.beginPath()
-        ctx.rect(-colWidth / 2, -rectH / 2 + verticalStagger, colWidth, rectH)
+        ctx.rect(-colWidth / 2 - overlap / 2, -rectH / 2, colWidth + overlap, rectH)
         ctx.clip()
         
-        // Draw screenshot part
+        // Draw image
         const imgAspect = img.width / img.height
-        // Add a tiny 1px bleed to the image (but not the clip) to ensure seamless tiling
         const drawW = colWidth + 1
         const drawH = drawW / imgAspect
         
-        // Scroll calculation: 0-100% represents one full image height for looping
         const scrollY = (page.yOffset / 100) * drawH
-        
-        // Apply column opacity
         ctx.globalAlpha = opacity
 
-        // Draw image multiple times to fill the tall clipping rect (vertical tiling/looping)
-        let startY = -rectH / 2 + verticalStagger - (scrollY % drawH)
+        let startY = -rectH / 2 - (scrollY % drawH)
+        while (startY > -rectH / 2) startY -= drawH
         
-        // Ensure we start high enough to cover the top of the clipping rect
-        while (startY > -rectH / 2 + verticalStagger) {
-            startY -= drawH
-        }
-        
-        // Fill the clipping rect downwards
         let currentY = startY
-        while (currentY < rectH / 2 + verticalStagger) {
-            // Center the image bleed (offset by 0.5px)
+        while (currentY < rectH / 2) {
             ctx.drawImage(img, -colWidth / 2 - 0.5, currentY, drawW, drawH)
             currentY += drawH
         }
         
         ctx.restore()
     }
+    
+    ctx.restore()
   }
 
   const wrapText = (ctx: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number, draw: boolean = true, hColor?: string) => {
@@ -1593,24 +1582,45 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
                         </button>
                       </div>
                       
-                      <div className="space-y-1.5 pt-1">
-                        <div className="flex items-center justify-between">
-                           <label className="text-[9px] uppercase font-bold opacity-50">Y Offset</label>
-                           <span className="text-[9px] font-mono">{showcasePages[i].yOffset}%</span>
+                      <div className="grid grid-cols-2 gap-4 pt-1">
+                        <div className="space-y-1.5">
+                          <div className="flex items-center justify-between">
+                             <label className="text-[9px] uppercase font-bold opacity-50">X Offset</label>
+                             <span className="text-[9px] font-mono">{showcasePages[i].xOffset}%</span>
+                          </div>
+                          <input 
+                            type="range"
+                            min="-100"
+                            max="100"
+                            className="w-full h-1 rounded-lg appearance-none cursor-pointer"
+                            style={{ backgroundColor: 'var(--admin-sidebar-border)', accentColor: 'var(--admin-accent)' }}
+                            value={showcasePages[i].xOffset}
+                            onChange={(e) => {
+                               const newPages = [...showcasePages]
+                               newPages[i].xOffset = parseInt(e.target.value)
+                               setShowcasePages(newPages)
+                            }}
+                          />
                         </div>
-                        <input 
-                          type="range"
-                          min="0"
-                          max="100"
-                          className="w-full h-1 rounded-lg appearance-none cursor-pointer"
-                          style={{ backgroundColor: 'var(--admin-sidebar-border)', accentColor: 'var(--admin-accent)' }}
-                          value={showcasePages[i].yOffset}
-                          onChange={(e) => {
-                             const newPages = [...showcasePages]
-                             newPages[i].yOffset = parseInt(e.target.value)
-                             setShowcasePages(newPages)
-                          }}
-                        />
+                        <div className="space-y-1.5">
+                          <div className="flex items-center justify-between">
+                             <label className="text-[9px] uppercase font-bold opacity-50">Y Offset</label>
+                             <span className="text-[9px] font-mono">{showcasePages[i].yOffset}%</span>
+                          </div>
+                          <input 
+                            type="range"
+                            min="0"
+                            max="100"
+                            className="w-full h-1 rounded-lg appearance-none cursor-pointer"
+                            style={{ backgroundColor: 'var(--admin-sidebar-border)', accentColor: 'var(--admin-accent)' }}
+                            value={showcasePages[i].yOffset}
+                            onChange={(e) => {
+                               const newPages = [...showcasePages]
+                               newPages[i].yOffset = parseInt(e.target.value)
+                               setShowcasePages(newPages)
+                            }}
+                          />
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -1629,8 +1639,8 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
                   </div>
                   <input 
                     type="range"
-                    min="1"
-                    max="3"
+                    min="0.5"
+                    max="2.5"
                     step="0.05"
                     className="w-full h-1 rounded-lg appearance-none cursor-pointer"
                     style={{ backgroundColor: 'var(--admin-sidebar-border)', accentColor: 'var(--admin-accent)' }}
@@ -1774,8 +1784,8 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
                     </div>
                     <input 
                       type="range"
-                      min="1"
-                      max="3"
+                      min="0.5"
+                      max="2.5"
                       step="0.05"
                       className="w-full h-1 rounded-lg appearance-none cursor-pointer"
                       style={{ backgroundColor: 'var(--admin-sidebar-border)', accentColor: 'var(--admin-accent)' }}
