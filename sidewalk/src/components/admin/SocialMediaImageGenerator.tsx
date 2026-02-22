@@ -61,7 +61,7 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
     { yOffset: 10, screenshot: null },
     { yOffset: 20, screenshot: null },
   ])
-  const [showcaseRotation, setShowcaseRotation] = useState(-15)
+  const [showcaseRotation, setShowcaseRotation] = useState(-30)
   const [activeShowcaseColumn, setActiveShowcaseColumn] = useState<number | null>(null)
 
   
@@ -689,19 +689,30 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
     return
   }
 
-  const drawShowcaseTemplate = async (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, margin: number, zoom: number = 1.0, opacity: number = 1.0, rotationDeg: number = -15) => {
+  const drawShowcaseTemplate = async (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, margin: number, zoom: number = 1.0, opacity: number = 1.0, rotationDeg: number = -30) => {
     const activePages = showcasePages.filter(p => !!p.screenshot)
     if (activePages.length === 0) return
 
     const rotation = rotationDeg * Math.PI / 180
     
-    // Total width to cover rotation (overscan)
-    const totalRotationWidth = (canvas.width * 1.8) * zoom
+    // Calculate the minimum width needed to cover the rotated canvas
+    const absCos = Math.abs(Math.cos(rotation))
+    const absSin = Math.abs(Math.sin(rotation))
+    const totalRotationWidth = (canvas.width * absCos + canvas.height * absSin) * 1.25 * zoom
     const numActive = activePages.length
-    const colWidth = totalRotationWidth / numActive
     
-    // Define drawing order: sides first, then middle (to ensure middle overlaps both)
-    const drawIndices = numActive === 3 ? [0, 2, 1] : Array.from({ length: numActive }, (_, i) => i)
+    // Draw in order left-to-right — no layering
+    const drawIndices = Array.from({ length: numActive }, (_, i) => i)
+
+    // Equal-width columns with no gaps or overlap
+    const colWidth = totalRotationWidth / numActive
+
+    const getColumnX = (index: number) => {
+        const centerX = canvas.width / 2
+        // Position each column so they tile seamlessly edge-to-edge
+        const startX = centerX - totalRotationWidth / 2
+        return startX + (index * colWidth) + (colWidth / 2)
+    }
 
     for (const i of drawIndices) {
         const page = activePages[i]
@@ -719,60 +730,48 @@ export default function SocialMediaImageGenerator({ clients }: Props) {
         ctx.save()
         
         // Position columns
-        const centerX = canvas.width / 2
-        const xOffsetStart = -totalRotationWidth / 2
-        
-        // Accurate pixel positioning to minimize seams
-        const colStartX = centerX + xOffsetStart + (i * colWidth)
-        const x = Math.round(colStartX + (colWidth / 2))
-        const y = Math.round(canvas.height / 2)
+        const x = getColumnX(i)
+        const y = canvas.height / 2
         
         ctx.translate(x, y)
         ctx.rotate(rotation)
         
-        // Cascading vertical alignment based on number of active columns
+        // Cascading vertical alignment
         const verticalStagger = (i - (numActive - 1) / 2) * (canvas.height * 0.15)
         
         // Use a very tall rect to ensure background is covered
-      const rectH = canvas.height * 3.0
-      
-      // Minimal overlap now that the white fill is gone and we have image bleed
-      const overlap = 2
-      
-      // Draw the clipping area with overlap
-        // We removed the white fill() here as it was causing bright lines to bleed through
+        const rectH = canvas.height * 3.0
+
+        // Draw the clipping area — exact column width, no overlap
         ctx.beginPath()
-        ctx.rect(Math.round(-colWidth/2 - overlap/2), Math.round(-rectH/2 + verticalStagger), Math.round(colWidth + overlap), Math.round(rectH))
+        ctx.rect(-colWidth / 2, -rectH / 2 + verticalStagger, colWidth, rectH)
         ctx.clip()
         
         // Draw screenshot part
         const imgAspect = img.width / img.height
-        const baseDrawW = Math.round(colWidth + overlap)
-        // Add a slight 2px bleed to ensure the image covers the anti-aliased edges of the clip perfectly
-        const bleed = 2
-        const drawW = baseDrawW + bleed
+        // Add a tiny 1px bleed to the image (but not the clip) to ensure seamless tiling
+        const drawW = colWidth + 1
         const drawH = drawW / imgAspect
         
         // Scroll calculation: 0-100% represents one full image height for looping
         const scrollY = (page.yOffset / 100) * drawH
         
-        // Apply individual column opacity if needed (using global opacity for now)
+        // Apply column opacity
         ctx.globalAlpha = opacity
 
         // Draw image multiple times to fill the tall clipping rect (vertical tiling/looping)
-        // We start drawing from the stagger point and expand upwards and downwards
-        let startY = -rectH/2 + verticalStagger - (scrollY % drawH)
+        let startY = -rectH / 2 + verticalStagger - (scrollY % drawH)
         
         // Ensure we start high enough to cover the top of the clipping rect
-        while (startY > -rectH/2 + verticalStagger) {
+        while (startY > -rectH / 2 + verticalStagger) {
             startY -= drawH
         }
         
         // Fill the clipping rect downwards
         let currentY = startY
-        while (currentY < rectH/2 + verticalStagger) {
-            // Centered bleed: draw slightly larger and offset by half the bleed
-            ctx.drawImage(img, Math.round(-colWidth/2 - overlap/2 - bleed/2), Math.round(currentY - bleed/2), Math.round(drawW), Math.round(drawH))
+        while (currentY < rectH / 2 + verticalStagger) {
+            // Center the image bleed (offset by 0.5px)
+            ctx.drawImage(img, -colWidth / 2 - 0.5, currentY, drawW, drawH)
             currentY += drawH
         }
         
