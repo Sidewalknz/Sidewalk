@@ -1,20 +1,21 @@
 import React from 'react'
-import { getPublishedPortfolioClientNames } from '@/actions/portfolio'
+import Link from 'next/link'
+import { getPublishedPortfolioClientsForMarquee } from '@/actions/portfolio'
 
 export async function ClientMarquee() {
-  const clientNames = await getPublishedPortfolioClientNames()
+  const clients = await getPublishedPortfolioClientsForMarquee()
 
-  if (!clientNames.length) return null
+  if (!clients.length) return null
 
-  const marqueeItems = [...clientNames, ...clientNames]
+  const marqueeItems = [...clients, ...clients]
 
   return (
-    <section className="client-marquee border-y border-[#1C2830]/20 bg-[#F3ECE3] py-6" aria-label="Clients we have helped">
+    <section className="client-marquee border-y border-[#F3ECE3]/15 bg-[#1C2830] py-6" aria-label="Clients we have helped">
       <div className="client-marquee__track">
-        {marqueeItems.map((name, index) => (
-          <span key={`${name}-${index}`} className="client-marquee__item">
-            {name}
-          </span>
+        {marqueeItems.map((client, index) => (
+          <Link key={`${client.name}-${index}`} href={client.href} className="client-marquee__item">
+            {client.name}
+          </Link>
         ))}
       </div>
     </section>

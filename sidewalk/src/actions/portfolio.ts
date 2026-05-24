@@ -160,7 +160,7 @@ export async function getHomepageFeaturedPortfolioItems(limit: number = 6) {
   return res.docs || []
 }
 
-export async function getPublishedPortfolioClientNames() {
+export async function getPublishedPortfolioClientsForMarquee() {
   const payload = await getPayload({ config })
   const res = await payload.find({
     collection: 'PortfolioItems',
@@ -176,16 +176,22 @@ export async function getPublishedPortfolioClientNames() {
     select: {
       title: true,
       clientCompany: true,
+      slug: true,
     },
   })
 
-  return Array.from(
-    new Set(
-      (res.docs || [])
-        .map((item: any) => String(item?.clientCompany || item?.title || '').trim())
-        .filter(Boolean),
-    ),
-  )
+  const seen = new Set<string>()
+
+  return (res.docs || [])
+    .map((item: any) => ({
+      name: String(item?.clientCompany || item?.title || '').trim(),
+      href: item?.slug ? `/portfolio/${item.slug}` : '/portfolio',
+    }))
+    .filter((item) => {
+      if (!item.name || seen.has(item.name)) return false
+      seen.add(item.name)
+      return true
+    })
 }
 
 export async function getPortfolioItemBySlug(slug: string) {
