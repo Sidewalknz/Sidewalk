@@ -1,23 +1,71 @@
 import React from 'react'
+import Link from 'next/link'
+import { ArrowDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 type SidewalkHeroProps = {
   title: string
   description: string
+  highlights?: string[]
+  exploreHref?: string
   eyebrow?: string
   className?: string
   titleAs?: 'h1' | 'p'
 }
 
+const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+const getTaglineParts = (description: string, highlights: string[]) => {
+  const highlightRanges = highlights.flatMap((highlight) => {
+    const matches = [...description.matchAll(new RegExp(escapeRegExp(highlight), 'gi'))]
+
+    return matches.map((match) => ({
+      start: match.index ?? 0,
+      end: (match.index ?? 0) + match[0].length,
+    }))
+  })
+
+  const parts = description.split(/(\s+)/)
+  let characterIndex = 0
+  let wordIndex = 0
+
+  return parts.map((part) => {
+    const start = characterIndex
+    const end = start + part.length
+    characterIndex = end
+
+    if (/^\s+$/.test(part)) {
+      return {
+        text: part,
+        isSpace: true,
+        highlighted: false,
+        wordIndex: -1,
+      }
+    }
+
+    const currentWordIndex = wordIndex
+    wordIndex += 1
+
+    return {
+      text: part,
+      isSpace: false,
+      highlighted: highlightRanges.some((range) => start < range.end && end > range.start),
+      wordIndex: currentWordIndex,
+    }
+  })
+}
+
 export const SidewalkHero = ({
   title,
   description,
+  highlights = [],
+  exploreHref,
   eyebrow,
   className,
   titleAs = 'h1',
 }: SidewalkHeroProps) => {
   const TitleTag = titleAs
-  const descriptionWords = description.split(' ')
+  const taglineParts = getTaglineParts(description, highlights)
 
   return (
     <section
@@ -49,17 +97,28 @@ export const SidewalkHero = ({
           </div>
 
           <p className="sidewalk-hero__tagline">
-            {descriptionWords.map((word, index) => (
+            {taglineParts.map((part, index) => part.isSpace ? (
+              <React.Fragment key={`space-${index}`}>{part.text}</React.Fragment>
+            ) : (
               <span
-                key={`${word}-${index}`}
-                className="sidewalk-hero__tagline-word"
-                style={{ animationDelay: `${520 + index * 45}ms` }}
+                key={`${part.text}-${index}`}
+                className={cn(
+                  'sidewalk-hero__tagline-word',
+                  part.highlighted && 'sidewalk-hero__tagline-word--highlight',
+                )}
+                style={{ animationDelay: `${520 + part.wordIndex * 45}ms` }}
               >
-                {word}
-                {index < descriptionWords.length - 1 ? ' ' : ''}
+                {part.text}
               </span>
             ))}
           </p>
+
+          {exploreHref ? (
+            <Link href={exploreHref} className="sidewalk-hero__explore" aria-label="Explore homepage content">
+              <span>Explore</span>
+              <ArrowDown className="h-6 w-6" aria-hidden="true" />
+            </Link>
+          ) : null}
         </div>
       </div>
     </section>
@@ -71,6 +130,18 @@ export const Hero = () => {
     <SidewalkHero
       title="web solutions"
       description="Creating web solutions, web design, website design, and web development for Nelson businesses that need clear strategy, flexible content management, and digital systems that support real workflows."
+      className="sidewalk-hero--home"
+      exploreHref="#home-content"
+      highlights={[
+        'web solutions',
+        'web design',
+        'website design',
+        'web development',
+        'Nelson',
+        'clear strategy',
+        'flexible content management',
+        'digital systems',
+      ]}
     />
   )
 }

@@ -45,6 +45,7 @@ export default function ServicesPage() {
       <SidewalkHero
         title="services"
         description="Custom web design Nelson, website design Nelson, web development Nelson, ecommerce websites, booking systems, and web solutions built around how your business works."
+        highlights={['web design Nelson', 'website design Nelson', 'web development Nelson', 'ecommerce websites', 'booking systems', 'web solutions']}
       />
 
       <section className="border-t border-[#1C2830]/20 py-24">

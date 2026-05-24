@@ -25,6 +25,7 @@ export default function AboutPage() {
       <SidewalkHero
         title="about"
         description="A Nelson-based web agency bringing website design, web development, and practical web solutions together for businesses that want more control over their digital presence."
+        highlights={['Nelson-based web agency', 'website design', 'web development', 'web solutions', 'digital presence']}
       />
 
       <section className="border-t border-[#1C2830]/20 py-24">

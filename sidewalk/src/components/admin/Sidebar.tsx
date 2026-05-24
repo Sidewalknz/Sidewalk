@@ -76,7 +76,7 @@ export function Sidebar({ user, isAdmin = true, isStoreOwner = false, filterSect
       <div className="p-6 overflow-y-auto flex-1">
         <div className="flex items-center gap-3 mb-10 border-l-4 border-brand-600 pl-4 py-1">
           <h1 className="text-xl font-black tracking-tighter text-slate-900 dark:text-white uppercase italic">
-            Admin<span className="text-brand-600 pl-1">Panel</span>
+            Sidewalk<span className="text-brand-600 pl-1">Admin</span>
           </h1>
         </div>
         

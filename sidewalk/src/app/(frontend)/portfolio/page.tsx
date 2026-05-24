@@ -20,6 +20,7 @@ export default async function PortfolioPage() {
       <SidewalkHero
         title="projects"
         description="A selection of Nelson web design, website design, web development, and digital system projects built for practical long-term control."
+        highlights={['Nelson web design', 'website design', 'web development', 'digital system projects']}
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20">

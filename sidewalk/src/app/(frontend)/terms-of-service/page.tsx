@@ -36,6 +36,7 @@ export default function TermsOfServicePage() {
       <SidewalkHero
         title="terms of service"
         description="The terms that apply when using Sidewalk services, website content, project communication, and digital work provided by our Nelson web agency."
+        highlights={['Sidewalk services', 'website content', 'project communication', 'Nelson web agency']}
       />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="space-y-12">

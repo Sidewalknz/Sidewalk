@@ -36,6 +36,7 @@ export default function PrivacyPolicyPage() {
       <SidewalkHero
         title="privacy policy"
         description="How Sidewalk handles privacy, website enquiries, contact details, and information shared through our Nelson web agency services."
+        highlights={['privacy', 'website enquiries', 'contact details', 'Nelson web agency']}
       />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="space-y-12">

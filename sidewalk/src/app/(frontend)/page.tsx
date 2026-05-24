@@ -1,6 +1,9 @@
 import React from 'react'
 import Link from 'next/link'
 import { Hero } from '@/components/frontend/Hero'
+import { ClientMarquee } from '@/components/frontend/ClientMarquee'
+
+export const dynamic = 'force-dynamic'
 
 export default function HomePage() {
   const services = [
@@ -32,8 +35,9 @@ export default function HomePage() {
   return (
     <div className="pb-24">
       <Hero />
+      <ClientMarquee />
 
-      <section className="border-t border-[#1C2830]/20 py-24">
+      <section id="home-content" className="border-t border-[#1C2830]/20 py-24 scroll-mt-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12">
           <div className="lg:col-span-4">
             <p className="text-sm font-bold uppercase tracking-normal text-[#B74831]">

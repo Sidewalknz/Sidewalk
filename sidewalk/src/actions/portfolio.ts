@@ -160,6 +160,34 @@ export async function getHomepageFeaturedPortfolioItems(limit: number = 6) {
   return res.docs || []
 }
 
+export async function getPublishedPortfolioClientNames() {
+  const payload = await getPayload({ config })
+  const res = await payload.find({
+    collection: 'PortfolioItems',
+    sort: ['sortOrder', 'clientCompany', 'title'],
+    where: {
+      and: [
+        { clientStatus: { not_equals: 'lead' } },
+        { clientStatus: { not_equals: 'archived' } },
+      ],
+    },
+    depth: 0,
+    limit: 200,
+    select: {
+      title: true,
+      clientCompany: true,
+    },
+  })
+
+  return Array.from(
+    new Set(
+      (res.docs || [])
+        .map((item: any) => String(item?.clientCompany || item?.title || '').trim())
+        .filter(Boolean),
+    ),
+  )
+}
+
 export async function getPortfolioItemBySlug(slug: string) {
   const payload = await getPayload({ config })
   const res = await payload.find({
