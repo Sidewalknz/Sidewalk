@@ -1,0 +1,14 @@
+node_modules
+.next
+.git
+.cursor
+.vscode
+*.log
+.env*
+! .env.example
+README.md
+LICENSE
+playwright.config.ts
+vitest.config.mts
+vitest.setup.ts
+tests

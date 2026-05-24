@@ -69,8 +69,8 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
-    clients: Client;
-    'ongoing-expenses': OngoingExpense;
+    Outgoings: Outgoing;
+    PortfolioItems: PortfolioItem;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -80,8 +80,8 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
-    clients: ClientsSelect<false> | ClientsSelect<true>;
-    'ongoing-expenses': OngoingExpensesSelect<false> | OngoingExpensesSelect<true>;
+    Outgoings: OutgoingsSelect<false> | OutgoingsSelect<true>;
+    PortfolioItems: PortfolioItemsSelect<false> | PortfolioItemsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -94,9 +94,10 @@ export interface Config {
   globals: {};
   globalsSelect: {};
   locale: null;
-  user: User & {
-    collection: 'users';
+  widgets: {
+    collections: CollectionsWidget;
   };
+  user: User;
   jobs: {
     tasks: unknown;
     workflows: unknown;
@@ -126,6 +127,32 @@ export interface UserAuthOperations {
  */
 export interface User {
   id: number;
+  firstName: string;
+  lastName: string;
+  role: 'admin' | 'editor' | 'user';
+  status: 'active' | 'suspended';
+  phone?: string | null;
+  addresses?:
+    | {
+        /**
+         * e.g. Home, Work
+         */
+        label?: string | null;
+        type: 'shipping' | 'billing' | 'both';
+        line1: string;
+        line2?: string | null;
+        city: string;
+        state?: string | null;
+        postalCode: string;
+        country: string;
+        isDefault?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Internal notes about this user
+   */
+  notes?: string | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -143,6 +170,7 @@ export interface User {
       }[]
     | null;
   password?: string | null;
+  collection: 'users';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -150,7 +178,8 @@ export interface User {
  */
 export interface Media {
   id: number;
-  alt: string;
+  name?: string | null;
+  alt?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -165,131 +194,159 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "clients".
+ * via the `definition` "Outgoings".
  */
-export interface Client {
+export interface Outgoing {
   id: number;
-  companyName: string;
-  ownerName: string;
-  website?: string | null;
-  email: string;
-  phone?: string | null;
-  status: 'in_progress' | 'completed' | 'in_talks' | 'completed_hide';
-  type: 'ecommerce' | 'portfolio' | 'business' | 'blog' | 'other';
+  name: string;
+  amount: number;
+  frequency: 'weekly' | 'monthly' | 'yearly';
+  startDate: string;
   /**
-   * What the client paid for (can add multiple products)
+   * Examples: Software, Rent, Contractors, Marketing.
    */
-  products: {
-    /**
-     * Category of this product
-     */
-    category?:
-      | (
-          | 'website'
-          | 'posters'
-          | 'logos'
-          | 'branding'
-          | 'social-media'
-          | 'print-design'
-          | 'web-development'
-          | 'consulting'
-          | 'other'
-        )
-      | null;
-    productName: string;
-    productDescription?: string | null;
-    /**
-     * When did this project start?
-     */
-    startDate?: string | null;
-    /**
-     * When did this project end?
-     */
-    endDate?: string | null;
-    /**
-     * The price paid for this product
-     */
-    price?: number | null;
-    /**
-     * Monthly recurring fee for this product
-     */
-    monthlyFee?: number | null;
-    /**
-     * Payment due date for this product
-     */
-    dueDate?: string | null;
-    id?: string | null;
-  }[];
-  /**
-   * Description of the client/project
-   */
-  description?: string | null;
-  /**
-   * List of features for this project
-   */
-  features?:
-    | {
-        feature: string;
-        /**
-         * Description of this feature
-         */
-        description?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * URL to the client icon (e.g., /assets/logos/client.svg)
-   */
-  icon?: string | null;
-  /**
-   * Multiple images for the client gallery
-   */
-  gallery?:
-    | {
-        image: number | Media;
-        caption?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  notes?: string | null;
+  category?: string | null;
+  adminNotes?: string | null;
+  status: 'active' | 'paused' | 'ended';
+  endDate?: string | null;
   updatedAt: string;
   createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ongoing-expenses".
+ * via the `definition` "PortfolioItems".
  */
-export interface OngoingExpense {
-  id: string;
+export interface PortfolioItem {
+  id: number;
+  title: string;
   /**
-   * Name or description of the ongoing expense
+   * A short public summary used on cards and listing pages.
    */
-  name: string;
+  shortDescription?: string | null;
   /**
-   * The cost amount for this expense
+   * Public-facing overview for the portfolio detail page.
    */
-  amount: number;
-  frequency: 'weekly' | 'monthly' | 'yearly';
+  overview?: string | null;
   /**
-   * When did this expense start? The next due date will be calculated automatically based on this date and frequency.
+   * Internal scope, notes, and delivery details.
    */
-  startDate: string;
+  projectDetails?: string | null;
+  challenge?: string | null;
+  solution?: string | null;
+  outcome?: string | null;
   /**
-   * Automatically calculated based on start date and frequency
+   * Optional client or project logo.
    */
-  nextDueDate?: string | null;
+  logo?: (number | null) | Media;
   /**
-   * Optional category for organizing expenses (e.g., Software, Hosting, Services)
+   * Optional external logo URL.
    */
-  category?: string | null;
+  logoUrl?: string | null;
+  featuredImage?: (number | null) | Media;
   /**
-   * Additional notes about this expense
+   * Alt text for the featured image.
    */
-  notes?: string | null;
+  featuredImageAlt?: string | null;
+  gallery?:
+    | {
+        image?: (number | null) | Media;
+        alt?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  clientCompany?: string | null;
   /**
-   * Whether this expense is currently active
+   * Public website URL for the portfolio item.
    */
-  isActive?: boolean | null;
+  websiteUrl?: string | null;
+  ownerName?: string | null;
+  ownerEmail?: string | null;
+  contactName?: string | null;
+  contactEmail?: string | null;
+  /**
+   * Industry or market this work belongs to.
+   */
+  industry?: string | null;
+  /**
+   * e.g. "Nelson, NZ"
+   */
+  location?: string | null;
+  /**
+   * e.g. Website, branding, renovation, installation.
+   */
+  projectType?: string | null;
+  completionDate?: string | null;
+  /**
+   * Services delivered for this item.
+   */
+  services?:
+    | {
+        service?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  features?:
+    | {
+        feature?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  constraints?:
+    | {
+        constraint?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Track each job, project, product, or service delivered for this client.
+   */
+  jobs?:
+    | {
+        category?: string | null;
+        jobName?: string | null;
+        description?: string | null;
+        price?: number | null;
+        monthlyFee?: number | null;
+        startDate?: string | null;
+        endDate?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Optional team list for this portfolio item.
+   */
+  teamMembers?:
+    | {
+        name?: string | null;
+        role?: string | null;
+        email?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Optional testimonial.
+   */
+  testimonial?: {
+    name?: string | null;
+    message?: string | null;
+    rating?: number | null;
+    image?: (number | null) | Media;
+  };
+  seo?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+    metaImage?: (number | null) | Media;
+  };
+  /**
+   * Automatic if left blank
+   */
+  slug: string;
+  clientStatus?: ('lead' | 'active' | 'paused' | 'complete' | 'archived') | null;
+  status?: ('draft' | 'published') | null;
+  publishedAt?: string | null;
+  featured?: boolean | null;
+  isFeaturedOnHomepage?: boolean | null;
+  sortOrder?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -326,12 +383,12 @@ export interface PayloadLockedDocument {
         value: number | Media;
       } | null)
     | ({
-        relationTo: 'clients';
-        value: number | Client;
+        relationTo: 'Outgoings';
+        value: number | Outgoing;
       } | null)
     | ({
-        relationTo: 'ongoing-expenses';
-        value: string | OngoingExpense;
+        relationTo: 'PortfolioItems';
+        value: number | PortfolioItem;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -380,6 +437,26 @@ export interface PayloadMigration {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  firstName?: T;
+  lastName?: T;
+  role?: T;
+  status?: T;
+  phone?: T;
+  addresses?:
+    | T
+    | {
+        label?: T;
+        type?: T;
+        line1?: T;
+        line2?: T;
+        city?: T;
+        state?: T;
+        postalCode?: T;
+        country?: T;
+        isDefault?: T;
+        id?: T;
+      };
+  notes?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -402,6 +479,7 @@ export interface UsersSelect<T extends boolean = true> {
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
+  name?: T;
   alt?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -417,63 +495,113 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "clients_select".
+ * via the `definition` "Outgoings_select".
  */
-export interface ClientsSelect<T extends boolean = true> {
-  companyName?: T;
-  ownerName?: T;
-  website?: T;
-  email?: T;
-  phone?: T;
+export interface OutgoingsSelect<T extends boolean = true> {
+  name?: T;
+  amount?: T;
+  frequency?: T;
+  startDate?: T;
+  category?: T;
+  adminNotes?: T;
   status?: T;
-  type?: T;
-  products?:
-    | T
-    | {
-        category?: T;
-        productName?: T;
-        productDescription?: T;
-        startDate?: T;
-        endDate?: T;
-        price?: T;
-        monthlyFee?: T;
-        dueDate?: T;
-        id?: T;
-      };
-  description?: T;
-  features?:
-    | T
-    | {
-        feature?: T;
-        description?: T;
-        id?: T;
-      };
-  icon?: T;
-  gallery?:
-    | T
-    | {
-        image?: T;
-        caption?: T;
-        id?: T;
-      };
-  notes?: T;
+  endDate?: T;
   updatedAt?: T;
   createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ongoing-expenses_select".
+ * via the `definition` "PortfolioItems_select".
  */
-export interface OngoingExpensesSelect<T extends boolean = true> {
-  id?: T;
-  name?: T;
-  amount?: T;
-  frequency?: T;
-  startDate?: T;
-  nextDueDate?: T;
-  category?: T;
-  notes?: T;
-  isActive?: T;
+export interface PortfolioItemsSelect<T extends boolean = true> {
+  title?: T;
+  shortDescription?: T;
+  overview?: T;
+  projectDetails?: T;
+  challenge?: T;
+  solution?: T;
+  outcome?: T;
+  logo?: T;
+  logoUrl?: T;
+  featuredImage?: T;
+  featuredImageAlt?: T;
+  gallery?:
+    | T
+    | {
+        image?: T;
+        alt?: T;
+        id?: T;
+      };
+  clientCompany?: T;
+  websiteUrl?: T;
+  ownerName?: T;
+  ownerEmail?: T;
+  contactName?: T;
+  contactEmail?: T;
+  industry?: T;
+  location?: T;
+  projectType?: T;
+  completionDate?: T;
+  services?:
+    | T
+    | {
+        service?: T;
+        id?: T;
+      };
+  features?:
+    | T
+    | {
+        feature?: T;
+        id?: T;
+      };
+  constraints?:
+    | T
+    | {
+        constraint?: T;
+        id?: T;
+      };
+  jobs?:
+    | T
+    | {
+        category?: T;
+        jobName?: T;
+        description?: T;
+        price?: T;
+        monthlyFee?: T;
+        startDate?: T;
+        endDate?: T;
+        id?: T;
+      };
+  teamMembers?:
+    | T
+    | {
+        name?: T;
+        role?: T;
+        email?: T;
+        id?: T;
+      };
+  testimonial?:
+    | T
+    | {
+        name?: T;
+        message?: T;
+        rating?: T;
+        image?: T;
+      };
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+        metaImage?: T;
+      };
+  slug?: T;
+  clientStatus?: T;
+  status?: T;
+  publishedAt?: T;
+  featured?: T;
+  isFeaturedOnHomepage?: T;
+  sortOrder?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -516,6 +644,16 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "collections_widget".
+ */
+export interface CollectionsWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'full';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

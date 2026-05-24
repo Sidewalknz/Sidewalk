@@ -1,0 +1,26 @@
+{
+  "projectName": "sidewalk",
+  "payloadVersion": "",
+  "modules": [
+    {
+      "name": "admin-custom",
+      "version": "1.0.0",
+      "installedAt": "2026-05-24T10:58:12.549Z"
+    },
+    {
+      "name": "basic-frontend",
+      "version": "1.0.0",
+      "installedAt": "2026-05-24T11:00:40.054Z"
+    },
+    {
+      "name": "outgoings",
+      "version": "1.0.0",
+      "installedAt": "2026-05-24T11:02:50.180Z"
+    },
+    {
+      "name": "portfolio",
+      "version": "1.0.0",
+      "installedAt": "2026-05-24T11:02:56.737Z"
+    }
+  ]
+}

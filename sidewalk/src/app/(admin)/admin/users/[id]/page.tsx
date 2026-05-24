@@ -1,25 +1,18 @@
-import React from 'react'
-import UserForm from '@/components/admin/UserForm'
-import { updateUser, getUser } from '@/actions/users'
-import { redirect } from 'next/navigation'
+import { getUser } from '@/actions/users'
+import { UserForm } from '@/components/admin/UserForm'
+import { notFound } from 'next/navigation'
 
-interface EditUserPageProps {
-    params: Promise<{ id: string }>
-}
+export default async function EditUserPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params
+    const user = await getUser(id)
 
-export default async function EditUserPage({ params }: EditUserPageProps) {
-  const { id } = await params
-  const user = await getUser(parseInt(id))
+    if (!user) {
+        notFound()
+    }
 
-  if (!user) {
-    redirect('/admin/users')
-  }
-
-  return (
-    <UserForm
-      mode="edit"
-      initialData={user}
-      action={updateUser}
-    />
-  )
+    return (
+        <div className="space-y-10 animate-in fade-in duration-700">
+            <UserForm user={user} />
+        </div>
+    )
 }

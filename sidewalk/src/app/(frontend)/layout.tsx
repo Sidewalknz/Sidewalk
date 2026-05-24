@@ -1,52 +1,42 @@
 import React from 'react'
-import Script from 'next/script'
-import './styles.css'
+import { Navbar } from '@/components/frontend/Navbar'
+import { Footer } from '@/components/frontend/Footer'
+import { Montserrat } from 'next/font/google'
+import '@/styles/globals.css'
+import { SIDEWALK_ASSETS } from '@/lib/sidewalk-assets'
+
+const montserrat = Montserrat({
+  subsets: ['latin'],
+  variable: '--font-sans',
+  weight: ['400', '600', '700', '800'],
+  display: 'swap',
+})
 
 export const metadata = {
-  metadataBase: new URL('https://sidewalks.co.nz'),
-  title: 'Sidewalk - Modern Web Solutions, Next.js & Payload CMS Experts',
-  description: 'Sidewalk - Web solutions company specializing in Next.js, Payload CMS, and PostgreSQL. Self-hosted, modern web experiences that streamline business workflows.',
-  alternates: {
-    canonical: '/',
+  title: {
+    default: 'Web Design Nelson | Sidewalk',
+    template: '%s | Sidewalk',
   },
-  openGraph: {
-    title: 'Sidewalk - Modern Web Solutions',
-    description: 'Expert Next.js and Payload CMS development. We build self-hosted, scalable web experiences.',
-    url: 'https://sidewalks.co.nz',
-    siteName: 'Sidewalk',
-    images: [
-      {
-        url: '/logo-w-r.svg', // Using a white logo on red as a placeholder OG image
-        width: 1200,
-        height: 630,
-        alt: 'Sidewalk Logo',
-      },
+  description: 'Sidewalk is a web agency in Nelson NZ for web design, website design, web development, and practical digital systems for local businesses.',
+  icons: {
+    icon: [
+      { url: SIDEWALK_ASSETS.favicon || '/favicon.ico' },
     ],
-    locale: 'en_NZ',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Sidewalk - Modern Web Solutions',
-    description: 'Expert Next.js and Payload CMS development.',
-    images: ['/logo-w-r.svg'],
   },
 }
 
-export default async function RootLayout(props: { children: React.ReactNode }) {
-  const { children } = props
-  const rybbitSiteId = process.env.RYBBIT_SITE_ID || '5'
-
+export default function FrontendLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <html lang="en">
-      <body>
-        <main>{children}</main>
-        <Script
-          src="https://analytics.sidewalks.co.nz/api/script.js"
-          data-site-id={rybbitSiteId}
-          strategy="afterInteractive"
-        />
-      </body>
-    </html>
+    <div className={`${montserrat.variable} flex flex-col min-h-screen bg-[#F3ECE3] font-sans`}>
+      <Navbar />
+      <main className="flex-grow">
+        {children}
+      </main>
+      <Footer />
+    </div>
   )
 }
