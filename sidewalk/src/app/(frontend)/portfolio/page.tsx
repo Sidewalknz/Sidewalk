@@ -1,4 +1,5 @@
 import { getPublishedPortfolioItems } from '@/actions/portfolio'
+import { PageCTA } from '@/components/frontend/PageCTA'
 import { PortfolioCard } from '@/components/frontend/PortfolioCard'
 import { SidewalkHero } from '@/components/frontend/Hero'
 
@@ -16,14 +17,14 @@ export default async function PortfolioPage() {
   const rest = portfolioItems.filter((p: any) => !p?.featured)
 
   return (
-    <div className="pb-24">
+    <div>
       <SidewalkHero
         title="projects"
         description="A selection of Nelson web design, website design, web development, and digital system projects built for practical long-term control."
         highlights={['Nelson web design', 'website design', 'web development', 'digital system projects']}
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20 pb-24">
         {featured.length ? (
           <section className="space-y-10">
             <div className="flex items-center gap-6">
@@ -68,6 +69,13 @@ export default async function PortfolioPage() {
           )}
         </section>
       </div>
+
+      <PageCTA
+        title="Planning something similar?"
+        description="Start with the services page to see the website packages and custom web solutions we can shape around your project."
+        href="/services"
+        linkLabel="View services"
+      />
     </div>
   )
 }

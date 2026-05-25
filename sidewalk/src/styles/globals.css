@@ -440,6 +440,14 @@
     width: 100%;
   }
 
+  .home-cta-section .home-journey-heading__line {
+    color: #fff;
+  }
+
+  .home-cta-section .home-journey-heading__middle {
+    color: #1C2830;
+  }
+
   .home-journey-heading {
     align-items: center;
     display: flex;

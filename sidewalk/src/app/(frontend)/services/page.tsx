@@ -1,6 +1,6 @@
 import React from 'react'
-import Link from 'next/link'
 import { SidewalkHero } from '@/components/frontend/Hero'
+import { PageCTA } from '@/components/frontend/PageCTA'
 
 export const metadata = {
   title: 'Website Design Nelson',
@@ -41,28 +41,18 @@ export default function ServicesPage() {
   ]
 
   return (
-    <div className="pb-24">
+    <div>
       <SidewalkHero
         title="services"
-        description="Custom web design Nelson, website design Nelson, web development Nelson, ecommerce websites, booking systems, and web solutions built around how your business works."
+        description="Every Sidewalk project is custom made. We design and develop websites around your brand, content, customers, and workflow, whether you need a simple one page website or a more complex web solution."
         highlights={['web design Nelson', 'website design Nelson', 'web development Nelson', 'ecommerce websites', 'booking systems', 'web solutions']}
       />
 
-      <section className="border-t border-[#1C2830]/20 py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12">
-          <div className="lg:col-span-4">
-            <p className="text-sm font-bold uppercase tracking-normal text-[#B74831]">
-              Custom made
-            </p>
-          </div>
-          <div className="lg:col-span-8 space-y-8">
-            <h2 className="text-4xl md:text-6xl font-extrabold leading-tight text-[#1C2830]">
-              No generic templates. No boxed-in builds.
-            </h2>
-            <p className="text-xl leading-9 text-[#1C2830]/80">
-              Every Sidewalk project is custom made. We design and develop websites around your brand, content, customers, and workflow, whether you need a simple one page website or a more complex web solution.
-            </p>
-          </div>
+      <section className="bg-[#1C2830] py-24 text-white">
+        <div className="mx-auto max-w-5xl px-4 text-center sm:px-6 lg:px-8">
+          <h2 className="text-4xl font-extrabold leading-tight md:text-6xl">
+            No generic templates. No boxed-in builds. Everything Custom made.
+          </h2>
         </div>
       </section>
 
@@ -127,21 +117,12 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      <section className="py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-[#1C2830]/20 pt-16">
-          <div className="max-w-4xl space-y-8">
-            <h2 className="text-4xl md:text-6xl font-extrabold leading-tight text-[#1C2830]">
-              Need a website developer in Nelson NZ?
-            </h2>
-            <p className="text-xl leading-9 text-[#1C2830]/80">
-              Send through what you need built. We will help work out whether it fits a package or needs a custom quote.
-            </p>
-            <Link href="/contact" className="inline-flex text-lg font-extrabold text-[#B74831] hover:text-[#1C2830] transition-colors">
-              Ask for a quote
-            </Link>
-          </div>
-        </div>
-      </section>
+      <PageCTA
+        title="Need a website developer in Nelson NZ?"
+        description="Send through what you need built. We will help work out whether it fits a package or needs a custom quote."
+        href="/contact"
+        linkLabel="Ask for a quote"
+      />
     </div>
   )
 }

@@ -51,7 +51,7 @@ export default function HomePage() {
   ]
 
   return (
-    <div className="pb-24">
+    <div>
       <Hero />
       <ClientMarquee />
 
@@ -113,17 +113,17 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="home-journey-section">
+      <section className="home-journey-section home-cta-section bg-[#B74831] text-white">
         <div className="home-journey-section__inner">
           <JourneyHeading top="START" bottom="CONVERSATION" reveal="with a" />
           <div className="home-journey-copy">
             <h2 className="sr-only">Planning a website or web system</h2>
-            <p className="text-xl leading-9 text-[#1C2830]/80 max-w-4xl">
+            <p className="text-xl leading-9 text-white/85 max-w-4xl">
               Tell us what you are trying to improve. We will help clarify the right approach before anything gets designed or built.
             </p>
             <Link
               href="/contact"
-              className="inline-flex text-lg font-extrabold text-[#B74831] hover:text-[#1C2830] transition-colors"
+              className="inline-flex text-lg font-extrabold text-white underline decoration-white/40 underline-offset-8 transition-colors hover:decoration-white"
             >
               Start the conversation
             </Link>

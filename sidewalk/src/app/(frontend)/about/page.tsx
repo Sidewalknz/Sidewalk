@@ -1,5 +1,6 @@
 import React from 'react'
 import { SidewalkHero } from '@/components/frontend/Hero'
+import { PageCTA } from '@/components/frontend/PageCTA'
 
 export const metadata = {
   title: 'Web Agency Nelson NZ',
@@ -21,7 +22,7 @@ export default function AboutPage() {
   ]
 
   return (
-    <div className="pb-24">
+    <div>
       <SidewalkHero
         title="about"
         description="A Nelson-based web agency bringing website design, web development, and practical web solutions together for businesses that want more control over their digital presence."
@@ -93,6 +94,13 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      <PageCTA
+        title="See what we build"
+        description="Explore the website packages and custom web solutions we can shape around your brand, content, customers, and workflow."
+        href="/services"
+        linkLabel="View services"
+      />
     </div>
   )
 }
