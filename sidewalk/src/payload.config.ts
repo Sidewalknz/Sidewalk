@@ -14,6 +14,13 @@ import { PortfolioItems } from './collections/PortfolioItems';
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
+const hasS3StorageConfig = Boolean(
+  process.env.S3_BUCKET &&
+    process.env.S3_ENDPOINT &&
+    process.env.S3_ACCESS_KEY_ID &&
+    process.env.S3_SECRET_ACCESS_KEY,
+)
+
 export default buildConfig({
   admin: {
     disable: true,
@@ -34,7 +41,10 @@ export default buildConfig({
     },
   }),
   sharp,
-  plugins: [s3Storage({
+  plugins: [
+    ...(hasS3StorageConfig
+      ? [
+          s3Storage({
             collections: {
               media: true,
             },
@@ -49,5 +59,8 @@ export default buildConfig({
               forcePathStyle: true,
             },
             disableLocalStorage: true,
-          })],
+          }),
+        ]
+      : []),
+  ],
 })

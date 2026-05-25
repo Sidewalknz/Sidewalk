@@ -242,10 +242,23 @@ export interface PortfolioItem {
    * Optional external logo URL.
    */
   logoUrl?: string | null;
-  featuredImage?: (number | null) | Media;
   /**
-   * Alt text for the featured image.
+   * Portfolio card/detail background image or video.
    */
+  backgroundMedia?: (number | null) | Media;
+  /**
+   * Alt text for the background media when it is an image.
+   */
+  backgroundMediaAlt?: string | null;
+  /**
+   * Transparent foreground image or video layered over the card background.
+   */
+  foregroundMedia?: (number | null) | Media;
+  /**
+   * Alt text for the foreground media when it is an image.
+   */
+  foregroundMediaAlt?: string | null;
+  featuredImage?: (number | null) | Media;
   featuredImageAlt?: string | null;
   gallery?:
     | {
@@ -523,6 +536,10 @@ export interface PortfolioItemsSelect<T extends boolean = true> {
   outcome?: T;
   logo?: T;
   logoUrl?: T;
+  backgroundMedia?: T;
+  backgroundMediaAlt?: T;
+  foregroundMedia?: T;
+  foregroundMediaAlt?: T;
   featuredImage?: T;
   featuredImageAlt?: T;
   gallery?:

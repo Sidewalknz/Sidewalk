@@ -247,6 +247,13 @@ export function MediaPicker({
                             alt={selectedItem.alt}
                             className="w-full h-full object-cover"
                           />
+                        ) : selectedItem?.mimeType?.startsWith?.('video/') ? (
+                          <video
+                            src={selectedItem.url}
+                            className="w-full h-full object-cover"
+                            muted
+                            playsInline
+                          />
                         ) : (
                           <div className="w-full h-full flex flex-col items-center justify-center gap-2 bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300">
                             <FileUp className="w-6 h-6" />
@@ -335,11 +342,20 @@ export function MediaPicker({
                                                     onClick={() => handleSelect(item)}
                                                     className="group relative aspect-square rounded-2xl overflow-hidden cursor-pointer border-2 border-transparent hover:border-brand-500 transition-all shadow-sm hover:shadow-xl hover:shadow-brand-500/10"
                                                 >
-                                                    <img 
-                                                        src={item.url} 
-                                                        alt={item.alt} 
-                                                        className="w-full h-full object-cover transition-transform group-hover:scale-110"
-                                                    />
+                                                    {item.mimeType?.startsWith?.('video/') ? (
+                                                        <video
+                                                            src={item.url}
+                                                            className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                                                            muted
+                                                            playsInline
+                                                        />
+                                                    ) : (
+                                                        <img 
+                                                            src={item.url} 
+                                                            alt={item.alt} 
+                                                            className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                                                        />
+                                                    )}
                                                     <div className="absolute inset-0 bg-brand-600/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                                         <Check className="text-white w-8 h-8" />
                                                     </div>
@@ -397,6 +413,13 @@ export function MediaPicker({
                                                                     src={URL.createObjectURL(f)}
                                                                     className={cn(uploadFiles.length > 1 ? 'w-full h-full object-cover' : 'w-full h-full object-contain rounded-xl')}
                                                                     alt="Preview"
+                                                                />
+                                                            ) : f.type?.startsWith?.('video/') ? (
+                                                                <video
+                                                                    src={URL.createObjectURL(f)}
+                                                                    className={cn(uploadFiles.length > 1 ? 'w-full h-full object-cover' : 'w-full h-full object-contain rounded-xl')}
+                                                                    muted
+                                                                    playsInline
                                                                 />
                                                             ) : (
                                                                 <div className="w-full h-full flex flex-col items-center justify-center gap-2 p-4 text-slate-600 dark:text-slate-300">

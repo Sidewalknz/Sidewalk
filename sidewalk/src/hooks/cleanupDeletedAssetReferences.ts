@@ -64,7 +64,7 @@ async function updateDocs(req: PayloadRequestLike, collection: string, docs: any
 export async function cleanupDeletedMediaReferences(req: PayloadRequestLike, deletedMediaId: string | number) {
   const id = String(deletedMediaId)
 
-  const [merch, schools, socialItems, testimonials, tourTemplates] = await Promise.all([
+  const [merch, schools, socialItems, testimonials, tourTemplates, portfolioItems] = await Promise.all([
     findAll(req, 'merch', { image: { equals: id } }),
     findAll(req, 'schools', { logo: { equals: id } }),
     findAll(req, 'social-wall-items', {
@@ -73,6 +73,17 @@ export async function cleanupDeletedMediaReferences(req: PayloadRequestLike, del
     findAll(req, 'testimonials', { image: { equals: id } }),
     findAll(req, 'tour-templates', {
       or: [{ 'images.image': { equals: id } }, { 'informationBooklets.file': { equals: id } }],
+    }),
+    findAll(req, 'PortfolioItems', {
+      or: [
+        { backgroundMedia: { equals: id } },
+        { foregroundMedia: { equals: id } },
+        { featuredImage: { equals: id } },
+        { 'gallery.image': { equals: id } },
+        { logo: { equals: id } },
+        { 'testimonial.image': { equals: id } },
+        { 'seo.metaImage': { equals: id } },
+      ],
     }),
   ])
 
@@ -87,6 +98,17 @@ export async function cleanupDeletedMediaReferences(req: PayloadRequestLike, del
     updateDocs(req, 'tour-templates', tourTemplates, (doc) => ({
       images: removeArrayRowsByRelation(doc.images, 'image', id),
       informationBooklets: removeArrayRowsByRelation(doc.informationBooklets, 'file', id),
+    })),
+    updateDocs(req, 'PortfolioItems', portfolioItems, (doc) => ({
+      ...(relationId(doc.backgroundMedia) === id ? { backgroundMedia: null } : null),
+      ...(relationId(doc.foregroundMedia) === id ? { foregroundMedia: null } : null),
+      ...(relationId(doc.featuredImage) === id ? { featuredImage: null } : null),
+      ...(relationId(doc.logo) === id ? { logo: null } : null),
+      ...(relationId(doc?.testimonial?.image) === id
+        ? { testimonial: { ...(doc.testimonial || {}), image: null } }
+        : null),
+      ...(relationId(doc?.seo?.metaImage) === id ? { seo: { ...(doc.seo || {}), metaImage: null } } : null),
+      gallery: removeArrayRowsByRelation(doc.gallery, 'image', id),
     })),
   ])
 }

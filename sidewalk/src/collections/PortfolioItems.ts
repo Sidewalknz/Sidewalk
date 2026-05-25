@@ -40,8 +40,30 @@ export const PortfolioItems: CollectionConfig = {
           fields: [
             { name: 'logo', type: 'upload', relationTo: 'media', admin: { description: 'Optional client or project logo.' } },
             { name: 'logoUrl', type: 'text', admin: { description: 'Optional external logo URL.' } },
-            { name: 'featuredImage', type: 'upload', relationTo: 'media' },
-            { name: 'featuredImageAlt', type: 'text', admin: { description: 'Alt text for the featured image.' } },
+            {
+              name: 'backgroundMedia',
+              type: 'upload',
+              relationTo: 'media',
+              admin: { description: 'Portfolio card/detail background image or video.' },
+            },
+            {
+              name: 'backgroundMediaAlt',
+              type: 'text',
+              admin: { description: 'Alt text for the background media when it is an image.' },
+            },
+            {
+              name: 'foregroundMedia',
+              type: 'upload',
+              relationTo: 'media',
+              admin: { description: 'Transparent foreground image or video layered over the card background.' },
+            },
+            {
+              name: 'foregroundMediaAlt',
+              type: 'text',
+              admin: { description: 'Alt text for the foreground media when it is an image.' },
+            },
+            { name: 'featuredImage', type: 'upload', relationTo: 'media', admin: { hidden: true } },
+            { name: 'featuredImageAlt', type: 'text', admin: { hidden: true } },
             {
               name: 'gallery',
               type: 'array',

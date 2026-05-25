@@ -21,7 +21,15 @@ export default async function PortfolioDetailPage({
   const project = await getPortfolioItemBySlug(slug)
   if (!project) return notFound()
 
-  const heroImage = project?.featuredImage && typeof project.featuredImage === 'object' ? project.featuredImage : null
+  const backgroundMedia =
+    project?.backgroundMedia && typeof project.backgroundMedia === 'object'
+      ? project.backgroundMedia
+      : project?.featuredImage && typeof project.featuredImage === 'object'
+        ? project.featuredImage
+        : null
+  const foregroundMedia = project?.foregroundMedia && typeof project.foregroundMedia === 'object' ? project.foregroundMedia : null
+  const backgroundIsVideo = backgroundMedia?.mimeType?.startsWith?.('video/')
+  const foregroundIsVideo = foregroundMedia?.mimeType?.startsWith?.('video/')
   const gallery = toArray<any>(project?.gallery)
   const services = toArray<any>(project?.services)
     .map((s) => (typeof s === 'string' ? s : s?.service))
@@ -95,14 +103,46 @@ export default async function PortfolioDetailPage({
           ) : null}
         </header>
 
-        {heroImage?.url ? (
-          <div className="rounded-[3rem] overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900">
-            <div className="aspect-[16/9]">
-              <img
-                src={heroImage.url}
-                alt={project?.featuredImageAlt || project?.title || ''}
-                className="w-full h-full object-cover"
-              />
+        {backgroundMedia?.url || foregroundMedia?.url ? (
+          <div className="relative overflow-visible bg-[#1C2830]">
+            <div className="relative aspect-[16/8] overflow-hidden">
+              {backgroundMedia?.url ? (
+                backgroundIsVideo ? (
+                  <video
+                    src={backgroundMedia.url}
+                    className="h-full w-full object-cover opacity-70"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                  />
+                ) : (
+                  <img
+                    src={backgroundMedia.url}
+                    alt=""
+                    className="h-full w-full object-cover opacity-70"
+                  />
+                )
+              ) : null}
+              <div className="absolute inset-0 bg-[#1C2830]/35" />
+              {foregroundMedia?.url ? (
+                foregroundIsVideo ? (
+                  <video
+                    src={foregroundMedia.url}
+                    className="absolute bottom-0 right-0 h-[115%] w-full object-contain object-bottom"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                  />
+                ) : (
+                  <img
+                    src={foregroundMedia.url}
+                    alt={project?.foregroundMediaAlt || project?.title || ''}
+                    className="absolute bottom-0 right-0 h-[115%] w-full object-contain object-bottom"
+                  />
+                )
+              ) : null}
             </div>
           </div>
         ) : null}

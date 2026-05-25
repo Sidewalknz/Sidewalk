@@ -28,6 +28,26 @@ type JobItem = {
   endDate?: string
 }
 
+function MediaLabelWithTooltip({
+  label,
+  tooltip,
+}: {
+  label: string
+  tooltip: string
+}) {
+  return (
+    <div className="flex items-center gap-2">
+      <Label className="text-[10px] uppercase font-black tracking-[0.2em] text-slate-400 ml-1">{label}</Label>
+      <span className="group relative inline-flex h-5 w-5 cursor-help items-center justify-center rounded-full bg-slate-200 text-[10px] font-black text-slate-500 dark:bg-slate-800 dark:text-slate-300">
+        ?
+        <span className="pointer-events-none absolute left-1/2 top-full z-50 mt-3 w-72 -translate-x-1/2 bg-[#1C2830] p-4 text-left text-[11px] font-bold leading-5 text-white opacity-0 shadow-xl transition-opacity group-hover:opacity-100">
+          {tooltip}
+        </span>
+      </span>
+    </div>
+  )
+}
+
 function toIdString(raw: unknown): string {
   if (raw === null || raw === undefined) return ''
   if (typeof raw === 'string' || typeof raw === 'number') return String(raw)
@@ -63,9 +83,16 @@ export function PortfolioItemForm({
   const [isCheckingSlug, setIsCheckingSlug] = useState<boolean>(false)
   const slugSeq = useRef(0)
 
-  const [featuredImage, setFeaturedImage] = useState<any>(() => {
-    if (!project?.featuredImage) return null
-    return typeof project.featuredImage === 'object' ? project.featuredImage : { id: project.featuredImage }
+  const [backgroundMedia, setBackgroundMedia] = useState<any>(() => {
+    const raw = project?.backgroundMedia || project?.featuredImage
+    if (!raw) return null
+    return typeof raw === 'object' ? raw : { id: raw }
+  })
+
+  const [foregroundMedia, setForegroundMedia] = useState<any>(() => {
+    const raw = project?.foregroundMedia
+    if (!raw) return null
+    return typeof raw === 'object' ? raw : { id: raw }
   })
 
   const [logo, setLogo] = useState<any>(() => {
@@ -86,7 +113,7 @@ export function PortfolioItemForm({
           url: toUrl(media),
         } as GalleryItem
       })
-      .filter(Boolean)
+      .filter((item: GalleryItem | null): item is GalleryItem => Boolean(item))
   })
   const [draggedGalleryIndex, setDraggedGalleryIndex] = useState<number | null>(null)
 
@@ -124,7 +151,7 @@ export function PortfolioItemForm({
         const email = String(m?.email || '').trim()
         return { name, role: role || undefined, email: email || undefined } as InlineTeamMember
       })
-      .filter(Boolean)
+      .filter((item: InlineTeamMember | null): item is InlineTeamMember => Boolean(item))
   })
 
   const [testimonialImage, setTestimonialImage] = useState<any>(() => {
@@ -246,7 +273,8 @@ export function PortfolioItemForm({
     <form action={formAction} className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <input type="hidden" name="id" value={project?.id || ''} />
       <input type="hidden" name="logo" value={toIdString(logo)} />
-      <input type="hidden" name="featuredImage" value={toIdString(featuredImage)} />
+      <input type="hidden" name="backgroundMedia" value={toIdString(backgroundMedia)} />
+      <input type="hidden" name="foregroundMedia" value={toIdString(foregroundMedia)} />
       <input type="hidden" name="gallery" value={payloadJson.gallery} />
       <input type="hidden" name="servicesText" value={servicesText} />
       <input type="hidden" name="jobs" value={payloadJson.jobs} />
@@ -497,65 +525,101 @@ export function PortfolioItemForm({
                   </div>
                 </div>
 
-                <div className="space-y-4">
-                  <Label className="text-[10px] uppercase font-black tracking-[0.2em] text-slate-400 ml-1">Featured image</Label>
-                  <div className="p-6 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 space-y-4">
-                    <div className="w-40">
-                      <MediaPicker
-                        onSelect={(m) => setFeaturedImage(m)}
-                        selected={featuredImage}
-                        aspectRatio="h-20"
-                        subtitle="Select or upload a featured image"
-                      />
-                    </div>
+                <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+                  <div className="space-y-4">
+                    <MediaLabelWithTooltip
+                      label="Background media"
+                      tooltip="Best at 2400 x 900px, minimum 1600 x 600px. Use this for the wide scene, texture, screenshot, or video behind the card text."
+                    />
+                    <div className="p-6 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 space-y-4">
+                      <div className="w-40">
+                        <MediaPicker
+                          onSelect={(m) => setBackgroundMedia(m)}
+                          selected={backgroundMedia}
+                          aspectRatio="h-20"
+                          accept="image/*,video/*"
+                          subtitle="Select or upload a background image or video"
+                        />
+                      </div>
 
-                    {featuredImage ? (
                       <div className="flex items-center gap-4 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-950">
                         <div className="w-24 h-16 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-900 flex items-center justify-center">
-                          {(featuredImage as any)?.url ? (
-                            <img
-                              src={(featuredImage as any).url}
-                              alt={project?.featuredImageAlt || ''}
-                              className="w-full h-full object-cover"
-                            />
+                          {(backgroundMedia as any)?.url ? (
+                            (backgroundMedia as any)?.mimeType?.startsWith?.('video/') ? (
+                              <video src={(backgroundMedia as any).url} className="w-full h-full object-cover" muted playsInline />
+                            ) : (
+                              <img src={(backgroundMedia as any).url} alt={project?.backgroundMediaAlt || project?.featuredImageAlt || ''} className="w-full h-full object-cover" />
+                            )
                           ) : (
                             <ImageIcon className="w-5 h-5 text-slate-300 dark:text-slate-700" />
                           )}
                         </div>
                         <Input
-                          id="featuredImageAlt"
-                          name="featuredImageAlt"
-                          defaultValue={project?.featuredImageAlt || ''}
-                          placeholder="Featured image alt (SEO)..."
+                          id="backgroundMediaAlt"
+                          name="backgroundMediaAlt"
+                          defaultValue={project?.backgroundMediaAlt || project?.featuredImageAlt || ''}
+                          placeholder="Background alt text..."
                           className="h-11 rounded-2xl border-slate-100 dark:border-slate-800 bg-slate-50/50 focus:bg-white dark:focus:bg-slate-900 transition-all font-bold"
                         />
                         <Button
                           type="button"
                           variant="ghost"
-                          onClick={() => setFeaturedImage(null)}
+                          onClick={() => setBackgroundMedia(null)}
                           className="h-11 w-11 rounded-2xl border border-slate-100 dark:border-slate-800 hover:bg-rose-50 dark:hover:bg-rose-950/20 text-slate-400 hover:text-rose-600"
-                          title="Remove image"
+                          title="Remove background media"
                         >
                           <Trash2 className="w-4 h-4" />
                         </Button>
                       </div>
-                    ) : (
-                      <div className="space-y-2">
-                        <Label
-                          htmlFor="featuredImageAlt"
-                          className="text-[10px] uppercase font-black tracking-[0.2em] text-slate-400 ml-1"
-                        >
-                          Featured image alt (SEO)
-                        </Label>
-                        <Input
-                          id="featuredImageAlt"
-                          name="featuredImageAlt"
-                          defaultValue={project?.featuredImageAlt || ''}
-                          placeholder="Describe the image..."
-                          className="h-14 rounded-2xl border-slate-100 dark:border-slate-800 bg-white/70 dark:bg-slate-900/40 focus:bg-white dark:focus:bg-slate-900 transition-all font-bold"
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <MediaLabelWithTooltip
+                      label="Foreground media"
+                      tooltip="Best on a 1600 x 900px transparent canvas. Use this for a cutout, device mockup, product, or transparent video that floats above the card."
+                    />
+                    <div className="p-6 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 space-y-4">
+                      <div className="w-40">
+                        <MediaPicker
+                          onSelect={(m) => setForegroundMedia(m)}
+                          selected={foregroundMedia}
+                          aspectRatio="h-20"
+                          accept="image/*,video/*"
+                          subtitle="Select or upload a transparent foreground image or video"
                         />
                       </div>
-                    )}
+
+                      <div className="flex items-center gap-4 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-950">
+                        <div className="w-24 h-16 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-900 flex items-center justify-center">
+                          {(foregroundMedia as any)?.url ? (
+                            (foregroundMedia as any)?.mimeType?.startsWith?.('video/') ? (
+                              <video src={(foregroundMedia as any).url} className="w-full h-full object-contain" muted playsInline />
+                            ) : (
+                              <img src={(foregroundMedia as any).url} alt={project?.foregroundMediaAlt || ''} className="w-full h-full object-contain" />
+                            )
+                          ) : (
+                            <ImageIcon className="w-5 h-5 text-slate-300 dark:text-slate-700" />
+                          )}
+                        </div>
+                        <Input
+                          id="foregroundMediaAlt"
+                          name="foregroundMediaAlt"
+                          defaultValue={project?.foregroundMediaAlt || ''}
+                          placeholder="Foreground alt text..."
+                          className="h-11 rounded-2xl border-slate-100 dark:border-slate-800 bg-slate-50/50 focus:bg-white dark:focus:bg-slate-900 transition-all font-bold"
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          onClick={() => setForegroundMedia(null)}
+                          className="h-11 w-11 rounded-2xl border border-slate-100 dark:border-slate-800 hover:bg-rose-50 dark:hover:bg-rose-950/20 text-slate-400 hover:text-rose-600"
+                          title="Remove foreground media"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
