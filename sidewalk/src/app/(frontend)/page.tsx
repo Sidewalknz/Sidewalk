@@ -3,34 +3,51 @@ import Link from 'next/link'
 import { Hero } from '@/components/frontend/Hero'
 import { ClientMarquee } from '@/components/frontend/ClientMarquee'
 import { JourneyHeading } from '@/components/frontend/JourneyHeading'
+import { ServiceStickyMenu } from '@/components/frontend/ServiceStickyMenu'
 
 export const dynamic = 'force-dynamic'
 
 export default function HomePage() {
   const services = [
     {
-      title: 'Website design',
-      text: 'Clear, responsive website design for Nelson businesses that need a professional presence without unnecessary clutter.',
-    },
-    {
-      title: 'Web development',
-      text: 'Frontend and backend development for fast websites, custom features, booking flows, dashboards, and business tools.',
+      title: 'Website design and development',
+      text: 'We design and build websites that are easy to use, easy to update, and tailored to the way your business works. From simple pages to more advanced web features, the goal is always to make the site useful, clear, and built properly.',
     },
     {
       title: 'Content management',
-      text: 'Practical CMS setups that let you update pages, projects, media, and structured content without relying on a developer for every change.',
+      text: 'We build custom content management systems around the content your business actually needs to update. Using Payload CMS, we create tailored admin areas for things like menus, products, projects, events, blogs, team members, and other dynamic content, so you can keep your website up to date without touching the design or code.',
+    },
+    {
+      title: 'SEO',
+      text: 'Good SEO starts before the site goes live. We plan the structure, pages, metadata, content flow, and technical basics so your website has a stronger chance of showing up for the right local searches.',
+    },
+    {
+      title: 'UI/UX design',
+      text: 'Your website should feel like it belongs to your brand. We take cues from your existing branding, products, packaging, signage, or style guide, then design clear, easy-to-use interfaces that fit naturally into the rest of your business.',
     },
     {
       title: 'Web solutions',
-      text: 'Digital systems that connect the website to the way your business works, from forms and email to workflows and automation.',
+      text: 'Some businesses need more than a standard website. We build practical web solutions like quote forms, booking flows, email automation, dashboards, integrations, client portals, and custom tools that help reduce manual admin and make day-to-day work easier.',
     },
   ]
 
   const process = [
-    'Understand the business, customers, content, and workflow behind the website.',
-    'Map the structure, user journey, and technical requirements before design starts.',
-    'Design and build a fast, manageable website with room to grow.',
-    'Launch, refine, and support the site so it keeps working after it goes live.',
+    {
+      title: 'Understand the work',
+      text: 'We start by learning how the business works, who the website is for, what content matters, and where the current digital experience is slowing things down.',
+    },
+    {
+      title: 'Map the structure',
+      text: 'Before design starts, we plan the page structure, user journey, content hierarchy, CMS needs, integrations, and technical requirements so the project has a clear shape.',
+    },
+    {
+      title: 'Design with purpose',
+      text: 'The design phase turns that plan into clear layouts, reusable sections, and practical interfaces that fit the brand while staying easy for customers and staff to use.',
+    },
+    {
+      title: 'Build for handover',
+      text: 'We build the website with manageable content, sensible admin tools, and room to grow, then refine and support it so it keeps working after launch.',
+    },
   ]
 
   return (
@@ -40,7 +57,7 @@ export default function HomePage() {
 
       <section id="home-content" className="home-journey-section scroll-mt-24">
         <div className="home-journey-section__inner">
-          <JourneyHeading top="WEBSITES" bottom="SHOULD WORK" reveal="harder" />
+          <JourneyHeading top="WEBSITES" bottom="WORK HARDER" reveal="should" />
           <div className="home-journey-copy">
             <h2 className="sr-only">Websites should do more than sit online</h2>
             <p className="text-xl leading-9 text-[#1C2830]/80 max-w-4xl">
@@ -53,41 +70,34 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="services" className="home-journey-section scroll-mt-24">
+      <section id="services" className="home-journey-section home-services-section scroll-mt-24">
         <div className="home-journey-section__inner">
-          <JourneyHeading top="WHAT" bottom="MATTERS" reveal="we build" />
+          <JourneyHeading top="WHAT" bottom="MATTERS" reveal="we build" exitLeftAt={0.08} />
           <div className="home-journey-copy">
             <h2 className="sr-only">What we build</h2>
-            <div className="space-y-8">
-              {services.map((service) => (
-                <div key={service.title} className="grid grid-cols-1 md:grid-cols-3 gap-6 py-8 first:pt-0">
-                  <h3 className="text-2xl font-extrabold text-[#B74831]">
-                    {service.title}
-                  </h3>
-                  <p className="md:col-span-2 text-lg leading-8 text-[#1C2830]/80">
-                    {service.text}
-                  </p>
-                </div>
-              ))}
-            </div>
+            <ServiceStickyMenu services={services} />
           </div>
         </div>
       </section>
 
       <section className="home-journey-section">
         <div className="home-journey-section__inner">
-          <JourneyHeading top="PROCESS" bottom="CLEAR" reveal="keeps work" />
+          <JourneyHeading top="PLANNING" bottom="CLEARER PROJECTS" reveal="creates" />
           <div className="home-journey-copy">
             <h2 className="sr-only">How we work</h2>
-            <ol className="space-y-7">
+            <p className="home-process-intro">
+              Better websites come from clearer decisions before the build starts. We use planning to connect business goals, content, design, and technical requirements early, so the project moves with fewer surprises.
+            </p>
+            <ol className="home-process-list">
               {process.map((step, index) => (
-                <li key={step} className="grid grid-cols-[4rem_1fr] gap-6 py-7 first:pt-0">
-                  <span className="text-sm font-extrabold text-[#B74831]">
+                <li key={step.title} className="home-process-item">
+                  <span className="home-process-item__number">
                     {String(index + 1).padStart(2, '0')}
                   </span>
-                  <p className="text-xl leading-8 text-[#1C2830]">
-                    {step}
-                  </p>
+                  <div>
+                    <h3 className="home-process-item__title">{step.title}</h3>
+                    <p className="home-process-item__text">{step.text}</p>
+                  </div>
                 </li>
               ))}
             </ol>
@@ -97,7 +107,7 @@ export default function HomePage() {
 
       <section className="home-journey-section">
         <div className="home-journey-section__inner">
-          <JourneyHeading top="RIGHT" bottom="GROWTH" reveal="fit for" />
+          <JourneyHeading top="RIGHT FIT" bottom="BETTER WORK" reveal="creates" />
           <div className="home-journey-copy">
             <h2 className="sr-only">A good fit when</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">

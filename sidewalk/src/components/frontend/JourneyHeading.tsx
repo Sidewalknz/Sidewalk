@@ -7,15 +7,18 @@ export function JourneyHeading({
   top,
   bottom,
   reveal,
+  exitLeftAt,
 }: {
   top: string
   bottom: string
   reveal: string
+  exitLeftAt?: number
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const revealRef = useRef<HTMLDivElement>(null)
   const [hasEntered, setHasEntered] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
+  const [isExitingLeft, setIsExitingLeft] = useState(false)
 
   const updateOpenState = useCallback(() => {
     const reveal = revealRef.current
@@ -28,7 +31,18 @@ export function JourneyHeading({
     if (revealCenter <= viewportMiddle) {
       setIsOpen(true)
     }
-  }, [])
+
+    const heading = ref.current
+    if (heading && typeof exitLeftAt === 'number') {
+      const section = heading.closest('section')
+      if (!section) return
+
+      const sectionRect = section.getBoundingClientRect()
+      const scrollableDistance = Math.max(sectionRect.height - window.innerHeight, 1)
+      const sectionProgress = Math.min(Math.max((0 - sectionRect.top) / scrollableDistance, 0), 1)
+      setIsExitingLeft(sectionProgress >= exitLeftAt)
+    }
+  }, [exitLeftAt])
 
   useEffect(() => {
     const element = ref.current
@@ -60,7 +74,12 @@ export function JourneyHeading({
   return (
     <div
       ref={ref}
-      className={cn('home-journey-heading', hasEntered && 'has-entered', isOpen && 'is-open')}
+      className={cn(
+        'home-journey-heading',
+        hasEntered && 'has-entered',
+        isOpen && 'is-open',
+        isExitingLeft && 'is-exiting-left',
+      )}
       aria-hidden="true"
     >
       <div className="home-journey-heading__line home-journey-heading__line--top">{top}</div>
