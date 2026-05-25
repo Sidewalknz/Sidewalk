@@ -8,7 +8,13 @@ type Service = {
   text: string
 }
 
-export function ServiceStickyMenu({ services }: { services: Service[] }) {
+export function ServiceStickyMenu({
+  services,
+  reverse = false,
+}: {
+  services: Service[]
+  reverse?: boolean
+}) {
   const ref = useRef<HTMLDivElement>(null)
   const [activeIndex, setActiveIndex] = useState(0)
   const activeService = services[activeIndex] ?? services[0]
@@ -41,7 +47,7 @@ export function ServiceStickyMenu({ services }: { services: Service[] }) {
   }, [updateActiveService])
 
   return (
-    <div ref={ref} className="home-service-menu">
+    <div ref={ref} className={cn('home-service-menu', reverse && 'home-service-menu--reverse')}>
       <div className="home-service-menu__nav" aria-label="Service categories">
         {services.map((service, index) => (
           <button

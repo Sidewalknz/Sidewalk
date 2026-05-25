@@ -80,27 +80,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="home-journey-section">
+      <section className="home-journey-section home-services-section">
         <div className="home-journey-section__inner">
-          <JourneyHeading top="PLANNING" bottom="CLEARER PROJECTS" reveal="creates" />
+          <JourneyHeading top="PLANNING" bottom="CLEARER PROJECTS" reveal="creates" exitLeftAt={0.08} />
           <div className="home-journey-copy">
             <h2 className="sr-only">How we work</h2>
-            <p className="home-process-intro">
-              Better websites come from clearer decisions before the build starts. We use planning to connect business goals, content, design, and technical requirements early, so the project moves with fewer surprises.
-            </p>
-            <ol className="home-process-list">
-              {process.map((step, index) => (
-                <li key={step.title} className="home-process-item">
-                  <span className="home-process-item__number">
-                    {String(index + 1).padStart(2, '0')}
-                  </span>
-                  <div>
-                    <h3 className="home-process-item__title">{step.title}</h3>
-                    <p className="home-process-item__text">{step.text}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
+            <ServiceStickyMenu services={process} reverse />
           </div>
         </div>
       </section>
