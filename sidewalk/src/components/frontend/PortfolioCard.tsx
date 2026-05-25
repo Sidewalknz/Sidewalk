@@ -22,7 +22,7 @@ export function PortfolioCard({ project }: { project: any }) {
           {backgroundIsVideo ? (
             <video
               src={backgroundMedia.url}
-              className="h-full w-full object-cover opacity-65 transition-transform duration-500 group-hover:scale-[1.03]"
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
               autoPlay
               muted
               loop
@@ -32,15 +32,14 @@ export function PortfolioCard({ project }: { project: any }) {
             <img
               src={backgroundMedia.url}
               alt=""
-              className="h-full w-full object-cover opacity-65 transition-transform duration-500 group-hover:scale-[1.03]"
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
             />
           )}
-          <div className="absolute inset-0 bg-[#1C2830]/55" />
         </div>
       ) : null}
 
       <div className="relative z-10 flex flex-col justify-center p-8 md:min-h-[14rem] lg:p-10">
-        <h3 className="text-3xl font-extrabold leading-tight text-white transition-colors group-hover:text-[#B74831] md:text-4xl">
+        <h3 className="text-3xl font-extrabold leading-tight text-white md:text-4xl">
           {project?.title || 'Untitled'}
         </h3>
 
