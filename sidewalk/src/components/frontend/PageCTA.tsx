@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { MoveRight } from 'lucide-react'
 
 type PageCTAProps = {
   title: string
@@ -19,18 +20,21 @@ export const PageCTA = ({
     <section className={`relative overflow-visible bg-[#B74831] pt-20 pb-28 text-white ${className}`}>
       <div className="relative z-30 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl space-y-8">
-          <h2 className="text-4xl font-extrabold leading-tight md:text-6xl">
-            {title}
-          </h2>
+          <div className="flex items-center gap-5 sm:gap-8">
+            <h2 className="text-4xl font-extrabold leading-tight md:text-6xl">
+              {title}
+            </h2>
+            <Link
+              href={href}
+              aria-label={linkLabel}
+              className="group inline-flex shrink-0 text-white"
+            >
+              <MoveRight className="h-10 w-10 transition-transform duration-300 group-hover:translate-x-2 md:h-14 md:w-14" strokeWidth={4} />
+            </Link>
+          </div>
           <p className="text-xl leading-9 text-white/85">
             {description}
           </p>
-          <Link
-            href={href}
-            className="inline-flex text-lg font-extrabold text-white underline decoration-white/40 underline-offset-8 transition-colors hover:decoration-white"
-          >
-            {linkLabel}
-          </Link>
         </div>
       </div>
       <div

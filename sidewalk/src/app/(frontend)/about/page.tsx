@@ -25,16 +25,26 @@ export default function AboutPage() {
     <div>
       <SidewalkHero
         title="about"
-        description="A Nelson-based web agency bringing website design, web development, and practical web solutions together for businesses that want more control over their digital presence."
-        highlights={['Nelson-based web agency', 'website design', 'web development', 'web solutions', 'digital presence']}
+        description="Sidewalk brings website design, web development, and practical web solutions together for businesses that want more control over their digital presence."
+        highlights={['website design', 'web development', 'web solutions', 'digital presence']}
       />
+
+      <section className="bg-[#1C2830] py-16 text-white">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 sm:px-6 md:grid-cols-2 lg:px-8">
+          <div className="border-l border-white/20 pl-6">
+            <p className="text-sm font-bold uppercase tracking-widest text-white/50">Ezekiel Brown</p>
+            <p className="mt-1 text-2xl font-extrabold">Lead Developer</p>
+          </div>
+          <div className="border-l border-white/20 pl-6">
+            <p className="text-sm font-bold uppercase tracking-widest text-white/50">Keegan Jeffries</p>
+            <p className="mt-1 text-2xl font-extrabold">Sales, onboarding, and operations</p>
+          </div>
+        </div>
+      </section>
 
       <section className="border-t border-[#1C2830]/20 py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12">
           <div className="lg:col-span-4">
-            <p className="text-sm font-bold uppercase tracking-normal text-[#B74831]">
-              Nelson web agency
-            </p>
           </div>
           <div className="lg:col-span-8 space-y-8">
             <h2 className="text-4xl md:text-6xl font-extrabold leading-tight text-[#1C2830]">
@@ -53,7 +63,7 @@ export default function AboutPage() {
       <section className="py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 border-t border-[#1C2830]/20 pt-16">
           <div className="lg:col-span-4">
-            <h2 className="text-3xl md:text-5xl font-extrabold text-[#1C2830]">
+            <h2 className="text-4xl font-extrabold leading-tight text-[#1C2830] md:text-6xl">
               Why self-hosted matters
             </h2>
           </div>
@@ -71,7 +81,7 @@ export default function AboutPage() {
       <section className="py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 border-t border-[#1C2830]/20 pt-16">
           <div className="lg:col-span-4">
-            <h2 className="text-3xl md:text-5xl font-extrabold text-[#1C2830]">
+            <h2 className="text-4xl font-extrabold leading-tight text-[#1C2830] md:text-6xl">
               The team
             </h2>
           </div>
