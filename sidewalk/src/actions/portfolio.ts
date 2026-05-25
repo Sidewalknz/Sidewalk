@@ -142,7 +142,7 @@ export async function getPublishedPortfolioItems() {
   const payload = await getPayload({ config })
   const res = await payload.find({
     collection: 'PortfolioItems',
-    sort: ['sortOrder', '-publishedAt', '-createdAt'],
+    sort: ['-completionDate', '-publishedAt', '-createdAt'],
     where: { status: { equals: 'published' } },
     depth: 2,
     limit: 200,
