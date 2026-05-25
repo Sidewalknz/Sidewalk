@@ -51,7 +51,7 @@ export default function ServicesPage() {
       <section className="bg-[#1C2830] py-24 text-white">
         <div className="mx-auto max-w-5xl px-4 text-center sm:px-6 lg:px-8">
           <h2 className="text-4xl font-extrabold leading-tight md:text-6xl">
-            No generic templates. No boxed-in builds. Everything Custom made.
+            No generic templates. Everything Custom made.
           </h2>
         </div>
       </section>
@@ -59,7 +59,7 @@ export default function ServicesPage() {
       <section className="py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 border-t border-[#1C2830]/20 pt-16">
           <div className="lg:col-span-4">
-            <h2 className="text-3xl md:text-5xl font-extrabold text-[#1C2830]">
+            <h2 className="text-4xl font-extrabold leading-tight text-[#1C2830] md:text-6xl">
               Website packages
             </h2>
             <p className="mt-6 text-lg leading-8 text-[#1C2830]/75">
@@ -98,7 +98,7 @@ export default function ServicesPage() {
       <section className="py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 border-t border-[#1C2830]/20 pt-16">
           <div className="lg:col-span-4">
-            <h2 className="text-3xl md:text-5xl font-extrabold text-[#1C2830]">
+            <h2 className="text-4xl font-extrabold leading-tight text-[#1C2830] md:text-6xl">
               Quoted web solutions
             </h2>
           </div>
@@ -118,7 +118,7 @@ export default function ServicesPage() {
       </section>
 
       <PageCTA
-        title="Need a website developer in Nelson NZ?"
+        title="Need a website?"
         description="Send through what you need built. We will help work out whether it fits a package or needs a custom quote."
         href="/contact"
         linkLabel="Ask for a quote"

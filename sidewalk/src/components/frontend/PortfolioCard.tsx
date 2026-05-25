@@ -8,9 +8,9 @@ export function PortfolioCard({ project }: { project: any }) {
   return (
     <Link
       href={href}
-      className="group relative bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 transition-all duration-300 hover:shadow-2xl hover:shadow-brand-600/10 hover:-translate-y-2"
+      className="group relative bg-white dark:bg-slate-900 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-brand-600/10 hover:-translate-y-2"
     >
-      <div className="aspect-[16/10] relative overflow-hidden bg-slate-100 dark:bg-slate-800">
+      <div className="aspect-[16/4.5] relative overflow-hidden bg-slate-100 dark:bg-slate-800">
         {image?.url ? (
           <img
             src={image.url}
@@ -20,7 +20,7 @@ export function PortfolioCard({ project }: { project: any }) {
         ) : null}
       </div>
 
-      <div className="p-7 space-y-3">
+      <div className="p-5 space-y-2">
         <h3 className="text-xl font-black text-slate-900 dark:text-white group-hover:text-brand-600 transition-colors">
           {project?.title || 'Untitled'}
         </h3>

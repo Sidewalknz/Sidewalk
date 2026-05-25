@@ -11,7 +11,7 @@ export const Footer = () => {
               <img src="/logo1.svg" alt="Sidewalk" className="h-10 w-auto" />
             </Link>
             <p className="text-stone-300 max-w-sm leading-relaxed">
-              A Nelson web agency creating web design, website design, web development, and practical web solutions for businesses across Nelson NZ.
+              A Nelson web agency building practical websites, ecommerce stores, booking systems, and custom web solutions for businesses across New Zealand.
             </p>
           </div>
 

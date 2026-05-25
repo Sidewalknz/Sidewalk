@@ -62,7 +62,7 @@ export default async function PortfolioDetailPage({
         </Link>
 
         <header className="space-y-6">
-          <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          <h1 className="text-4xl font-extrabold leading-tight text-[#1C2830] dark:text-white md:text-6xl">
             {project?.title}
           </h1>
 
@@ -186,10 +186,8 @@ export default async function PortfolioDetailPage({
 
         {gallery.length ? (
           <section className="space-y-8">
-            <div className="flex items-center gap-6">
-              <div className="h-px bg-slate-200 dark:bg-slate-800 flex-grow" />
-              <h2 className="text-xl font-black text-slate-900 dark:text-white uppercase italic tracking-tight">Gallery</h2>
-              <div className="h-px bg-slate-200 dark:bg-slate-800 flex-grow" />
+            <div className="border-t border-[#1C2830]/20 pt-16">
+              <h2 className="text-4xl font-extrabold leading-tight text-[#1C2830] dark:text-white md:text-6xl">Gallery</h2>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {gallery.map((g: any, idx: number) => {
@@ -209,10 +207,8 @@ export default async function PortfolioDetailPage({
 
         {related.length ? (
           <section className="space-y-10 pt-10">
-            <div className="flex items-center gap-6">
-              <div className="h-px bg-slate-200 dark:bg-slate-800 flex-grow" />
-              <h2 className="text-xl font-black text-slate-900 dark:text-white uppercase italic tracking-tight">Related portfolio</h2>
-              <div className="h-px bg-slate-200 dark:bg-slate-800 flex-grow" />
+            <div className="border-t border-[#1C2830]/20 pt-16">
+              <h2 className="text-4xl font-extrabold leading-tight text-[#1C2830] dark:text-white md:text-6xl">Related portfolio</h2>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {related.map((p: any) => (

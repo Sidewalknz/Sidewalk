@@ -20,21 +20,36 @@ export default async function PortfolioPage() {
     <div>
       <SidewalkHero
         title="projects"
-        description="A selection of Nelson web design, website design, web development, and digital system projects built for practical long-term control."
+        description="A selection of websites, ecommerce stores, and custom web projects built to be practical, manageable, and useful long after launch."
         highlights={['Nelson web design', 'website design', 'web development', 'digital system projects']}
       />
+
+      <section className="bg-[#1C2830] py-16 text-white">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 sm:px-6 md:grid-cols-3 lg:px-8">
+          <div className="border-l border-white/20 pl-6">
+            <p className="text-sm font-bold uppercase tracking-widest text-white/50">Project type</p>
+            <p className="mt-1 text-2xl font-extrabold">Websites and web systems</p>
+          </div>
+          <div className="border-l border-white/20 pl-6">
+            <p className="text-sm font-bold uppercase tracking-widest text-white/50">Built for</p>
+            <p className="mt-1 text-2xl font-extrabold">Real business workflows</p>
+          </div>
+          <div className="border-l border-white/20 pl-6">
+            <p className="text-sm font-bold uppercase tracking-widest text-white/50">Includes</p>
+            <p className="mt-1 text-2xl font-extrabold">Strategy, design and development</p>
+          </div>
+        </div>
+      </section>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20 pb-24">
         {featured.length ? (
           <section className="space-y-10">
-            <div className="flex items-center gap-6">
-              <div className="h-px bg-slate-200 dark:bg-slate-800 flex-grow" />
-              <h2 className="text-xl font-black text-slate-900 dark:text-white uppercase italic tracking-tight">
+            <div className="border-t border-[#1C2830]/20 pt-16">
+              <h2 className="text-4xl font-extrabold leading-tight text-[#1C2830] dark:text-white md:text-6xl">
                 Featured
               </h2>
-              <div className="h-px bg-slate-200 dark:bg-slate-800 flex-grow" />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 gap-8">
               {featured.map((p: any) => (
                 <PortfolioCard key={p.id} project={p} />
               ))}
@@ -43,23 +58,21 @@ export default async function PortfolioPage() {
         ) : null}
 
         <section className="space-y-10">
-          <div className="flex items-center gap-6">
-            <div className="h-px bg-slate-200 dark:bg-slate-800 flex-grow" />
-            <h2 className="text-xl font-black text-slate-900 dark:text-white uppercase italic tracking-tight">
+          <div className="border-t border-[#1C2830]/20 pt-16">
+            <h2 className="text-4xl font-extrabold leading-tight text-[#1C2830] dark:text-white md:text-6xl">
               All portfolio
             </h2>
-            <div className="h-px bg-slate-200 dark:bg-slate-800 flex-grow" />
           </div>
 
           {rest.length ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 gap-8">
               {rest.map((p: any) => (
                 <PortfolioCard key={p.id} project={p} />
               ))}
             </div>
           ) : (
             <div className="text-center py-24 bg-slate-50 dark:bg-slate-900/40 rounded-[3rem] border-2 border-dashed border-slate-200 dark:border-slate-800/50">
-              <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-4 uppercase italic">
+              <h2 className="text-4xl font-extrabold leading-tight text-[#1C2830] dark:text-white md:text-6xl">
                 Portfolio items are coming soon
               </h2>
               <p className="text-slate-500 dark:text-slate-400 font-medium max-w-sm mx-auto">
@@ -79,4 +92,3 @@ export default async function PortfolioPage() {
     </div>
   )
 }
-

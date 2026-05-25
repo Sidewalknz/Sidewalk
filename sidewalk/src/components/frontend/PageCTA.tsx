@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { MoveRight } from 'lucide-react'
 
 type PageCTAProps = {
   title: string
@@ -17,21 +16,26 @@ export const PageCTA = ({
   className = '',
 }: PageCTAProps) => {
   return (
-    <section className={`relative overflow-visible bg-[#B74831] pt-20 pb-28 text-white ${className}`}>
+    <section className={`relative overflow-visible bg-[#B74831] pt-20 pb-44 text-white ${className}`}>
       <div className="relative z-30 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl space-y-8">
-          <div className="flex items-center gap-5 sm:gap-8">
+          <Link
+            href={href}
+            aria-label={linkLabel}
+            className="group flex w-fit items-center gap-5 text-white sm:gap-8"
+          >
             <h2 className="text-4xl font-extrabold leading-tight md:text-6xl">
               {title}
             </h2>
-            <Link
-              href={href}
-              aria-label={linkLabel}
-              className="group inline-flex shrink-0 text-white"
-            >
-              <MoveRight className="h-10 w-10 transition-transform duration-300 group-hover:translate-x-2 md:h-14 md:w-14" strokeWidth={4} />
-            </Link>
-          </div>
+            <span
+              aria-hidden="true"
+              className="h-10 w-14 shrink-0 bg-current transition-transform duration-300 group-hover:translate-x-2 md:h-14 md:w-[4.9rem]"
+              style={{
+                WebkitMask: 'url(/icons/right-arrow.svg) center / contain no-repeat',
+                mask: 'url(/icons/right-arrow.svg) center / contain no-repeat',
+              }}
+            />
+          </Link>
           <p className="text-xl leading-9 text-white/85">
             {description}
           </p>
