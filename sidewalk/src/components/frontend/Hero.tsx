@@ -131,18 +131,15 @@ export const Hero = () => {
   return (
     <SidewalkHero
       title="web solutions"
-      description="Creating web solutions, web design, website design, and web development for Nelson businesses that need clear strategy, flexible content management, and digital systems that support real workflows."
+      description="A Nelson web agency designing and building practical websites, ecommerce stores, and custom web tools for businesses that need more than a basic online presence."
       className="sidewalk-hero--home"
       exploreHref="#home-content"
       highlights={[
-        'web solutions',
-        'web design',
-        'website design',
-        'web development',
-        'Nelson',
-        'clear strategy',
-        'flexible content management',
-        'digital systems',
+        'Nelson web agency',
+        'practical websites',
+        'ecommerce stores',
+        'custom web tools',
+        'more than a basic online presence',
       ]}
     />
   )

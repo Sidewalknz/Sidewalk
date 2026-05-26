@@ -24,9 +24,9 @@ export default function AboutPage() {
   return (
     <div>
       <SidewalkHero
-        title="about"
+        title="About"
         description="Sidewalk brings design, development, and practical web systems together to create websites that are easier to manage and built around how each business works."
-        highlights={['website design', 'web development', 'web solutions', 'digital presence']}
+        highlights={['design', 'development', 'practical web systems', 'easier to manage', 'how each business works']}
       />
 
       <section className="bg-[#1C2830] py-16 text-white">
