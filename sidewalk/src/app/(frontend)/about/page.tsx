@@ -12,12 +12,12 @@ export default function AboutPage() {
     {
       name: 'Ezekiel Brown',
       role: 'Lead Developer',
-      description: 'Ezekiel leads the technical direction, web development, CMS architecture, and custom systems that sit behind each Sidewalk project.',
+      description: 'Ezekiel looks after the technical side of Sidewalk, shaping the web development, CMS architecture, and custom systems behind each project. With a Bachelor of Information Technology from NMIT and a Master of Artificial Intelligence from Victoria University of Wellington, he brings a strong technical foundation to practical, business-focused websites.',
     },
     {
       name: 'Keegan Jeffries',
       role: 'Sales, onboarding, and operations',
-      description: 'Keegan manages client conversations, onboarding, admin, and the practical details that keep each project moving clearly from first enquiry to launch.',
+      description: 'Keegan keeps projects moving clearly from first enquiry to launch, managing client communication, onboarding, admin, and the practical details along the way. His work managing Kirby Lane and Bridge Street Collective brings a strong understanding of business operations and client experience.',
     },
   ]
 
@@ -25,7 +25,7 @@ export default function AboutPage() {
     <div>
       <SidewalkHero
         title="about"
-        description="Sidewalk brings website design, web development, and practical web solutions together for businesses that want more control over their digital presence."
+        description="Sidewalk brings design, development, and practical web systems together to create websites that are easier to manage and built around how each business works."
         highlights={['website design', 'web development', 'web solutions', 'digital presence']}
       />
 
