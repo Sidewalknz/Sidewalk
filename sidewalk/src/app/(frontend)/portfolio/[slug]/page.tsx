@@ -59,7 +59,7 @@ export default async function PortfolioDetailPage({
         className="sidewalk-hero--portfolio-detail"
       />
 
-      <section className="mt-16 bg-[#1C2830] py-16 text-white">
+      <section className="mt-8 bg-[#1C2830] py-16 text-white">
         <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 sm:px-6 md:grid-cols-3 lg:px-8">
           {project?.location ? (
             <div className="border-l border-white/20 pl-6">

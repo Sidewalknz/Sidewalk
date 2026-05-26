@@ -1,7 +1,8 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { Menu, X, Rocket } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { SIDEWALK_ASSETS } from '@/lib/sidewalk-assets'
@@ -10,26 +11,16 @@ import { frontendNavLinks } from '@/lib/nav-links'
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
   const [logoError, setLogoError] = useState(false)
+  const pathname = usePathname()
 
   const logoSrc = SIDEWALK_ASSETS.logo || '/logo.png' // Default filename if manifest is missing/null
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20)
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  const isActiveLink = (href: string) => (href === '/' ? pathname === href : pathname.startsWith(href))
 
   return (
     <nav
       className={cn(
-        'fixed top-0 w-full z-50 transition-all duration-300 border-b',
-        scrolled 
-          ? 'bg-[#F3ECE3]/85 backdrop-blur-md py-3 border-stone-300/60 shadow-sm'
-          : 'bg-transparent py-5 border-transparent'
+        'fixed top-0 w-full z-50 border-b border-transparent bg-transparent py-5 transition-colors duration-300'
       )}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -52,15 +43,22 @@ export const Navbar = () => {
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center space-x-8">
-            {frontendNavLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                className="text-sm font-medium text-slate-600 hover:text-brand-600 dark:text-slate-300 dark:hover:text-brand-500 transition-colors"
-              >
-                {link.name}
-              </Link>
-            ))}
+            {frontendNavLinks.map((link) => {
+              const isActive = isActiveLink(link.href)
+
+              return (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className={cn(
+                    'text-sm text-slate-600 hover:text-brand-600 dark:text-slate-300 dark:hover:text-brand-500 transition-colors',
+                    isActive ? 'font-bold text-slate-900 dark:text-white' : 'font-medium'
+                  )}
+                >
+                  {link.name}
+                </Link>
+              )
+            })}
           </div>
 
           {/* Mobile Menu Button */}
@@ -83,16 +81,23 @@ export const Navbar = () => {
         )}
       >
         <div className="px-4 pt-2 pb-6 space-y-1">
-          {frontendNavLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              onClick={() => setIsOpen(false)}
-              className="block px-3 py-3 text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-brand-600 rounded-md transition-colors"
-            >
-              {link.name}
-            </Link>
-          ))}
+          {frontendNavLinks.map((link) => {
+            const isActive = isActiveLink(link.href)
+
+            return (
+              <Link
+                key={link.name}
+                href={link.href}
+                onClick={() => setIsOpen(false)}
+                className={cn(
+                  'block px-3 py-3 text-base text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-brand-600 rounded-md transition-colors',
+                  isActive ? 'font-bold text-slate-900 dark:text-white' : 'font-medium'
+                )}
+              >
+                {link.name}
+              </Link>
+            )
+          })}
         </div>
       </div>
     </nav>
