@@ -11,6 +11,7 @@ type SidewalkHeroProps = {
   eyebrow?: string
   className?: string
   titleAs?: 'h1' | 'p'
+  brandText?: string
 }
 
 const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -63,6 +64,7 @@ export const SidewalkHero = ({
   eyebrow,
   className,
   titleAs = 'h1',
+  brandText = 'SIDEWALK',
 }: SidewalkHeroProps) => {
   const TitleTag = titleAs
   const taglineParts = getTaglineParts(description, highlights)
@@ -76,7 +78,7 @@ export const SidewalkHero = ({
     >
       <div className="sidewalk-hero__stage mx-auto flex min-h-[520px] max-w-7xl flex-col items-center justify-center text-center">
         <div className="sidewalk-hero__brand sidewalk-hero__brand--top" aria-hidden="true">
-          SIDEWALK
+          {brandText}
         </div>
 
         <div className="sidewalk-hero__content">
@@ -93,7 +95,7 @@ export const SidewalkHero = ({
 
         <div className="sidewalk-hero__bottom-container">
           <div className="sidewalk-hero__brand sidewalk-hero__brand--bottom" aria-hidden="true">
-            SIDEWALK
+            {brandText}
           </div>
 
           <p className="sidewalk-hero__tagline">

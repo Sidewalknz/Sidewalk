@@ -15,7 +15,7 @@ export function PortfolioCard({ project }: { project: any }) {
   return (
     <Link
       href={href}
-      className="group relative grid min-h-[14rem] grid-cols-1 overflow-visible bg-[#1C2830] text-white transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-brand-600/10 md:grid-cols-[minmax(0,0.42fr)_minmax(0,0.58fr)]"
+      className="group relative grid h-[30rem] grid-cols-1 overflow-visible bg-[#1C2830] text-white transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-brand-600/10 md:h-[20rem] md:grid-cols-[minmax(0,0.42fr)_minmax(0,0.58fr)]"
     >
       {backgroundMedia?.url ? (
         <div className="absolute inset-0 overflow-hidden opacity-0 transition-opacity duration-500 group-hover:opacity-100">
@@ -38,10 +38,19 @@ export function PortfolioCard({ project }: { project: any }) {
         </div>
       ) : null}
 
-      <div className="relative z-10 flex flex-col justify-center p-8 md:min-h-[14rem] lg:p-10">
+      <div className="relative z-10 flex h-full flex-col justify-center p-8 lg:p-10">
         <h3 className="text-3xl font-extrabold leading-tight text-white md:text-4xl">
           {project?.title || 'Untitled'}
         </h3>
+
+        <p
+          className={`mt-4 min-h-[7rem] max-w-xl overflow-hidden text-base font-medium leading-7 text-white/75 [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:4] ${
+            project?.shortDescription ? '' : 'invisible'
+          }`}
+          aria-hidden={!project?.shortDescription}
+        >
+          {project?.shortDescription || 'Portfolio project summary'}
+        </p>
 
         <div className="mt-4 flex flex-wrap items-center gap-3 text-[10px] font-black uppercase tracking-widest text-white/55">
           {project?.location ? (
@@ -56,15 +65,9 @@ export function PortfolioCard({ project }: { project: any }) {
           ) : null}
         </div>
 
-        {project?.shortDescription ? (
-          <p className="mt-4 max-w-md text-sm font-medium leading-relaxed text-white/78 line-clamp-3">
-            {project.shortDescription}
-          </p>
-        ) : null}
-
       </div>
 
-      <div className="relative z-10 min-h-[10rem] overflow-visible opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100 md:min-h-[14rem] md:translate-y-6">
+      <div className="relative z-10 h-full overflow-visible opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100 md:translate-y-6">
         {foregroundMedia?.url ? (
           foregroundIsVideo ? (
             <video

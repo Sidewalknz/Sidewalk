@@ -263,6 +263,16 @@
     align-self: center;
   }
 
+  .sidewalk-hero--portfolio-detail .sidewalk-hero__title {
+    font-size: clamp(42px, 7.5vw, 112px);
+    max-width: none;
+    overflow-wrap: normal;
+    padding-left: 5.6em;
+    padding-right: 5.6em;
+    text-align: center;
+    white-space: nowrap;
+  }
+
   .sidewalk-hero__tagline-word {
     animation: sidewalk-hero-word-in 420ms ease-out both;
     display: inline-block;
