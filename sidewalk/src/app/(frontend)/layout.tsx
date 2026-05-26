@@ -32,7 +32,9 @@ export default function FrontendLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className={`${montserrat.variable} flex flex-col min-h-screen bg-[#F3ECE3] font-sans`}>
+    <div
+      className={`${montserrat.variable} frontend-shell flex flex-col min-h-screen bg-[#F3ECE3] font-sans`}
+    >
       <Navbar />
       <main className="flex-grow">
         <PageTransition>{children}</PageTransition>

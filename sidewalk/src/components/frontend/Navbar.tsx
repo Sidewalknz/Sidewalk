@@ -31,7 +31,7 @@ export const Navbar = () => {
   return (
     <nav
       className={cn(
-        'fixed top-0 w-full z-50 border-b py-5 transition-colors duration-300',
+        'fixed top-0 w-full z-50 py-5 transition-colors duration-300',
         scrolled
           ? 'bg-[#F3ECE3]/85 backdrop-blur-md border-transparent'
           : 'bg-transparent border-transparent'
@@ -90,7 +90,7 @@ export const Navbar = () => {
       {/* Mobile Nav Menu */}
       <div
         className={cn(
-          'md:hidden absolute w-full bg-[#F3ECE3] border-b border-stone-300/60 transition-all duration-300 ease-in-out overflow-hidden',
+          'md:hidden absolute w-full bg-[#F3ECE3] transition-all duration-300 ease-in-out overflow-hidden',
           isOpen ? 'max-h-64' : 'max-h-0'
         )}
       >

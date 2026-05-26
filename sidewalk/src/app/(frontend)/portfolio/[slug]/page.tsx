@@ -129,7 +129,7 @@ export default async function PortfolioDetailPage({
         {backgroundMedia?.url || foregroundMedia?.url ? (
           <Reveal>
             <div className="relative overflow-visible bg-[#1C2830]">
-              <div className="relative aspect-[16/8] overflow-hidden">
+              <div className="relative h-[30rem] overflow-hidden md:h-[20rem]">
                 {backgroundMedia?.url ? (
                   backgroundIsVideo ? (
                     <video
