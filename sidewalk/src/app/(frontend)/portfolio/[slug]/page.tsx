@@ -148,7 +148,7 @@ export default async function PortfolioDetailPage({
                   foregroundIsVideo ? (
                     <video
                       src={foregroundMedia.url}
-                      className="absolute inset-0 h-full w-full object-contain object-center"
+                      className="absolute inset-0 h-full w-full object-contain object-center drop-shadow-[0_1.5rem_1.25rem_rgba(0,0,0,0.35)]"
                       autoPlay
                       muted
                       loop
@@ -158,7 +158,7 @@ export default async function PortfolioDetailPage({
                     <img
                       src={foregroundMedia.url}
                       alt={project?.foregroundMediaAlt || project?.title || ''}
-                      className="absolute inset-0 h-full w-full object-contain object-center"
+                      className="absolute inset-0 h-full w-full object-contain object-center drop-shadow-[0_1.5rem_1.25rem_rgba(0,0,0,0.35)]"
                     />
                   )
                 ) : null}

@@ -86,7 +86,7 @@ export function PortfolioCard({ project }: { project: any }) {
           foregroundIsVideo ? (
             <video
               src={foregroundMedia.url}
-              className="absolute bottom-0 right-0 h-[125%] w-full object-contain object-bottom transition-transform duration-500 group-hover:scale-[1.03] md:-top-8 md:bottom-auto md:h-[calc(100%+3rem)]"
+              className="absolute bottom-0 right-0 h-[125%] w-full object-contain object-bottom drop-shadow-[0_1.5rem_1.25rem_rgba(0,0,0,0.35)] transition-transform duration-500 group-hover:scale-[1.03] md:-top-8 md:bottom-auto md:h-[calc(100%+3rem)]"
               autoPlay
               muted
               loop
@@ -96,7 +96,7 @@ export function PortfolioCard({ project }: { project: any }) {
             <img
               src={foregroundMedia.url}
               alt={project?.foregroundMediaAlt || project?.title || ''}
-              className="absolute bottom-0 right-0 h-[125%] w-full object-contain object-bottom transition-transform duration-500 group-hover:scale-[1.03] md:-top-8 md:bottom-auto md:h-[calc(100%+3rem)]"
+              className="absolute bottom-0 right-0 h-[125%] w-full object-contain object-bottom drop-shadow-[0_1.5rem_1.25rem_rgba(0,0,0,0.35)] transition-transform duration-500 group-hover:scale-[1.03] md:-top-8 md:bottom-auto md:h-[calc(100%+3rem)]"
             />
           )
         ) : null}
