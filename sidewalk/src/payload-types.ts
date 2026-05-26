@@ -251,6 +251,10 @@ export interface PortfolioItem {
    */
   backgroundMediaAlt?: string | null;
   /**
+   * Use dark text when the portfolio card background is white or very light.
+   */
+  cardTextTone?: ('light' | 'dark') | null;
+  /**
    * Transparent foreground image or video layered over the card background.
    */
   foregroundMedia?: (number | null) | Media;
@@ -538,6 +542,7 @@ export interface PortfolioItemsSelect<T extends boolean = true> {
   logoUrl?: T;
   backgroundMedia?: T;
   backgroundMediaAlt?: T;
+  cardTextTone?: T;
   foregroundMedia?: T;
   foregroundMediaAlt?: T;
   featuredImage?: T;

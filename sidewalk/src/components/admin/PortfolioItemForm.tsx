@@ -529,7 +529,7 @@ export function PortfolioItemForm({
                   <div className="space-y-4">
                     <MediaLabelWithTooltip
                       label="Background media"
-                      tooltip="Best at 2400 x 900px, minimum 1600 x 600px. Use this for the wide scene, texture, screenshot, or video behind the card text."
+                      tooltip="Best at 2400 x 640px, minimum 1600 x 425px. The portfolio card crops this media to about 3.75:1 on desktop, so keep important details away from the top and bottom edges."
                     />
                     <div className="p-6 rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 space-y-4">
                       <div className="w-40">
@@ -540,6 +540,21 @@ export function PortfolioItemForm({
                           accept="image/*,video/*"
                           subtitle="Select or upload a background image or video"
                         />
+                      </div>
+
+                      <div className="space-y-4">
+                        <Label htmlFor="cardTextTone" className="text-[10px] uppercase font-black tracking-[0.2em] text-slate-400 ml-1">
+                          Card text colour
+                        </Label>
+                        <select
+                          id="cardTextTone"
+                          name="cardTextTone"
+                          defaultValue={project?.cardTextTone || 'light'}
+                          className="w-full h-14 rounded-2xl border border-slate-100 dark:border-slate-800 bg-white/70 dark:bg-slate-900/40 p-4 text-xs font-black uppercase tracking-widest text-slate-900 dark:text-white outline-none transition-all focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-brand-500"
+                        >
+                          <option value="light">Light text for dark backgrounds</option>
+                          <option value="dark">Dark text for white/light backgrounds</option>
+                        </select>
                       </div>
 
                       <div className="flex items-center gap-4 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-950">

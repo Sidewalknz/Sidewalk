@@ -52,6 +52,16 @@ export const PortfolioItems: CollectionConfig = {
               admin: { description: 'Alt text for the background media when it is an image.' },
             },
             {
+              name: 'cardTextTone',
+              type: 'select',
+              defaultValue: 'light',
+              options: [
+                { label: 'Light text', value: 'light' },
+                { label: 'Dark text', value: 'dark' },
+              ],
+              admin: { description: 'Use dark text when the portfolio card background is white or very light.' },
+            },
+            {
               name: 'foregroundMedia',
               type: 'upload',
               relationTo: 'media',

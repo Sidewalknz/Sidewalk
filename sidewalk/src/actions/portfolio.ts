@@ -107,6 +107,7 @@ function readPortfolioForm(formData: FormData, existing?: any) {
     logoUrl: (formData.get('logoUrl') as string) || '',
     backgroundMedia: toId(formData.get('backgroundMedia')),
     backgroundMediaAlt: (formData.get('backgroundMediaAlt') as string) || '',
+    cardTextTone: (formData.get('cardTextTone') as string) === 'dark' ? 'dark' : 'light',
     foregroundMedia: toId(formData.get('foregroundMedia')),
     foregroundMediaAlt: (formData.get('foregroundMediaAlt') as string) || '',
     gallery: normalizeGallery(formData.get('gallery')),

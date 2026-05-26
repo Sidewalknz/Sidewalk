@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { cn } from '@/lib/utils'
 
 export function PortfolioCard({ project }: { project: any }) {
   const backgroundMedia =
@@ -11,6 +12,7 @@ export function PortfolioCard({ project }: { project: any }) {
   const href = `/portfolio/${project?.slug || ''}`
   const backgroundIsVideo = backgroundMedia?.mimeType?.startsWith?.('video/')
   const foregroundIsVideo = foregroundMedia?.mimeType?.startsWith?.('video/')
+  const usesDarkText = project?.cardTextTone === 'dark'
 
   return (
     <Link
@@ -39,20 +41,32 @@ export function PortfolioCard({ project }: { project: any }) {
       ) : null}
 
       <div className="relative z-10 flex h-full flex-col justify-center p-8 lg:p-10">
-        <h3 className="text-3xl font-extrabold leading-tight text-white md:text-4xl">
+        <h3
+          className={cn(
+            'text-3xl font-extrabold leading-tight text-white transition-colors duration-500 md:text-4xl',
+            usesDarkText && 'group-hover:text-[#1C2830]',
+          )}
+        >
           {project?.title || 'Untitled'}
         </h3>
 
         <p
-          className={`mt-4 min-h-[7rem] max-w-xl overflow-hidden text-base font-medium leading-7 text-white/75 [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:4] ${
-            project?.shortDescription ? '' : 'invisible'
-          }`}
+          className={cn(
+            'mt-4 min-h-[7rem] max-w-xl overflow-hidden text-base font-medium leading-7 text-white/75 transition-colors duration-500 [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:4]',
+            usesDarkText && 'group-hover:text-[#1C2830]/75',
+            !project?.shortDescription && 'invisible',
+          )}
           aria-hidden={!project?.shortDescription}
         >
           {project?.shortDescription || 'Portfolio project summary'}
         </p>
 
-        <div className="mt-4 flex flex-wrap items-center gap-3 text-[10px] font-black uppercase tracking-widest text-white/55">
+        <div
+          className={cn(
+            'mt-4 flex flex-wrap items-center gap-3 text-[10px] font-black uppercase tracking-widest text-white/55 transition-colors duration-500',
+            usesDarkText && 'group-hover:text-[#1C2830]/55',
+          )}
+        >
           {project?.location ? (
             <span>
               {project.location}

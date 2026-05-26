@@ -1,12 +1,13 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @plugin "tailwindcss-animate";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-sans:
+    var(--font-sans), ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
 
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
@@ -100,7 +101,7 @@
     --ring: 10 57% 45%;
     --radius: 0.75rem;
 
-    --brand-hex: #B74831;
+    --brand-hex: #b74831;
     --brand-50: 34 34% 92%;
     --brand-100: 44 61% 58%;
     --brand-200: 44 61% 58%;
@@ -169,6 +170,23 @@
 }
 
 @layer components {
+  .content-reveal {
+    opacity: 0;
+    transform: translateY(1.5rem);
+    will-change: opacity, transform;
+  }
+
+  .content-reveal.is-ready {
+    transition:
+      opacity 700ms ease,
+      transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .content-reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
   .sidewalk-hero--home {
     min-height: 100vh;
     display: flex;
@@ -189,7 +207,7 @@
   }
 
   .sidewalk-hero__brand {
-    color: #1C2830;
+    color: #1c2830;
     font-family: var(--font-sans);
     font-size: clamp(96px, 18vw, 250px);
     font-weight: 800;
@@ -223,8 +241,8 @@
 
   .sidewalk-hero__title {
     align-items: center;
-    background-color: #F3ECE3;
-    color: #B74831;
+    background-color: #f3ece3;
+    color: #b74831;
     display: flex;
     font-family: var(--font-sans);
     font-size: clamp(64px, 12vw, 170px);
@@ -248,7 +266,7 @@
 
   .sidewalk-hero__tagline {
     align-self: flex-start;
-    color: #1C2830;
+    color: #1c2830;
     font-size: clamp(10px, min(1.5vw, 2.5vh), 20px);
     font-weight: 700;
     letter-spacing: 0.5px;
@@ -286,14 +304,14 @@
   }
 
   .sidewalk-hero__tagline-word--highlight {
-    color: #B74831;
+    color: #b74831;
   }
 
   .sidewalk-hero__explore {
     align-self: flex-start;
     align-items: center;
     animation: sidewalk-hero-content 500ms ease-out 1600ms both;
-    color: #1C2830;
+    color: #1c2830;
     display: inline-flex;
     font-size: 0.9rem;
     font-weight: 800;
@@ -308,7 +326,7 @@
   }
 
   .sidewalk-hero__explore:hover {
-    color: #B74831;
+    color: #b74831;
   }
 
   @media (min-width: 1024px) {
@@ -339,6 +357,12 @@
       animation: none;
       opacity: 1;
       transform: none;
+    }
+
+    .content-reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
     }
   }
 }
@@ -389,14 +413,14 @@
 
 @layer components {
   .client-marquee {
-    background-color: #1C2830;
+    background-color: #1c2830;
     overflow: hidden;
     transition: background-color 420ms ease;
     white-space: nowrap;
   }
 
   .client-marquee:hover {
-    background-color: #B74831 !important;
+    background-color: #b74831 !important;
   }
 
   .client-marquee__track {
@@ -408,7 +432,7 @@
   }
 
   .client-marquee__item {
-    color: #F3ECE3;
+    color: #f3ece3;
     font-size: clamp(1rem, 2vw, 1.5rem);
     font-weight: 800;
     letter-spacing: 0;
@@ -417,7 +441,7 @@
   }
 
   .client-marquee__item:hover {
-    color: #1C2830;
+    color: #1c2830;
   }
 
   .client-marquee:hover .client-marquee__track {
@@ -470,7 +494,7 @@
 @layer components {
   .home-journey-section {
     align-items: center;
-    background: #F3ECE3;
+    background: #f3ece3;
     display: flex;
     min-height: 100vh;
     padding: clamp(7rem, 12vh, 12rem) 1rem;
@@ -495,7 +519,7 @@
   }
 
   .home-cta-section .home-journey-heading__middle {
-    color: #1C2830;
+    color: #1c2830;
   }
 
   .home-journey-heading {
@@ -506,7 +530,9 @@
     margin-bottom: clamp(3rem, 7vh, 6rem);
     overflow: visible;
     text-align: center;
-    transition: transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 520ms ease;
+    transition:
+      transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      opacity 520ms ease;
     width: 100%;
   }
 
@@ -516,7 +542,7 @@
   }
 
   .home-journey-heading__line {
-    color: #1C2830;
+    color: #1c2830;
     font-size: clamp(48px, 8.5vw, 120px);
     font-weight: 800;
     letter-spacing: -4px;
@@ -529,13 +555,17 @@
   .home-journey-heading__line--top {
     opacity: 0;
     transform: translateY(0.72em);
-    transition: opacity 900ms cubic-bezier(0.2, 0.8, 0.2, 1), transform 1100ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition:
+      opacity 900ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      transform 1100ms cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
   .home-journey-heading__line--bottom {
     opacity: 0;
     transform: translateY(-0.72em);
-    transition: opacity 900ms cubic-bezier(0.2, 0.8, 0.2, 1), transform 1100ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition:
+      opacity 900ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      transform 1100ms cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
   .home-journey-heading.has-entered .home-journey-heading__line--top {
@@ -545,7 +575,7 @@
     -moz-transform: translateY(-0.25em);
     -ms-transform: translateY(-0.25em);
     -o-transform: translateY(-0.25em);
-}
+  }
 
   .home-journey-heading.has-entered .home-journey-heading__line--bottom {
     opacity: 1;
@@ -554,7 +584,7 @@
     -moz-transform: translateY(0.25em);
     -ms-transform: translateY(0.25em);
     -o-transform: translateY(0.25em);
-}
+  }
 
   .home-journey-heading.is-open .home-journey-heading__line--top {
     transform: translateY(-0.34em);
@@ -565,7 +595,7 @@
   }
 
   .home-journey-heading__middle {
-    color: #B74831;
+    color: #b74831;
     font-size: clamp(36px, 6vw, 84px);
     font-weight: 800;
     letter-spacing: -2px;
@@ -578,7 +608,10 @@
     position: relative;
     text-transform: lowercase;
     transform: translateY(-0.12em);
-    transition: max-height 900ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 900ms cubic-bezier(0.2, 0.8, 0.2, 1), transform 900ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition:
+      max-height 900ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      opacity 900ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      transform 900ms cubic-bezier(0.2, 0.8, 0.2, 1);
     white-space: nowrap;
     z-index: 2;
   }
@@ -627,7 +660,9 @@
     max-width: 74rem;
     opacity: 0;
     transform: translateY(7rem);
-    transition: opacity 760ms ease, transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
+    transition:
+      opacity 760ms ease,
+      transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
     width: 100%;
   }
 
@@ -664,13 +699,15 @@
     line-height: 0.95;
     outline: none;
     text-align: left;
-    transition: color 220ms ease, transform 220ms ease;
+    transition:
+      color 220ms ease,
+      transform 220ms ease;
   }
 
   .home-service-menu__button:hover,
   .home-service-menu__button:focus-visible,
   .home-service-menu__button.is-active {
-    color: #B74831;
+    color: #b74831;
     transform: translateX(0.35rem);
   }
 
@@ -685,7 +722,9 @@
     position: sticky;
     top: 7rem;
     transform: translateY(0.75rem);
-    transition: opacity 180ms ease, transform 220ms ease;
+    transition:
+      opacity 180ms ease,
+      transform 220ms ease;
   }
 
   .home-service-menu__panel.is-visible {
@@ -716,7 +755,7 @@
   }
 
   .home-service-menu__title {
-    color: #1C2830;
+    color: #1c2830;
     font-size: clamp(2rem, 4vw, 4rem);
     font-weight: 800;
     letter-spacing: -1px;
@@ -762,14 +801,14 @@
   }
 
   .home-process-item__number {
-    color: #B74831;
+    color: #b74831;
     font-size: clamp(1.35rem, 3vw, 2.5rem);
     font-weight: 800;
     line-height: 1;
   }
 
   .home-process-item__title {
-    color: #1C2830;
+    color: #1c2830;
     font-size: clamp(1.65rem, 4vw, 3.25rem);
     font-weight: 800;
     letter-spacing: -1px;
