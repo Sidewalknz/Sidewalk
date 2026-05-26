@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { Lock, Mail, Loader2, ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -51,8 +52,15 @@ export default function LoginForm() {
         <div className="w-full max-w-md animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="bg-white p-10 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100">
                 <div className="flex flex-col items-center mb-10 text-center">
-                    <div className="w-16 h-16 bg-brand-50 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
-                        <Lock className="w-8 h-8 text-brand-600" />
+                    <div className="mb-6 flex h-16 w-40 items-center justify-center">
+                        <Image
+                            src="/logo.svg"
+                            alt="Sidewalk"
+                            width={160}
+                            height={64}
+                            priority
+                            className="h-auto w-full"
+                        />
                     </div>
                     <h1 className="text-3xl font-black tracking-tight text-slate-900 border-b-4 border-brand-600 pb-2">
                         Admin Login
@@ -67,7 +75,7 @@ export default function LoginForm() {
                             {error}
                         </div>
                     )}
-                    
+
                     <div className="space-y-2">
                         <Label htmlFor="email" className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Email</Label>
                         <div className="relative group">
@@ -83,7 +91,7 @@ export default function LoginForm() {
                            />
                         </div>
                     </div>
-                    
+
                     <div className="space-y-2">
                         <Label htmlFor="password" className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Password</Label>
                         <div className="relative group">
@@ -92,7 +100,7 @@ export default function LoginForm() {
                                id="password"
                                type="password"
                                required
-                               placeholder="••••••••"
+                               placeholder="Password"
                                className="pl-12 rounded-2xl border-slate-200 bg-slate-50/50 focus:bg-white transition-all h-14"
                                value={password}
                                onChange={(e) => setPassword(e.target.value)}
@@ -121,9 +129,9 @@ export default function LoginForm() {
                    </p>
                 </div>
             </div>
-            
+
             <p className="text-center mt-8 text-slate-400 text-xs font-bold uppercase tracking-widest opacity-50">
-               © 2026 Powered by Sidewalk
+               (c) 2026 Powered by Sidewalk
             </p>
         </div>
     )

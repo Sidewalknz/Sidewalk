@@ -9,20 +9,28 @@ export const metadata = {
 export default function PrivacyPolicyPage() {
   const sections = [
     {
-      title: 'Information We Collect',
-      content: 'We collect information that you provide directly to us, such as when you create an account, make a purchase, or contact us for support. This may include your name, email address, and payment information.',
+      title: 'Information we collect',
+      content: 'We collect personal information you choose to send us through this website or by email, such as your name, email address, phone number, business name, project details, and any files or notes you include with an enquiry. We may also collect basic technical information such as your IP address, browser, device, pages visited, and referral source through website analytics, logs, cookies, or similar tools.',
     },
     {
-      title: 'How We Use Your Information',
-      content: 'We use the information we collect to provide, maintain, and improve our services, to process transactions, and to communicate with you about updates and offers.',
+      title: 'Why we collect it',
+      content: 'We collect this information to respond to enquiries, discuss potential projects, provide quotes, deliver website and digital services, maintain business records, improve this website, monitor security, and meet legal or accounting obligations. We only collect information where it is connected to these purposes.',
     },
     {
-      title: 'Data Security',
-      content: 'We take reasonable measures to help protect information about you from loss, theft, misuse, and unauthorized access, disclosure, alteration, and destruction.',
+      title: 'How we store and protect it',
+      content: 'We take reasonable steps to keep personal information secure and protect it from loss, unauthorised access, misuse, disclosure, alteration, or destruction. Information may be stored in email, project management tools, website hosting systems, analytics tools, or other service providers used to run Sidewalk and deliver client work.',
     },
     {
-      title: 'Cookies and Tracking',
-      content: "We use cookies and similar tracking technologies to analyze trends, administer the website, and track users' movements around the website.",
+      title: 'Sharing and service providers',
+      content: 'We do not sell personal information. We may share information with trusted service providers where needed to operate this website, manage enquiries, host websites, send email, analyse website performance, process payments, or deliver project work. Some providers may store or process information outside New Zealand. Where that happens, we take reasonable steps to use providers with appropriate privacy and security protections.',
+    },
+    {
+      title: 'Cookies and analytics',
+      content: 'This website may use cookies, analytics, server logs, and similar technologies to understand how visitors use the site and to keep it secure. You can usually disable or limit cookies through your browser settings, although some website functions may not work as expected.',
+    },
+    {
+      title: 'Access, correction, and privacy breaches',
+      content: 'Under the New Zealand Privacy Act 2020, you can ask to access or correct personal information we hold about you. If we become aware of a privacy breach that has caused serious harm or is likely to do so, we will notify the Office of the Privacy Commissioner and affected people where required by law.',
     },
   ]
 
@@ -38,7 +46,7 @@ export default function PrivacyPolicyPage() {
         <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 sm:px-6 md:grid-cols-2 lg:px-8">
           <div className="border-l border-white/20 pl-6">
             <p className="text-sm font-bold uppercase tracking-widest text-white/50">Last modified</p>
-            <p className="mt-1 text-2xl font-extrabold">March 5, 2026</p>
+            <p className="mt-1 text-2xl font-extrabold">May 26, 2026</p>
           </div>
           <div className="border-l border-white/20 pl-6">
             <p className="text-sm font-bold uppercase tracking-widest text-white/50">Questions</p>
@@ -55,7 +63,7 @@ export default function PrivacyPolicyPage() {
                 Privacy
               </h2>
               <p className="mt-6 text-lg leading-8 text-[#1C2830]/75">
-                This page explains the information we may collect, how it is used, and how to contact us about privacy questions.
+                This page explains what personal information this website may collect, how Sidewalk uses it, and your rights under New Zealand privacy law.
               </p>
             </div>
           </div>
