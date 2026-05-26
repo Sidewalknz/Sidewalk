@@ -19,9 +19,9 @@ export default async function PortfolioPage() {
   return (
     <div>
       <SidewalkHero
-        title="projects"
+        title="Projects"
         description="A selection of websites, ecommerce stores, and custom web projects built to be practical, manageable, and useful long after launch."
-        highlights={['Nelson web design', 'website design', 'web development', 'digital system projects']}
+        highlights={['websites', 'ecommerce stores', 'custom web projects', 'long after launch']}
       />
 
       <section className="bg-[#1C2830] py-16 text-white">

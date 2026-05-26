@@ -37,9 +37,9 @@ export default function TermsOfServicePage() {
   return (
     <div>
       <SidewalkHero
-        title="terms of service"
-        description="The terms that apply when using Sidewalk services, website content, project communication, and digital work provided by our Nelson web agency."
-        highlights={['Sidewalk services', 'website content', 'project communication', 'Nelson web agency']}
+        title="Terms of service"
+        description="The terms that apply when working with Sidewalk, including project communication, website content, services, and digital work we provide."
+        highlights={['Sidewalk services', 'project communication', 'website content', 'digital work']}
       />
 
       <section className="bg-[#1C2830] py-16 text-white">

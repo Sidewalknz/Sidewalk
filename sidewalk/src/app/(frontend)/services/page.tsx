@@ -67,9 +67,9 @@ const packages = [
   return (
     <div>
       <SidewalkHero
-        title="services"
+        title="Services"
         description="Every Sidewalk project is custom made. We design and develop websites around your brand, content, customers, and workflow, whether you need a simple one page website or a more complex web solution."
-        highlights={['web design Nelson', 'website design Nelson', 'web development Nelson', 'ecommerce websites', 'booking systems', 'web solutions']}
+        highlights={['custom websites', 'your brand', 'customers', 'workflow', 'ecommerce websites', 'booking systems']}
       />
 
       <section className="bg-[#1C2830] py-24 text-white">

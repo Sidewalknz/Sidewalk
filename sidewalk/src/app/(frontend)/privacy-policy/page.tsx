@@ -37,8 +37,8 @@ export default function PrivacyPolicyPage() {
   return (
     <div>
       <SidewalkHero
-        title="privacy policy"
-        description="How Sidewalk handles privacy, website enquiries, contact details, and information shared through our Nelson web agency services."
+        title="Privacy policy"
+        description="How Sidewalk handles website enquiries, contact details, project information, and personal information shared with our Nelson web agency."
         highlights={['privacy', 'website enquiries', 'contact details', 'Nelson web agency']}
       />
 

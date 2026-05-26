@@ -36,9 +36,9 @@ export default function ContactPage() {
   return (
     <div>
       <SidewalkHero
-        title="contact"
-        description="Looking for a web designer in Nelson NZ, a website developer, or a web agency for your next project? Tell us what you are building."
-        highlights={['web designer in Nelson NZ', 'website developer', 'web agency']}
+        title="Contact"
+        description="Talk to us about your next website, ecommerce store, booking system, or custom web project."
+        highlights={['us', 'website', 'custom web project']}
       />
 
       <section className="bg-[#1C2830] py-16 text-white">
