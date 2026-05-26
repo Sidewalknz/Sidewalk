@@ -8,36 +8,60 @@ export const metadata = {
 }
 
 export default function ServicesPage() {
-  const packages = [
-    {
-      name: 'One page website',
-      price: 'From $1,500',
-      description: 'A custom one page website for small businesses, campaigns, landing pages, or service-based brands that need a clear online presence.',
-      details: ['Custom design', 'Responsive build', 'Contact form', 'Basic SEO setup', 'Launch support'],
-    },
-    {
-      name: 'Multi page website',
-      price: 'From $3,500',
-      description: 'A custom multi page website for businesses that need room for services, about content, projects, FAQs, and stronger search coverage.',
-      details: ['Custom website design', 'CMS setup', 'Core page templates', 'On-page SEO structure', 'Training handover'],
-    },
-    {
-      name: 'Ecommerce website',
-      price: 'From $6,500',
-      description: 'A custom ecommerce website for selling products online with a manageable catalogue, clear buying flow, and room to grow.',
-      details: ['Product structure', 'Checkout flow', 'Payment integration', 'CMS/product management', 'Launch support'],
-    },
-  ]
+const packages = [
+  {
+    name: 'One page website',
+    description:
+      'A custom one page website for small businesses, campaigns, landing pages, or service-based brands that need a clear and focused online presence without a full multi page setup.',
+    details: [
+      'Custom one page design',
+      'Responsive website build',
+      'Contact form setup',
+      'Basic SEO structure',
+      'Fast self-hosted website',
+      'Maintenance support available',
+    ],
+  },
+  {
+    name: 'Multi page website',
+    description:
+      'A custom multi page website for businesses that need room for services, about content, projects, FAQs, locations, resources, or stronger search coverage across multiple pages.',
+    details: [
+      'Custom website design',
+      'Responsive website build',
+      'Content management setup',
+      'Flexible page structure',
+      'Basic SEO structure',
+      'Fast self-hosted website',
+      'Maintenance support available',
+    ],
+  },
+  {
+    name: 'Ecommerce website',
+    description:
+      'A custom ecommerce website for selling products online, with a manageable product catalogue, clear buying flow, and room to grow. No Shopify platform fees, just standard payment processing fees such as Stripe.',
+    details: [
+      'Custom ecommerce design',
+      'Responsive website build',
+      'Product catalogue setup',
+      'Checkout flow',
+      'Stripe payment integration',
+      'Product management setup',
+      'Basic SEO structure',
+      'Fast self-hosted website',
+      'Maintenance support available',
+    ],
+  },
+]
 
   const quotedServices = [
     'Booking systems',
     'Ticketing systems',
-    'Client portals',
     'Custom dashboards',
     'Workflow automation',
-    'CRM-style tools',
     'Payload CMS builds',
     'Website rebuilds and migrations',
+    'Much more!'
   ]
 
   return (
@@ -57,19 +81,21 @@ export default function ServicesPage() {
       </section>
 
       <section className="py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 border-t border-[#1C2830]/20 pt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12">
           <div className="lg:col-span-4">
-            <h2 className="text-4xl font-extrabold leading-tight text-[#1C2830] md:text-6xl">
-              Website packages
-            </h2>
-            <p className="mt-6 text-lg leading-8 text-[#1C2830]/75">
-              Dummy pricing for now. Final pricing depends on content, integrations, design complexity, and functionality.
-            </p>
+            <div className="lg:sticky lg:top-28">
+              <h2 className="text-4xl font-extrabold leading-tight text-[#1C2830] md:text-6xl">
+                Website packages
+              </h2>
+              <p className="mt-6 text-lg leading-8 text-[#1C2830]/75">
+                Every website is scoped around the content, integrations, design complexity, and functionality required. We self-host our websites, provide maintenance support, and can help with SEO before and after launch.
+              </p>
+            </div>
           </div>
           <div className="lg:col-span-8 divide-y divide-[#1C2830]/20">
             {packages.map((item) => (
               <div key={item.name} className="py-10 first:pt-0">
-                <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4 md:items-start">
+                <div className="grid grid-cols-1 gap-4 md:items-start">
                   <div>
                     <h3 className="text-3xl font-extrabold text-[#B74831]">
                       {item.name}
@@ -78,13 +104,10 @@ export default function ServicesPage() {
                       {item.description}
                     </p>
                   </div>
-                  <p className="text-2xl font-extrabold text-[#1C2830]">
-                    {item.price}
-                  </p>
                 </div>
                 <ul className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3">
                   {item.details.map((detail) => (
-                    <li key={detail} className="text-[#1C2830]/75">
+                    <li key={detail} className="text-lg font-bold text-[#1C2830]">
                       {detail}
                     </li>
                   ))}

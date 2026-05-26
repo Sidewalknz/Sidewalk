@@ -42,32 +42,30 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="border-t border-[#1C2830]/20 py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12">
-          <div className="lg:col-span-4">
-          </div>
-          <div className="lg:col-span-8 space-y-8">
+      <section className="border-t border-[#1C2830]/20 py-20 lg:py-24">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <div className="space-y-8">
             <h2 className="text-4xl md:text-6xl font-extrabold leading-tight text-[#1C2830]">
               Design, development, and systems that connect.
             </h2>
             <p className="text-xl leading-9 text-[#1C2830]/80">
-              We are a Nelson-based duo passionate about crafting websites and building brands that connect. At Sidewalk, we bring design and development together to help companies stand out online and work more efficiently behind the scenes.
+              Sidewalk is a small studio that brings design, development, and day-to-day business thinking into the same process. We build websites that look considered, feel easy to use, and are backed by systems that make content and admin simpler to manage.
             </p>
             <p className="text-lg leading-8 text-[#1C2830]/75">
-              Our work sits between web design Nelson businesses can trust, custom web development Nelson companies can grow with, and practical web solutions that reduce manual admin. We care about websites that look sharp, load fast, and give businesses control over their content.
+              We care about the practical details as much as the visual ones: clear page structure, fast loading, flexible content editing, and tools that fit the way a business already works. The goal is a digital presence that feels polished on the outside and useful behind the scenes.
             </p>
           </div>
         </div>
       </section>
 
-      <section className="py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 border-t border-[#1C2830]/20 pt-16">
-          <div className="lg:col-span-4">
+      <section className="py-20 lg:py-24">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 border-t border-[#1C2830]/20 px-4 pt-16 sm:px-6 lg:grid-cols-12 lg:gap-16 lg:px-8">
+          <div className="lg:col-span-5">
             <h2 className="text-4xl font-extrabold leading-tight text-[#1C2830] md:text-6xl">
               Why self-hosted matters
             </h2>
           </div>
-          <div className="lg:col-span-8 space-y-8">
+          <div className="space-y-8 lg:col-span-7">
             <p className="text-xl leading-9 text-[#1C2830]/80">
               We believe in self-hosted solutions that give you complete control over your digital presence. That means your website, content, and business systems can be shaped around how you operate rather than being boxed into a one-size-fits-all platform.
             </p>
@@ -78,21 +76,27 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 border-t border-[#1C2830]/20 pt-16">
+      <section className="py-20 lg:py-24">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 border-t border-[#1C2830]/20 px-4 pt-16 sm:px-6 lg:grid-cols-12 lg:gap-16 lg:px-8">
           <div className="lg:col-span-4">
             <h2 className="text-4xl font-extrabold leading-tight text-[#1C2830] md:text-6xl">
               The team
             </h2>
+            <p className="mt-6 max-w-sm text-lg leading-8 text-[#1C2830]/75">
+              Sidewalk is intentionally small, so the people planning the work are the same people responsible for delivering it.
+            </p>
           </div>
-          <div className="lg:col-span-8 divide-y divide-[#1C2830]/20">
+          <div className="lg:col-span-8">
             {team.map((member) => (
-              <div key={member.name} className="grid grid-cols-1 md:grid-cols-3 gap-6 py-8 first:pt-0">
-                <div>
+              <div
+                key={member.name}
+                className="grid grid-cols-1 gap-6 border-t border-[#1C2830]/20 py-8 first:border-t-0 first:pt-0 md:grid-cols-3"
+              >
+                <div className="md:pr-6">
                   <h3 className="text-2xl font-extrabold text-[#B74831]">
                     {member.name}
                   </h3>
-                  <p className="mt-2 text-sm font-bold uppercase tracking-normal text-[#1C2830]/60">
+                  <p className="mt-3 text-sm font-bold uppercase tracking-widest text-[#1C2830]/55">
                     {member.role}
                   </p>
                 </div>

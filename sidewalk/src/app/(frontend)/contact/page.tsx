@@ -17,22 +17,18 @@ export default function ContactPage() {
   const services = [
     {
       name: 'One page website',
-      price: 'From $1,500',
       description: 'A focused custom website for small businesses, campaigns, landing pages, or service-based brands that need a clear online presence.',
     },
     {
       name: 'Multi page website',
-      price: 'From $3,500',
       description: 'A broader website for businesses that need room for services, about content, projects, FAQs, stronger search coverage, and CMS editing.',
     },
     {
       name: 'Ecommerce website',
-      price: 'From $6,500',
       description: 'A custom online store with product structure, payment integration, CMS/product management, and a clear buying flow.',
     },
     {
       name: 'Quoted web solutions',
-      price: 'Scoped to fit',
       description: 'Booking systems, ticketing, client portals, dashboards, workflow automation, Payload CMS builds, integrations, and rebuilds.',
     },
   ]
@@ -81,14 +77,9 @@ export default function ContactPage() {
                 <div className="mt-10 divide-y divide-[#1C2830]/15">
                   {services.map((service) => (
                     <div key={service.name} className="py-7 first:pt-0 last:pb-0">
-                      <div className="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_auto] sm:items-start">
-                        <h3 className="text-3xl font-extrabold leading-tight text-[#B74831] md:text-4xl">
-                          {service.name}
-                        </h3>
-                        <p className="text-xl font-extrabold text-[#1C2830]">
-                          {service.price}
-                        </p>
-                      </div>
+                      <h3 className="text-3xl font-extrabold leading-tight text-[#B74831] md:text-4xl">
+                        {service.name}
+                      </h3>
                       <p className="mt-4 text-base leading-7 text-[#1C2830]/75">
                         {service.description}
                       </p>
