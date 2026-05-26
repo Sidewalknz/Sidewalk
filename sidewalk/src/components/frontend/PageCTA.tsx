@@ -24,7 +24,7 @@ export const PageCTA = ({
             aria-label={linkLabel}
             className="group flex w-fit items-center gap-5 text-white sm:gap-8"
           >
-            <h2 className="text-4xl font-extrabold leading-tight md:text-6xl">
+            <h2 className="whitespace-nowrap text-[clamp(2rem,7vw,3.75rem)] font-extrabold leading-tight">
               {title}
             </h2>
             <span

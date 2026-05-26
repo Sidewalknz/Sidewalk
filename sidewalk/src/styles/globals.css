@@ -157,6 +157,10 @@
     @apply bg-background text-foreground font-sans antialiased;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   /* Fix for native selects having invisible options in light mode when parent has text-white */
   select option {
     color: hsl(var(--foreground));
@@ -320,6 +324,10 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
     .sidewalk-hero__brand--top,
     .sidewalk-hero__brand--bottom,
     .sidewalk-hero__content {
@@ -436,6 +444,30 @@
 }
 
 @layer components {
+  .frontend-page-transition {
+    animation: frontend-page-enter 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    min-height: 100%;
+    transform-origin: top center;
+    will-change: transform;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .frontend-page-transition {
+      animation: none;
+    }
+  }
+}
+
+@keyframes frontend-page-enter {
+  from {
+    transform: translateY(1.25rem);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@layer components {
   .home-journey-section {
     align-items: center;
     background: #F3ECE3;
@@ -452,6 +484,14 @@
 
   .home-cta-section .home-journey-heading__line {
     color: #fff;
+  }
+
+  .home-journey-section.home-cta-section {
+    min-height: auto;
+    overflow: visible;
+    padding-bottom: clamp(7rem, 16vw, 14rem);
+    padding-top: clamp(5rem, 10vh, 8rem);
+    position: relative;
   }
 
   .home-cta-section .home-journey-heading__middle {
@@ -640,9 +680,17 @@
     grid-column: 2;
     grid-row: 1;
     min-height: 20rem;
+    opacity: 0;
     padding-left: clamp(1.5rem, 4vw, 3rem);
     position: sticky;
     top: 7rem;
+    transform: translateY(0.75rem);
+    transition: opacity 180ms ease, transform 220ms ease;
+  }
+
+  .home-service-menu__panel.is-visible {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   .home-service-menu--reverse .home-service-menu__nav {
@@ -816,6 +864,12 @@
     .home-journey-heading__line--bottom,
     .home-journey-heading__middle {
       max-height: none;
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+
+    .home-service-menu__panel {
       opacity: 1;
       transform: none;
       transition: none;

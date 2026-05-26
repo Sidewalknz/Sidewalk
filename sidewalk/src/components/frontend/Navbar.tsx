@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Menu, X, Rocket } from 'lucide-react'
@@ -11,16 +11,30 @@ import { frontendNavLinks } from '@/lib/nav-links'
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const [logoError, setLogoError] = useState(false)
   const pathname = usePathname()
 
   const logoSrc = SIDEWALK_ASSETS.logo || '/logo.png' // Default filename if manifest is missing/null
   const isActiveLink = (href: string) => (href === '/' ? pathname === href : pathname.startsWith(href))
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20)
+    }
+
+    handleScroll()
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
   return (
     <nav
       className={cn(
-        'fixed top-0 w-full z-50 border-b border-transparent bg-transparent py-5 transition-colors duration-300'
+        'fixed top-0 w-full z-50 border-b py-5 transition-colors duration-300',
+        scrolled
+          ? 'bg-[#F3ECE3]/85 backdrop-blur-md border-transparent'
+          : 'bg-transparent border-transparent'
       )}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -52,7 +66,7 @@ export const Navbar = () => {
                   href={link.href}
                   className={cn(
                     'text-sm text-slate-600 hover:text-brand-600 dark:text-slate-300 dark:hover:text-brand-500 transition-colors',
-                    isActive ? 'font-bold text-slate-900 dark:text-white' : 'font-medium'
+                    isActive ? 'font-black text-slate-900 dark:text-white' : 'font-semibold'
                   )}
                 >
                   {link.name}
@@ -91,7 +105,7 @@ export const Navbar = () => {
                 onClick={() => setIsOpen(false)}
                 className={cn(
                   'block px-3 py-3 text-base text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-brand-600 rounded-md transition-colors',
-                  isActive ? 'font-bold text-slate-900 dark:text-white' : 'font-medium'
+                  isActive ? 'font-black text-slate-900 dark:text-white' : 'font-semibold'
                 )}
               >
                 {link.name}

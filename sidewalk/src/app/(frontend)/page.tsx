@@ -123,11 +123,25 @@ export default function HomePage() {
             </p>
             <Link
               href="/contact"
-              className="inline-flex text-lg font-extrabold text-white underline decoration-white/40 underline-offset-8 transition-colors hover:decoration-white"
+              className="group inline-flex items-center gap-5 text-lg font-extrabold text-white transition-colors hover:text-[#1C2830]"
             >
-              Start the conversation
+              <span>Start the conversation</span>
+              <span
+                aria-hidden="true"
+                className="h-8 w-11 shrink-0 bg-current transition-transform duration-300 group-hover:translate-x-2"
+                style={{
+                  WebkitMask: 'url(/icons/right-arrow.svg) center / contain no-repeat',
+                  mask: 'url(/icons/right-arrow.svg) center / contain no-repeat',
+                }}
+              />
             </Link>
           </div>
+        </div>
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-20 translate-y-[38%] overflow-hidden px-4 text-center text-[clamp(5rem,18vw,16rem)] font-extrabold leading-none text-[#1C2830] sm:px-6 lg:px-8"
+        >
+          sidewalk
         </div>
       </section>
     </div>

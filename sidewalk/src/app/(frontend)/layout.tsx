@@ -1,6 +1,7 @@
 import React from 'react'
 import { Navbar } from '@/components/frontend/Navbar'
 import { Footer } from '@/components/frontend/Footer'
+import { PageTransition } from '@/components/frontend/PageTransition'
 import { Montserrat } from 'next/font/google'
 import '@/styles/globals.css'
 import { SIDEWALK_ASSETS } from '@/lib/sidewalk-assets'
@@ -34,7 +35,7 @@ export default function FrontendLayout({
     <div className={`${montserrat.variable} flex flex-col min-h-screen bg-[#F3ECE3] font-sans`}>
       <Navbar />
       <main className="flex-grow">
-        {children}
+        <PageTransition>{children}</PageTransition>
       </main>
       <Footer />
     </div>
