@@ -1,5 +1,6 @@
 import React from 'react'
 import { OutgoingsDashboardWidgets } from '@/components/admin/OutgoingsDashboardWidgets';
+import { JobBreakdownCalculator } from '@/components/admin/JobBreakdownCalculator';
 
 /**
  * Central registry for modular UI injection slots.
@@ -9,7 +10,7 @@ import { OutgoingsDashboardWidgets } from '@/components/admin/OutgoingsDashboard
  */
 export const UI_REGISTRY: Record<string, React.ComponentType<any>[]> = {
   // Admin
-  'admin-dashboard-widgets': [OutgoingsDashboardWidgets],
+  'admin-dashboard-widgets': [OutgoingsDashboardWidgets, JobBreakdownCalculator],
 
   // Ecommerce (kept here so UI injections work even if ecommerce modules aren't installed first)
   'product-variants-top': [],
@@ -17,4 +18,3 @@ export const UI_REGISTRY: Record<string, React.ComponentType<any>[]> = {
   'product-variant-options': [],
   'product-options-bottom': [],
 }
-

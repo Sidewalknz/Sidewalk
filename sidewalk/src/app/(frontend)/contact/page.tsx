@@ -12,7 +12,7 @@ export const metadata = {
 
 export default function ContactPage() {
   const contactInfo = [
-    { label: 'Email', value: 'admin@sidewalk.co.nz' },
+    { label: 'Email', value: 'admin@sidewalks.co.nz' },
     { label: 'Location', value: 'Nelson, New Zealand' },
   ]
 
