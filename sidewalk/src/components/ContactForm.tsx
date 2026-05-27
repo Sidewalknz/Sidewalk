@@ -27,7 +27,7 @@ export function ContactForm() {
 
   return (
     <div>
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-5 md:space-y-6">
         <input type="hidden" name="startedAt" value={startedAt} />
         <div className="hidden" aria-hidden="true">
           <label htmlFor="website">Website</label>
@@ -40,7 +40,7 @@ export function ContactForm() {
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
           <div className="space-y-2">
             <label htmlFor="name" className="text-sm font-bold text-slate-700 dark:text-slate-300">Name</label>
             <input
@@ -49,7 +49,7 @@ export function ContactForm() {
               name="name"
               required
               placeholder="John Doe"
-              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-5 py-4 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all"
+              className="w-full border border-slate-200 bg-slate-50 px-4 py-3.5 transition-all focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 dark:border-slate-800 dark:bg-slate-900 md:px-5 md:py-4"
             />
           </div>
           <div className="space-y-2">
@@ -60,7 +60,7 @@ export function ContactForm() {
               name="email"
               required
               placeholder="john@example.com"
-              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-5 py-4 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all"
+              className="w-full border border-slate-200 bg-slate-50 px-4 py-3.5 transition-all focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 dark:border-slate-800 dark:bg-slate-900 md:px-5 md:py-4"
             />
           </div>
         </div>
@@ -71,7 +71,7 @@ export function ContactForm() {
             id="subject"
             name="subject"
             placeholder="How can we help?"
-            className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-5 py-4 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all"
+            className="w-full border border-slate-200 bg-slate-50 px-4 py-3.5 transition-all focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 dark:border-slate-800 dark:bg-slate-900 md:px-5 md:py-4"
           />
         </div>
         <div className="space-y-2">
@@ -79,10 +79,10 @@ export function ContactForm() {
           <textarea
             id="message"
             name="message"
-            rows={6}
+            rows={5}
             required
             placeholder="Your message goes here..."
-            className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-5 py-4 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all resize-none"
+            className="w-full resize-none border border-slate-200 bg-slate-50 px-4 py-3.5 transition-all focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 dark:border-slate-800 dark:bg-slate-900 md:px-5 md:py-4"
           ></textarea>
         </div>
 
@@ -96,7 +96,7 @@ export function ContactForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-brand-600 hover:bg-brand-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-4 shadow-xl shadow-brand-500/20 transition-all flex items-center justify-center space-x-2 group"
+          className="group flex w-full items-center justify-center space-x-2 bg-brand-600 py-3.5 font-bold text-white shadow-xl shadow-brand-500/20 transition-all hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-50 md:py-4"
         >
           <span>{isSubmitting ? 'Sending...' : 'Send Message'}</span>
           <Send size={18} className={`${isSubmitting ? '' : 'group-hover:translate-x-1 group-hover:-translate-y-1'} transition-transform`} />
