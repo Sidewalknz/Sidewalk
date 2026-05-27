@@ -129,7 +129,7 @@ export default async function PortfolioDetailPage({
         {backgroundMedia?.url || foregroundMedia?.url ? (
           <Reveal>
             <div className="relative overflow-visible bg-[#1C2830]">
-              <div className="relative h-[30rem] overflow-hidden md:h-[20rem]">
+              <div className="relative h-[14rem] overflow-visible md:h-[20rem]">
                 {backgroundMedia?.url ? (
                   backgroundIsVideo ? (
                     <video
@@ -148,7 +148,7 @@ export default async function PortfolioDetailPage({
                   foregroundIsVideo ? (
                     <video
                       src={foregroundMedia.url}
-                      className="absolute inset-0 h-full w-full object-contain object-center drop-shadow-[0_1.5rem_1.25rem_rgba(0,0,0,0.35)]"
+                      className="absolute inset-x-0 -bottom-5 h-[115%] w-full object-contain object-bottom drop-shadow-[0_1.5rem_1.25rem_rgba(0,0,0,0.35)] md:-bottom-7 md:h-[125%]"
                       autoPlay
                       muted
                       loop
@@ -158,7 +158,7 @@ export default async function PortfolioDetailPage({
                     <img
                       src={foregroundMedia.url}
                       alt={project?.foregroundMediaAlt || project?.title || ''}
-                      className="absolute inset-0 h-full w-full object-contain object-center drop-shadow-[0_1.5rem_1.25rem_rgba(0,0,0,0.35)]"
+                      className="absolute inset-x-0 -bottom-5 h-[115%] w-full object-contain object-bottom drop-shadow-[0_1.5rem_1.25rem_rgba(0,0,0,0.35)] md:-bottom-7 md:h-[125%]"
                     />
                   )
                 ) : null}
