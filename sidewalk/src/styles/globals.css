@@ -362,13 +362,14 @@
     }
 
     .sidewalk-hero:not(.sidewalk-hero--home) {
-      min-height: 100svh;
-      padding-bottom: 4rem;
-      padding-top: 6.5rem;
+      min-height: auto !important;
+      padding-bottom: 1.5rem !important;
+      padding-top: 5.25rem !important;
     }
 
     .sidewalk-hero:not(.sidewalk-hero--home) .sidewalk-hero__stage {
-      min-height: calc(100svh - 10.5rem);
+      justify-content: flex-start !important;
+      min-height: auto !important;
       width: 100%;
     }
 

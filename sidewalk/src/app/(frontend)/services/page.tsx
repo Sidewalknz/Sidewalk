@@ -81,24 +81,24 @@ export default function ServicesPage() {
         ]}
       />
 
-      <section className="bg-[#1C2830] py-24 text-white">
+      <section className="bg-[#1C2830] py-14 text-white md:py-24">
         <div className="mx-auto max-w-5xl px-4 text-center sm:px-6 lg:px-8">
           <Reveal>
-            <h2 className="text-4xl font-extrabold leading-tight md:text-6xl">
+            <h2 className="text-3xl font-extrabold leading-tight md:text-6xl">
               No generic templates. Everything Custom made.
             </h2>
           </Reveal>
         </div>
       </section>
 
-      <section className="py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12">
+      <section className="py-14 md:py-24">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 gap-8 px-4 sm:px-6 md:gap-12 lg:grid-cols-12 lg:px-8">
           <Reveal className="lg:col-span-4">
             <div className="lg:sticky lg:top-28">
-              <h2 className="text-4xl font-extrabold leading-tight text-[#1C2830] md:text-6xl">
+              <h2 className="text-3xl font-extrabold leading-tight text-[#1C2830] md:text-6xl">
                 Website packages
               </h2>
-              <p className="mt-6 text-lg leading-8 text-[#1C2830]/75">
+              <p className="mt-4 text-base leading-7 text-[#1C2830]/75 md:mt-6 md:text-lg md:leading-8">
                 Every website is scoped around the content, integrations, design complexity, and
                 functionality required. We self-host our websites, provide maintenance support, and
                 can help with SEO before and after launch.
@@ -107,16 +107,20 @@ export default function ServicesPage() {
           </Reveal>
           <div className="lg:col-span-8 divide-y divide-[#1C2830]/20">
             {packages.map((item, index) => (
-              <Reveal key={item.name} delay={100 + index * 100} className="py-10 first:pt-0">
-                <div className="grid grid-cols-1 gap-4 md:items-start">
+              <Reveal key={item.name} delay={100 + index * 100} className="py-8 first:pt-0 md:py-10">
+                <div className="grid grid-cols-1 gap-3 md:gap-4 md:items-start">
                   <div>
-                    <h3 className="text-3xl font-extrabold text-[#B74831]">{item.name}</h3>
-                    <p className="mt-4 text-lg leading-8 text-[#1C2830]/80">{item.description}</p>
+                    <h3 className="text-2xl font-extrabold leading-tight text-[#B74831] md:text-3xl">
+                      {item.name}
+                    </h3>
+                    <p className="mt-3 text-base leading-7 text-[#1C2830]/80 md:mt-4 md:text-lg md:leading-8">
+                      {item.description}
+                    </p>
                   </div>
                 </div>
-                <ul className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3">
+                <ul className="mt-5 grid grid-cols-1 gap-y-2 sm:grid-cols-2 sm:gap-x-8 md:mt-6 md:gap-y-3">
                   {item.details.map((detail) => (
-                    <li key={detail} className="text-lg font-bold text-[#1C2830]">
+                    <li key={detail} className="text-base font-bold leading-7 text-[#1C2830] md:text-lg">
                       {detail}
                     </li>
                   ))}
@@ -127,25 +131,25 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      <section className="py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 border-t border-[#1C2830]/20 pt-16">
+      <section className="py-14 md:py-24">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 gap-8 border-t border-[#1C2830]/20 px-4 pt-12 sm:px-6 md:gap-12 md:pt-16 lg:grid-cols-12 lg:px-8">
           <Reveal className="lg:col-span-4">
-            <h2 className="text-4xl font-extrabold leading-tight text-[#1C2830] md:text-6xl">
+            <h2 className="text-3xl font-extrabold leading-tight text-[#1C2830] md:text-6xl">
               Quoted web solutions
             </h2>
           </Reveal>
           <div className="lg:col-span-8">
             <Reveal delay={100}>
-              <p className="text-xl leading-9 text-[#1C2830]/80 max-w-4xl">
+              <p className="max-w-4xl text-lg leading-8 text-[#1C2830]/80 md:text-xl md:leading-9">
                 Some projects need to be scoped properly before pricing. If you need a booking
                 system, ecommerce flow, dashboard, integration, or custom business tool, we quote
                 based on the workflow and technical requirements.
               </p>
             </Reveal>
-            <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4">
+            <div className="mt-7 grid grid-cols-1 gap-y-3 sm:grid-cols-2 sm:gap-x-12 md:mt-10 md:gap-y-4">
               {quotedServices.map((service, index) => (
                 <Reveal key={service} delay={200 + index * 50}>
-                  <p className="text-lg font-bold text-[#1C2830]">{service}</p>
+                  <p className="text-base font-bold leading-7 text-[#1C2830] md:text-lg">{service}</p>
                 </Reveal>
               ))}
             </div>

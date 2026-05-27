@@ -39,37 +39,39 @@ export default function AboutPage() {
         ]}
       />
 
-      <section className="bg-[#1C2830] py-16 text-white">
-        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 sm:px-6 md:grid-cols-2 lg:px-8">
+      <section className="bg-[#1C2830] py-12 text-white md:py-16">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-7 px-4 sm:px-6 md:grid-cols-2 lg:px-8">
           <Reveal delay={100}>
-            <div className="border-l border-white/20 pl-6">
+            <div className="border-l border-white/20 pl-5 md:pl-6">
               <p className="text-sm font-bold uppercase tracking-widest text-white/50">
                 Ezekiel Brown
               </p>
-              <p className="mt-1 text-2xl font-extrabold">Lead Developer</p>
+              <p className="mt-1 text-xl font-extrabold leading-tight md:text-2xl">Lead Developer</p>
             </div>
           </Reveal>
           <Reveal delay={200}>
-            <div className="border-l border-white/20 pl-6">
+            <div className="border-l border-white/20 pl-5 md:pl-6">
               <p className="text-sm font-bold uppercase tracking-widest text-white/50">
                 Keegan Jeffries
               </p>
-              <p className="mt-1 text-2xl font-extrabold">Sales, onboarding, and operations</p>
+              <p className="mt-1 text-xl font-extrabold leading-tight md:text-2xl">
+                Sales, onboarding, and operations
+              </p>
             </div>
           </Reveal>
         </div>
       </section>
 
-      <section className="border-t border-[#1C2830]/20 py-20 lg:py-24">
+      <section className="border-t border-[#1C2830]/20 py-14 md:py-20 lg:py-24">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <div className="space-y-8">
+          <div className="space-y-6 md:space-y-8">
             <Reveal>
-              <h2 className="text-4xl font-extrabold leading-tight text-[#1C2830] md:text-6xl">
+              <h2 className="text-3xl font-extrabold leading-tight text-[#1C2830] md:text-6xl">
                 Design, development, and systems that connect.
               </h2>
             </Reveal>
             <Reveal delay={100}>
-              <p className="text-xl leading-9 text-[#1C2830]/80">
+              <p className="text-lg leading-8 text-[#1C2830]/80 md:text-xl md:leading-9">
                 Sidewalk is a small studio that brings design, development, and day-to-day business
                 thinking into the same process. We build websites that look considered, feel easy to
                 use, and are backed by systems that make content and admin simpler to manage.
@@ -87,16 +89,16 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="py-20 lg:py-24">
-        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 border-t border-[#1C2830]/20 px-4 pt-16 sm:px-6 lg:grid-cols-12 lg:gap-16 lg:px-8">
+      <section className="py-14 md:py-20 lg:py-24">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 border-t border-[#1C2830]/20 px-4 pt-12 sm:px-6 md:gap-12 md:pt-16 lg:grid-cols-12 lg:gap-16 lg:px-8">
           <Reveal className="lg:col-span-5">
-            <h2 className="text-4xl font-extrabold leading-tight text-[#1C2830] md:text-6xl">
+            <h2 className="text-3xl font-extrabold leading-tight text-[#1C2830] md:text-6xl">
               Why self-hosted matters
             </h2>
           </Reveal>
-          <div className="space-y-8 lg:col-span-7">
+          <div className="space-y-6 md:space-y-8 lg:col-span-7">
             <Reveal delay={100}>
-              <p className="text-xl leading-9 text-[#1C2830]/80">
+              <p className="text-lg leading-8 text-[#1C2830]/80 md:text-xl md:leading-9">
                 We believe in self-hosted solutions that give you complete control over your digital
                 presence. That means your website, content, and business systems can be shaped
                 around how you operate rather than being boxed into a one-size-fits-all platform.
@@ -113,13 +115,13 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="py-20 lg:py-24">
-        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 border-t border-[#1C2830]/20 px-4 pt-16 sm:px-6 lg:grid-cols-12 lg:gap-16 lg:px-8">
+      <section className="py-14 md:py-20 lg:py-24">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 border-t border-[#1C2830]/20 px-4 pt-12 sm:px-6 md:gap-12 md:pt-16 lg:grid-cols-12 lg:gap-16 lg:px-8">
           <Reveal className="lg:col-span-4">
-            <h2 className="text-4xl font-extrabold leading-tight text-[#1C2830] md:text-6xl">
+            <h2 className="text-3xl font-extrabold leading-tight text-[#1C2830] md:text-6xl">
               The team
             </h2>
-            <p className="mt-6 max-w-sm text-lg leading-8 text-[#1C2830]/75">
+            <p className="mt-4 max-w-sm text-base leading-7 text-[#1C2830]/75 md:mt-6 md:text-lg md:leading-8">
               Sidewalk is intentionally small, so the people planning the work are the same people
               responsible for delivering it.
             </p>
@@ -129,11 +131,11 @@ export default function AboutPage() {
               <Reveal
                 key={member.name}
                 delay={100 + index * 100}
-                className="border-t border-[#1C2830]/20 py-8 first:border-t-0 first:pt-0"
+                className="border-t border-[#1C2830]/20 py-7 first:border-t-0 first:pt-0 md:py-8"
               >
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6">
                   <div className="md:pr-6">
-                    <h3 className="text-2xl font-extrabold text-[#B74831]">{member.name}</h3>
+                    <h3 className="text-2xl font-extrabold leading-tight text-[#B74831]">{member.name}</h3>
                     <p className="mt-3 text-sm font-bold uppercase tracking-widest text-[#1C2830]/55">
                       {member.role}
                     </p>
