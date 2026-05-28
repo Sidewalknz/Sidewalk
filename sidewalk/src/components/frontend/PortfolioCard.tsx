@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils'
 export function PortfolioCard({ project }: { project: any }) {
   const cardRef = useRef<HTMLAnchorElement>(null)
   const [isInView, setIsInView] = useState(false)
+  const [hasRevealed, setHasRevealed] = useState(false)
   const backgroundMedia =
     project?.backgroundMedia && typeof project.backgroundMedia === 'object'
       ? project.backgroundMedia
@@ -34,10 +35,15 @@ export function PortfolioCard({ project }: { project: any }) {
     return () => observer.disconnect()
   }, [])
 
+  const handlePointerEnter = () => {
+    setHasRevealed(true)
+  }
+
   return (
     <Link
       ref={cardRef}
       href={href}
+      onPointerEnter={handlePointerEnter}
       className={cn(
         'group relative grid min-h-[22rem] grid-cols-1 overflow-visible bg-[#1C2830] text-white transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-brand-600/10 md:h-[20rem] md:min-h-0 md:grid-cols-[minmax(0,0.42fr)_minmax(0,0.58fr)]',
         isInView && 'shadow-2xl shadow-brand-600/10',
@@ -47,7 +53,8 @@ export function PortfolioCard({ project }: { project: any }) {
         <div
           className={cn(
             'absolute inset-0 overflow-hidden opacity-0 transition-opacity duration-500 group-hover:opacity-100',
-            isInView && 'opacity-100',
+            isInView && 'max-md:opacity-100',
+            hasRevealed && 'md:opacity-100',
           )}
         >
           {backgroundIsVideo ? (
@@ -56,6 +63,7 @@ export function PortfolioCard({ project }: { project: any }) {
               className={cn(
                 'h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]',
                 isInView && 'scale-[1.03]',
+                hasRevealed && 'md:scale-[1.03]',
               )}
               autoPlay
               muted
@@ -69,6 +77,7 @@ export function PortfolioCard({ project }: { project: any }) {
               className={cn(
                 'h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]',
                 isInView && 'scale-[1.03]',
+                hasRevealed && 'md:scale-[1.03]',
               )}
             />
           )}
@@ -121,8 +130,9 @@ export function PortfolioCard({ project }: { project: any }) {
 
       <div
         className={cn(
-          'pointer-events-none absolute inset-x-0 bottom-0 z-10 h-full overflow-visible opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100 md:relative md:inset-auto md:translate-y-6',
-          isInView && 'translate-y-0 opacity-100',
+          'pointer-events-none absolute inset-x-0 bottom-0 z-10 h-full overflow-visible opacity-0 transition-all duration-500 group-hover:-translate-y-4 group-hover:opacity-100 md:relative md:inset-auto md:-translate-y-2 md:group-hover:-translate-y-8',
+          isInView && 'max-md:translate-y-0 max-md:opacity-100',
+          hasRevealed && 'md:-translate-y-5 md:opacity-100',
         )}
       >
         {foregroundMedia?.url ? (
@@ -130,8 +140,9 @@ export function PortfolioCard({ project }: { project: any }) {
             <video
               src={foregroundMedia.url}
               className={cn(
-                'absolute -bottom-10 right-0 h-[78%] w-full object-contain object-bottom drop-shadow-[0_1.5rem_1.25rem_rgba(0,0,0,0.35)] transition-transform duration-500 group-hover:scale-[1.03] md:-top-8 md:bottom-auto md:h-[calc(100%+3rem)]',
+                'absolute -bottom-12 right-0 h-[78%] w-full object-contain object-bottom drop-shadow-[0_1.5rem_1.25rem_rgba(0,0,0,0.35)] transition-transform duration-500 group-hover:scale-[1.03] md:-top-12 md:bottom-auto md:h-[calc(100%+3rem)]',
                 isInView && 'scale-[1.03]',
+                hasRevealed && 'md:scale-[1.03]',
               )}
               autoPlay
               muted
@@ -143,8 +154,9 @@ export function PortfolioCard({ project }: { project: any }) {
               src={foregroundMedia.url}
               alt={project?.foregroundMediaAlt || project?.title || ''}
               className={cn(
-                'absolute -bottom-10 right-0 h-[78%] w-full object-contain object-bottom drop-shadow-[0_1.5rem_1.25rem_rgba(0,0,0,0.35)] transition-transform duration-500 group-hover:scale-[1.03] md:-top-8 md:bottom-auto md:h-[calc(100%+3rem)]',
+                'absolute -bottom-12 right-0 h-[78%] w-full object-contain object-bottom drop-shadow-[0_1.5rem_1.25rem_rgba(0,0,0,0.35)] transition-transform duration-500 group-hover:scale-[1.03] md:-top-12 md:bottom-auto md:h-[calc(100%+3rem)]',
                 isInView && 'scale-[1.03]',
+                hasRevealed && 'md:scale-[1.03]',
               )}
             />
           )
