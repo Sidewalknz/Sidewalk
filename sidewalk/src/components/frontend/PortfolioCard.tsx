@@ -8,6 +8,7 @@ export function PortfolioCard({ project }: { project: any }) {
   const cardRef = useRef<HTMLAnchorElement>(null)
   const [isInView, setIsInView] = useState(false)
   const [hasRevealed, setHasRevealed] = useState(false)
+  const [hasMobileRevealed, setHasMobileRevealed] = useState(false)
   const backgroundMedia =
     project?.backgroundMedia && typeof project.backgroundMedia === 'object'
       ? project.backgroundMedia
@@ -26,7 +27,9 @@ export function PortfolioCard({ project }: { project: any }) {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setIsInView(entry.isIntersecting && entry.intersectionRatio >= 0.2)
+        const isVisible = entry.isIntersecting && entry.intersectionRatio >= 0.2
+        setIsInView(isVisible)
+        if (isVisible) setHasMobileRevealed(true)
       },
       { threshold: [0, 0.2] },
     )
@@ -53,7 +56,7 @@ export function PortfolioCard({ project }: { project: any }) {
         <div
           className={cn(
             'absolute inset-0 overflow-hidden opacity-0 transition-opacity duration-500 group-hover:opacity-100',
-            isInView && 'max-md:opacity-100',
+            hasMobileRevealed && 'max-md:opacity-100',
             hasRevealed && 'md:opacity-100',
           )}
         >
@@ -89,7 +92,8 @@ export function PortfolioCard({ project }: { project: any }) {
           className={cn(
             'text-2xl font-extrabold leading-tight text-white transition-colors duration-500 md:text-4xl',
             usesDarkText && 'group-hover:text-[#1C2830]',
-            usesDarkText && isInView && 'text-[#1C2830]',
+            usesDarkText && hasMobileRevealed && 'max-md:text-[#1C2830]',
+            usesDarkText && isInView && 'md:text-[#1C2830]',
           )}
         >
           {project?.title || 'Untitled'}
@@ -99,7 +103,8 @@ export function PortfolioCard({ project }: { project: any }) {
           className={cn(
             'mt-3 max-w-xl overflow-hidden text-base font-medium leading-7 text-white/75 transition-colors duration-500 [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:5] md:mt-4 md:min-h-[7rem] md:[-webkit-line-clamp:4]',
             usesDarkText && 'group-hover:text-[#1C2830]/75',
-            usesDarkText && isInView && 'text-[#1C2830]/75',
+            usesDarkText && hasMobileRevealed && 'max-md:text-[#1C2830]/75',
+            usesDarkText && isInView && 'md:text-[#1C2830]/75',
             !project?.shortDescription && 'invisible',
           )}
           aria-hidden={!project?.shortDescription}
@@ -111,7 +116,8 @@ export function PortfolioCard({ project }: { project: any }) {
           className={cn(
             'mt-4 flex flex-wrap items-center gap-3 text-[10px] font-black uppercase tracking-widest text-white/55 transition-colors duration-500',
             usesDarkText && 'group-hover:text-[#1C2830]/55',
-            usesDarkText && isInView && 'text-[#1C2830]/55',
+            usesDarkText && hasMobileRevealed && 'max-md:text-[#1C2830]/55',
+            usesDarkText && isInView && 'md:text-[#1C2830]/55',
           )}
         >
           {project?.location ? (
@@ -131,7 +137,7 @@ export function PortfolioCard({ project }: { project: any }) {
       <div
         className={cn(
           'pointer-events-none absolute inset-x-0 bottom-0 z-10 h-full overflow-visible opacity-0 transition-all duration-500 group-hover:-translate-y-4 group-hover:opacity-100 md:relative md:inset-auto md:-translate-y-2 md:group-hover:-translate-y-8',
-          isInView && 'max-md:translate-y-0 max-md:opacity-100',
+          hasMobileRevealed && 'max-md:translate-y-0 max-md:opacity-100',
           hasRevealed && 'md:-translate-y-5 md:opacity-100',
         )}
       >

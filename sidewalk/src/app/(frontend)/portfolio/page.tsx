@@ -53,7 +53,7 @@ export default async function PortfolioPage() {
                 </h2>
               </div>
             </Reveal>
-            <div className="grid grid-cols-1 gap-9 md:gap-8">
+            <div className="grid grid-cols-1 gap-16 md:gap-8">
               {featured.map((p: any, index: number) => (
                 <Reveal key={p.id} delay={100 + index * 100}>
                   <PortfolioCard project={p} />
@@ -73,7 +73,7 @@ export default async function PortfolioPage() {
           </Reveal>
 
           {rest.length ? (
-            <div className="grid grid-cols-1 gap-9 md:gap-8">
+            <div className="grid grid-cols-1 gap-16 md:gap-8">
               {rest.map((p: any, index: number) => (
                 <Reveal key={p.id} delay={100 + index * 100}>
                   <PortfolioCard project={p} />
