@@ -93,7 +93,7 @@ export function PortfolioCard({ project }: { project: any }) {
             'text-2xl font-extrabold leading-tight text-white transition-colors duration-500 md:text-4xl',
             usesDarkText && 'group-hover:text-[#1C2830]',
             usesDarkText && hasMobileRevealed && 'max-md:text-[#1C2830]',
-            usesDarkText && isInView && 'md:text-[#1C2830]',
+            usesDarkText && hasRevealed && 'md:text-[#1C2830]',
             !hasCardBackgroundMedia && '!text-white',
           )}
         >
@@ -105,7 +105,7 @@ export function PortfolioCard({ project }: { project: any }) {
             'mt-3 max-w-xl overflow-hidden text-base font-medium leading-7 text-white/75 transition-colors duration-500 [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:5] md:mt-4 md:min-h-[7rem] md:[-webkit-line-clamp:4]',
             usesDarkText && 'group-hover:text-[#1C2830]/75',
             usesDarkText && hasMobileRevealed && 'max-md:text-[#1C2830]/75',
-            usesDarkText && isInView && 'md:text-[#1C2830]/75',
+            usesDarkText && hasRevealed && 'md:text-[#1C2830]/75',
             !hasCardBackgroundMedia && '!text-white/75',
             !project?.shortDescription && 'invisible',
           )}
@@ -119,7 +119,7 @@ export function PortfolioCard({ project }: { project: any }) {
             'mt-4 flex flex-wrap items-center gap-3 text-[10px] font-black uppercase tracking-widest text-white/55 transition-colors duration-500',
             usesDarkText && 'group-hover:text-[#1C2830]/55',
             usesDarkText && hasMobileRevealed && 'max-md:text-[#1C2830]/55',
-            usesDarkText && isInView && 'md:text-[#1C2830]/55',
+            usesDarkText && hasRevealed && 'md:text-[#1C2830]/55',
             !hasCardBackgroundMedia && '!text-white/55',
           )}
         >
