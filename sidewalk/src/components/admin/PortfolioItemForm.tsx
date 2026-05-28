@@ -84,7 +84,7 @@ export function PortfolioItemForm({
   const slugSeq = useRef(0)
 
   const [backgroundMedia, setBackgroundMedia] = useState<any>(() => {
-    const raw = project?.backgroundMedia || project?.featuredImage
+    const raw = project?.backgroundMedia
     if (!raw) return null
     return typeof raw === 'object' ? raw : { id: raw }
   })
@@ -563,7 +563,7 @@ export function PortfolioItemForm({
                             (backgroundMedia as any)?.mimeType?.startsWith?.('video/') ? (
                               <video src={(backgroundMedia as any).url} className="w-full h-full object-cover" muted playsInline />
                             ) : (
-                              <img src={(backgroundMedia as any).url} alt={project?.backgroundMediaAlt || project?.featuredImageAlt || ''} className="w-full h-full object-cover" />
+                              <img src={(backgroundMedia as any).url} alt={project?.backgroundMediaAlt || ''} className="w-full h-full object-cover" />
                             )
                           ) : (
                             <ImageIcon className="w-5 h-5 text-slate-300 dark:text-slate-700" />
@@ -572,7 +572,7 @@ export function PortfolioItemForm({
                         <Input
                           id="backgroundMediaAlt"
                           name="backgroundMediaAlt"
-                          defaultValue={project?.backgroundMediaAlt || project?.featuredImageAlt || ''}
+                          defaultValue={project?.backgroundMediaAlt || ''}
                           placeholder="Background alt text..."
                           className="h-11 rounded-2xl border-slate-100 dark:border-slate-800 bg-slate-50/50 focus:bg-white dark:focus:bg-slate-900 transition-all font-bold"
                         />

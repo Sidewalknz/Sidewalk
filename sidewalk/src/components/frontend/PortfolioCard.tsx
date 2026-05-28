@@ -12,14 +12,14 @@ export function PortfolioCard({ project }: { project: any }) {
   const backgroundMedia =
     project?.backgroundMedia && typeof project.backgroundMedia === 'object'
       ? project.backgroundMedia
-      : project?.featuredImage && typeof project.featuredImage === 'object'
-        ? project.featuredImage
-        : null
+      : null
+  const hasCardBackgroundMedia =
+    project?.backgroundMedia && typeof project.backgroundMedia === 'object' && Boolean(project.backgroundMedia?.url)
   const foregroundMedia = project?.foregroundMedia && typeof project.foregroundMedia === 'object' ? project.foregroundMedia : null
   const href = `/portfolio/${project?.slug || ''}`
   const backgroundIsVideo = backgroundMedia?.mimeType?.startsWith?.('video/')
   const foregroundIsVideo = foregroundMedia?.mimeType?.startsWith?.('video/')
-  const usesDarkText = project?.cardTextTone === 'dark'
+  const usesDarkText = project?.cardTextTone === 'dark' && hasCardBackgroundMedia
 
   useEffect(() => {
     const element = cardRef.current
@@ -94,6 +94,7 @@ export function PortfolioCard({ project }: { project: any }) {
             usesDarkText && 'group-hover:text-[#1C2830]',
             usesDarkText && hasMobileRevealed && 'max-md:text-[#1C2830]',
             usesDarkText && isInView && 'md:text-[#1C2830]',
+            !hasCardBackgroundMedia && '!text-white',
           )}
         >
           {project?.title || 'Untitled'}
@@ -105,6 +106,7 @@ export function PortfolioCard({ project }: { project: any }) {
             usesDarkText && 'group-hover:text-[#1C2830]/75',
             usesDarkText && hasMobileRevealed && 'max-md:text-[#1C2830]/75',
             usesDarkText && isInView && 'md:text-[#1C2830]/75',
+            !hasCardBackgroundMedia && '!text-white/75',
             !project?.shortDescription && 'invisible',
           )}
           aria-hidden={!project?.shortDescription}
@@ -118,6 +120,7 @@ export function PortfolioCard({ project }: { project: any }) {
             usesDarkText && 'group-hover:text-[#1C2830]/55',
             usesDarkText && hasMobileRevealed && 'max-md:text-[#1C2830]/55',
             usesDarkText && isInView && 'md:text-[#1C2830]/55',
+            !hasCardBackgroundMedia && '!text-white/55',
           )}
         >
           {project?.location ? (

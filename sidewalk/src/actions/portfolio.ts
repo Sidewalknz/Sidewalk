@@ -13,6 +13,10 @@ function toId(raw: unknown): Id | undefined {
   return Number.isNaN(Number(asString)) ? asString : Number(asString)
 }
 
+function toNullableId(raw: unknown): Id | null {
+  return toId(raw) ?? null
+}
+
 function safeJsonParse<T>(raw: unknown, fallback: T): T {
   if (typeof raw !== 'string' || raw.trim().length === 0) return fallback
   try {
@@ -105,10 +109,10 @@ function readPortfolioForm(formData: FormData, existing?: any) {
     outcome: (formData.get('outcome') as string) || '',
     logo: toId(formData.get('logo')),
     logoUrl: (formData.get('logoUrl') as string) || '',
-    backgroundMedia: toId(formData.get('backgroundMedia')),
+    backgroundMedia: toNullableId(formData.get('backgroundMedia')),
     backgroundMediaAlt: (formData.get('backgroundMediaAlt') as string) || '',
     cardTextTone: (formData.get('cardTextTone') as string) === 'dark' ? 'dark' : 'light',
-    foregroundMedia: toId(formData.get('foregroundMedia')),
+    foregroundMedia: toNullableId(formData.get('foregroundMedia')),
     foregroundMediaAlt: (formData.get('foregroundMediaAlt') as string) || '',
     gallery: normalizeGallery(formData.get('gallery')),
     clientCompany: (formData.get('clientCompany') as string) || '',
